@@ -65,7 +65,7 @@ class ShoppingHistory(models.Model):
     material = models.ForeignKey(Material, verbose_name='原材料', on_delete=models.SET(get_deleted_material))
     num = models.IntegerField(verbose_name='数',default=0)
     date = models.DateField(help_text='作成日') 
-    is_send = models.BooleanField()
+    is_send = models.BooleanField(null=True, blank=True,default=False)
 
 class ShoppingHistoryProxy(ShoppingHistory):
     class Meta:

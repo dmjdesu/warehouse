@@ -4,12 +4,25 @@ from .models import Material,ShoppingHistory,Category,ParentCategory,Warehouse,S
 from django.db.models import Count, Sum #追加する
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
+from import_export import fields
 from pprint import pprint
 
 class ShoppingHistoryResource(resources.ModelResource):
-    # Modelに対するdjango-import-exportの設定
+    material_name = fields.Field()
+    total_value = fields.Field()
+
     class Meta:
+        fields = ['material_name','num','total_value', 'target_name','articles','date','is_send']
         model = ShoppingHistoryProxy
+
+    def dehydrate_material_name(self, shopping_history):
+        return '%s' % (shopping_history.material)
+
+    def dehydrate_is_send(self, shopping_history):
+        return "送信済み"  if shopping_history.is_send  else "未送信"
+
+    def dehydrate_total_value(self, shopping_history):
+        return '%s' % (shopping_history.num  * shopping_history.material.value)
 
 class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
@@ -38,7 +51,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # django-import-exportsの設定
     resource_class = ShoppingHistoryResource
 
-class ShoppingHistoryAdmin(admin.ModelAdmin):
+class ShoppingHistoryAdmin(ImportExportModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
     list_filter = ['target_name','date']
@@ -71,6 +84,8 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         response.context_data['total_value'] = total_value
         return response
 
+    resource_class = ShoppingHistoryResource
+
 
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('name','value')
@@ -83,6 +98,7 @@ class ItemMaterialAdmin(admin.ModelAdmin):
 
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
+    list_filter = ['material','material__category','material__category__parent']
 
 admin.site.register(Category)
 admin.site.register(ShoppingHistory,ShoppingHistoryAdmin)

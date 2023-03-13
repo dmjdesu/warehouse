@@ -11,7 +11,12 @@ TARGET = (
 )
 
 class ShoppingHistoryForm(forms.ModelForm):
-    material = forms.ChoiceField()
+    target_name = forms.fields.ChoiceField(
+        choices=TargetChoices.choices,
+        required=True,
+        label='店舗',
+        # widget=forms.widgets.Select,
+    )
     date = forms.DateTimeField(widget=DatePickerInput(format='%Y-%m-%d'))
     parent_category = forms.ModelChoiceField(
         label='親カテゴリ',
@@ -28,10 +33,10 @@ class ShoppingHistoryForm(forms.ModelForm):
         queryset=Material.objects,
         required=False
     )
-    field_order = ('parent_category', 'category',"material")
+    field_order = ('target_name','parent_category', 'category',"material")
     class Meta:
         model = ShoppingHistory
-        fields = "__all__"
+        fields = ("date","num")
     def __init__(self, material=None,*args, **kwargs):
         self.base_fields["material"].choices = material
         super().__init__(*args, **kwargs)

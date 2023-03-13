@@ -22,7 +22,9 @@ class ShoppingHistoryView(CreateView):
             date=request.POST["date"]
         ) 
         werehouse = Warehouse.objects.get_or_create(material=material)
-        werehouse[0].num - int(request.POST["num"])
+        werehouse[0].num -= int(request.POST["num"])
+        werehouse[0].save()
+        pprint(werehouse[0].num)
         return redirect("/admin/")
 
     def get_context_data(self, **kwargs):
