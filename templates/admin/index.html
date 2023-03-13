@@ -15,7 +15,7 @@
 <div id="content-main">
     <table>
         <thead>
-            <tr><th><a href="../shopping_history">発注登録</a></th></tr>
+            <tr><th><a  href="{% url 'shopping_history' %}">発注登録</a></th></tr>
         </thead>
     </table>
   {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
