@@ -1,0 +1,114 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <form action="" method="POST">
+        {% bootstrap_javascript jquery='full' %} 
+        {{ form.media }}
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit">送信</button>
+    </form>
+</div>
+<script>
+    const parentCategoryElement = $('#id_parent_category');
+    const categoryElement = $('#id_category');
+    const materialElement = $('#id_material');
+    const categories = {
+        {% for parent in parentcategory_list %}
+            '{{ parent.pk }}': [
+                {% for category in parent.category_set.all %}
+                    {
+                        'pk': '{{ category.pk }}',
+                        'name': '{{ category.name }}'
+                    },
+                {% endfor %}
+            ],
+        {% endfor %}
+    };
+    const materials = {
+        {% for category in category_list %}
+            '{{ category.pk }}': [
+                {% for material in category.material_set.all %}
+                    {
+                        'pk': '{{ material.pk }}',
+                        'name': '{{ material.name }}'
+                    },
+                {% endfor %}
+            ],
+        {% endfor %}
+    };
+
+
+    const changeCategory = (select) => {
+        // 子カテゴリの選択欄を空にする。
+        categoryElement.children().remove();
+
+        // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
+        const parentId = parentCategoryElement.val();
+        const categoryList = categories[parentId];
+
+        // 子カテゴリの選択肢を作成・追加。
+        for (const category of categoryList) {
+            const option = $('<option>');
+            option.val(category['pk']);
+            option.text(category['name']);
+            categoryElement.append(option);
+        }
+
+        // 指定があれば、そのカテゴリを選択する
+        if (select !== undefined) {
+            categoryElement.val(select);
+        }
+        changeMaterial()
+    };
+
+    const changeMaterial = (select) => {
+        // 子カテゴリの選択欄を空にする。
+        materialElement.children().remove();
+
+        // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
+        const parentId = categoryElement.val();
+        const materialList = materials[parentId];
+
+        // 子カテゴリの選択肢を作成・追加。
+        for (const material of materialList) {
+            const option = $('<option>');
+            option.val(material['pk']);
+            option.text(material['name']);
+            console.log(option)
+            materialElement.append(option);
+        }
+
+        // 指定があれば、そのカテゴリを選択する
+        if (select !== undefined) {
+            materialElement.val(select);
+        }
+    };
+
+
+    $('#id_parent_category').on('change', () => {
+        changeCategory();
+        // changeMaterial();
+    });
+
+    $('#id_category').on('change', () => {
+        changeMaterial();
+    });
+
+
+    // 入力値に問題があって再表示された場合、ページ表示時点で小カテゴリが絞り込まれるようにする
+    if (parentCategoryElement.val()) {
+        const selectedCategory = categoryElement.val();
+        changeCategory(selectedCategory);
+    }
+
+</script>
+{% endblock %}
