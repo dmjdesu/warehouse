@@ -66,7 +66,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
 class ShoppingHistoryAdmin(admin.ModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
-    list_filter = ['target_name','date', ['date', DateRangeFilter],['num',NumericRangeFilter]]
+    list_filter = ['target_name','date', ['date', DateRangeFilter]]
     list_display = ('target_name','material','num','date','is_send')
 
     def regroup_by(self):
