@@ -6,7 +6,7 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export import fields
 from pprint import pprint
-from rangefilter.filters import DateRangeFilter
+from rangefilter.filters import DateRangeFilter,NumericRangeFilter
 
 class ShoppingHistoryProxyResource(resources.ModelResource):
     material_name = fields.Field()
@@ -43,7 +43,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
     list_display = ('target_name','material','articles','date','is_send')
-    list_filter = ['target_name','date','is_send', ['date', DateRangeFilter]]
+    list_filter = ['target_name','date','is_send', ['date', DateRangeFilter],['num',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
 
     def articles(self,object):
@@ -66,7 +66,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
 class ShoppingHistoryAdmin(admin.ModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
-    list_filter = ['target_name','date', ['date', DateRangeFilter]]
+    list_filter = ['target_name','date', ['date', DateRangeFilter],['num',NumericRangeFilter]]
     list_display = ('target_name','material','num','date','is_send')
 
     def regroup_by(self):
