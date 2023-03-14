@@ -25,7 +25,7 @@ class ShoppingHistoryForm(forms.ModelForm):
     )
     category = forms.ModelChoiceField(
         label='子カテゴリ',
-        queryset=Category.objects,
+        queryset=Item.objects,
         required=False
     )
     material = forms.ModelChoiceField(

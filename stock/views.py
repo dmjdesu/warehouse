@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import CreateView
 from django.shortcuts import redirect
 from stock.forms import ShoppingHistoryForm,PurchaseHistoryForm
-from stock.models import ParentCategory, ShoppingHistory,PurchaseHistory,Item,Material,Category,Warehouse
+from stock.models import ParentCategory, ShoppingHistory,PurchaseHistory,Item,Material,Warehouse
 from django.contrib import messages
 from django.shortcuts import resolve_url
 from pprint import pprint
@@ -30,7 +30,7 @@ class ShoppingHistoryView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['parentcategory_list'] = ParentCategory.objects.all()
-        context['category_list'] = Category.objects.all()
+        context['category_list'] = Item.objects.all()
         return context
 
     # 投稿に成功した時に実行される処理

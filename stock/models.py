@@ -15,7 +15,7 @@ class ParentCategory(models.Model):
         return self.name
 
 
-class Category(models.Model):
+class Item(models.Model):
     name = models.CharField('カテゴリ名', max_length=255)
     parent = models.ForeignKey(ParentCategory, verbose_name='親カテゴリ', on_delete=models.PROTECT)
 
@@ -24,31 +24,17 @@ class Category(models.Model):
 
 class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
-    category = models.ForeignKey(Category, verbose_name='カテゴリ', on_delete=models.PROTECT)
+    category = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT)
     value = models.IntegerField(verbose_name='値段',default=0)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
-
     def __str__(self):
         return self.name
 
 def get_deleted_material():
     return Material.objects.get_or_create(name="削除された材料")[0]
 
-class Item(models.Model):
-    name = models.CharField(verbose_name='商品名',max_length=255)
-    value = models.IntegerField(verbose_name='販売値',default=0)
-    unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
-
-    def __str__(self):
-        return self.name
-
 def get_deleted_item():
     return Item.objects.get_or_create(name="削除された商品")[0]
-
-class ItemMaterial(models.Model):
-    item = models.ForeignKey(Item, verbose_name='商品', on_delete=models.SET(get_deleted_item))
-    material = models.ForeignKey(Material, verbose_name='材料', on_delete=models.SET(get_deleted_material))
-    num = models.IntegerField(verbose_name='数',default=0)
 
 class TargetChoices(models.TextChoices):
     PENTICNTON = 'penticton', 'ペンティクトン店'
