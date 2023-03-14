@@ -15,7 +15,11 @@
 <div id="content-main">
     <table>
         <thead>
-            <tr><th><a  href="{% url 'shopping_history' %}">発注登録</a></th></tr>
+            <tr>
+                <th><a  href="{% url 'shopping_history' %}">発注登録</a></th>
+                <th><a  href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></th>
+                <th><a  href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></th>
+            </tr>
         </thead>
     </table>
   {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}

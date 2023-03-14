@@ -6,8 +6,9 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export import fields
 from pprint import pprint
+from rangefilter.filters import DateRangeFilter
 
-class ShoppingHistoryResource(resources.ModelResource):
+class ShoppingHistoryProxyResource(resources.ModelResource):
     material_name = fields.Field()
     total_value = fields.Field()
 
@@ -24,11 +25,25 @@ class ShoppingHistoryResource(resources.ModelResource):
     def dehydrate_total_value(self, shopping_history):
         return '%s' % (shopping_history.num  * shopping_history.material.value)
 
+class ShoppingHistoryResource(resources.ModelResource):
+    class Meta:
+        fields = ['target_name','material__name','material__value', 'material__unit',"total"]
+        model = ShoppingHistory
+    
+    def get_queryset():
+
+        metrics = {
+            'total': Count('id'),
+            'total_num': Sum('num'),
+        }
+            
+        return super.get_queryset().values("total",'target_name','material__name','material__value','material__unit').annotate(total=Count('id')).order_by('-target_name')
+
 class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
     list_display = ('target_name','material','articles','date','is_send')
-    list_filter = ['target_name','date','is_send']
+    list_filter = ['target_name','date','is_send', ['date', DateRangeFilter]]
     actions = ['send_material','no_send_material']
 
     def articles(self,object):
@@ -48,14 +63,12 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     def no_send_material(self,request,queryset):
         queryset.update(is_send=False)
 
-    # django-import-exportsの設定
-    resource_class = ShoppingHistoryResource
-
-class ShoppingHistoryAdmin(ImportExportModelAdmin):
+class ShoppingHistoryAdmin(admin.ModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
-    list_filter = ['target_name','date']
+    list_filter = ['target_name','date', ['date', DateRangeFilter]]
     list_display = ('target_name','material','num','date','is_send')
+
     def regroup_by(self):
         return 'date'
     
@@ -84,7 +97,7 @@ class ShoppingHistoryAdmin(ImportExportModelAdmin):
         response.context_data['total_value'] = total_value
         return response
 
-    resource_class = ShoppingHistoryResource
+    # resource_class = ShoppingHistoryResource
 
 
 class ItemAdmin(admin.ModelAdmin):

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     'import_export',
     'mathfilters',
+    'rangefilter',
 ]
 
 MIDDLEWARE = [
