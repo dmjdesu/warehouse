@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-abuwh3_17^x6%ivg@2v71r3@l4d5xk8(nuv@8emqy%p1a&h7a1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+wsgi_app = 'shoping.wsgi:application' 
 
+ALLOWED_HOSTS = ["os3-381-23528.vs.sakura.ne.jp","www.os3-381-23528.vs.sakura.ne.jp"]
+
+bind = '0.0.0.0:8000'
 
 # Application definition
 
@@ -132,6 +135,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/var/www/static/' 
+
+import mimetypes
+mimetypes.add_type("text/javascript", ".js", True)
+mimetypes.add_type("text/css", ".css", True)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
