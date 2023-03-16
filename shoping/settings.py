@@ -27,7 +27,7 @@ DEBUG = True
 
 wsgi_app = 'shoping.wsgi:application' 
 
-ALLOWED_HOSTS = ["os3-381-23528.vs.sakura.ne.jp","www.os3-381-23528.vs.sakura.ne.jp"]
+ALLOWED_HOSTS = ["127.0.0.1","os3-381-23528.vs.sakura.ne.jp","www.os3-381-23528.vs.sakura.ne.jp"]
 
 bind = '0.0.0.0:8000'
 

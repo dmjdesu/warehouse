@@ -26,7 +26,7 @@ class Item(models.Model):
 class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
     item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT)
-    value = models.DecimalField(verbose_name='',max_digits=5,decimal_places=2,blank=True,null=True,default=1)
+    value = models.DecimalField(verbose_name='価格',max_digits=5,decimal_places=2,blank=True,null=True,default=1)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
     note = models.TextField(null=True,blank=True)
     def __str__(self):
