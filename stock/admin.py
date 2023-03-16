@@ -108,7 +108,7 @@ class MaterialAdmin(admin.ModelAdmin):
 
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
-    list_filter = ['material','material__category','material__category__parent']
+    list_filter = ['material','material__item','material__item__parent']
 
 admin.site.register(Item)
 admin.site.register(ShoppingHistory,ShoppingHistoryAdmin)

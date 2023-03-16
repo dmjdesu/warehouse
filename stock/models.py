@@ -1,3 +1,4 @@
+from __future__ import barry_as_FLUFL
 from django.db import models
 
 class UnitChoices(models.TextChoices):
@@ -24,9 +25,10 @@ class Item(models.Model):
 
 class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
-    category = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT)
-    value = models.IntegerField(verbose_name='値段',default=0)
+    item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT)
+    value = models.DecimalField(verbose_name='',max_digits=5,decimal_places=2,blank=True,null=True,default=1)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
+    note = models.TextField(null=True,blank=True)
     def __str__(self):
         return self.name
 
