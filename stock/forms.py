@@ -23,7 +23,7 @@ class ShoppingHistoryForm(forms.ModelForm):
         queryset=ParentCategory.objects,
         required=False
     )
-    category = forms.ModelChoiceField(
+    item = forms.ModelChoiceField(
         label='子カテゴリ',
         queryset=Item.objects,
         required=False
@@ -33,7 +33,7 @@ class ShoppingHistoryForm(forms.ModelForm):
         queryset=Material.objects,
         required=False
     )
-    field_order = ('target_name','parent_category', 'category',"material")
+    field_order = ('target_name','parent_category', 'item',"material")
     class Meta:
         model = ShoppingHistory
         fields = ("date","num")
