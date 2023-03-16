@@ -59,6 +59,7 @@ class ShoppingHistoryProxy(ShoppingHistory):
     class Meta:
         proxy = True
 
+
 #倉庫の数
 class Warehouse(models.Model):
     material = models.ForeignKey(Material, verbose_name='原材料', on_delete=models.SET(get_deleted_material))
