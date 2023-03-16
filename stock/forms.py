@@ -50,3 +50,21 @@ class PurchaseHistoryForm(forms.ModelForm):
     def __init__(self, item=None,*args, **kwargs):
         self.base_fields["item"].choices = item
         super().__init__(*args, **kwargs)
+
+class CustomChoiceField(forms.ModelChoiceField):
+    #ここで表示したい形式にします
+    def label_from_instance(self, obj):
+        return u'%s %s' %(obj.name,obj.unit)
+
+class WarehouseAdminForm(forms.ModelForm):
+    """Django 管理サイト専用のフォーム
+    """
+    material = CustomChoiceField(queryset=Material.objects.all())
+    class Meta:
+        model = Warehouse
+        fields = [
+                'num',
+                ]
+ 
+
+ 

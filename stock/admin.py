@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import Material,ShoppingHistory,Item,ParentCategory,Warehouse,ShoppingHistoryProxy
+from .forms import WarehouseAdminForm
 from django.db.models import Count, Sum #追加する
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
@@ -108,6 +109,7 @@ class MaterialAdmin(admin.ModelAdmin):
 
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
+    form = WarehouseAdminForm
     list_filter = ['material','material__item','material__item__parent']
 
 admin.site.register(Item)
