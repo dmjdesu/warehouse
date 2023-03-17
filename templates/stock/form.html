@@ -8,6 +8,9 @@
 {% block bodyclass %}{{ block.super }} dashboard{% endblock %}
 
 {% block content %}
+<!-- Select2.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">
+<!-- jquery & iScroll -->
 <div id="content-main">
     <form action="" method="POST">
         {% bootstrap_javascript jquery='full' %} 
@@ -153,6 +156,7 @@
     });
 
 
+
     // 入力値に問題があって再表示された場合、ページ表示時点で小カテゴリが絞り込まれるようにする
     if (parentCategoryElement.val()) {
         const selectedCategory = itemElement.val();
@@ -161,6 +165,13 @@
     console.log()
     
     $('#id_date').val( new Date().getFullYear() + '-' + (new Date().getMonth()+1).toString().padStart(2, '0') + '-' + (new Date().getDate()).toString().padStart(2, '0'));
+    
 
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Select2本体 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+<script>$(function() {
+    console.log($('#id_material').select2())
+});</script>
 {% endblock %}

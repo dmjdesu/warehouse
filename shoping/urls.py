@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path,include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+admin.site.site_title = 'KOYA 在庫管理システム' 
+admin.site.site_header = 'KOYA 在庫管理システム' 
+admin.site.index_title = 'メニュー'
+
 urlpatterns = [
     path("",include('stock.urls')),
     path('admin/', admin.site.urls),
