@@ -52,6 +52,10 @@
     </form>
     
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Select2本体 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+
 <script>
     const parentCategoryElement = $('#id_parent_category');
     const itemElement = $('#id_item');
@@ -84,7 +88,8 @@
 
 
     const changeCategory = (select) => {
-        // 子カテゴリの選択欄を空にする。
+        // 子カテゴリの選択欄を空にする。]
+        // console.log(itemElement)
         itemElement.children().remove();
 
         // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
@@ -103,10 +108,10 @@
         if (select !== undefined) {
             itemElement.val(select);
         }
-        changeMaterial()
     };
 
     const changeMaterial = (select) => {
+        console.log("Ma")
         // 子カテゴリの選択欄を空にする。
         materialElement.children().remove();
 
@@ -115,6 +120,7 @@
         
         const materialList = materials[parentId];
 
+        console.log(materials)
 
         // 子カテゴリの選択肢を作成・追加。
         for (const material of materialList) {
@@ -124,6 +130,7 @@
             materialElement.append(option);
         }
 
+        console.log(materialElement)
         // 指定があれば、そのカテゴリを選択する
         if (select !== undefined) {
             materialElement.val(select);
@@ -133,18 +140,32 @@
 
     $('#id_parent_category').on('change', () => {
         changeCategory();
+        changeMaterial();
+        itemElement.val(null).trigger('change');
+        console.log(itemElement)
         $('#id_material').val(null).trigger('change');
     });
 
-    $('#id_item').on('change', () => {
+    // $('#id_item').on('select2:select', () => {
+    //     console.log("SSS")
+    //     changeMaterial();
+    //     $('#id_material').val(null).trigger('change');
+    // });
+
+    itemElement.trigger('change', () => {
+        console.log("SSS")
         changeMaterial();
         $('#id_material').val(null).trigger('change');
-        const input1 = document.getElementById("atention");
-        console.log(materials[1][0])
-        input1.innerHTML = materials[1][0]["note"]
     });
 
+    // $('#id_item').on('selected', () => {
+    //     console.log("SSS")
+    //     changeMaterial();
+    //     $('#id_material').val(null).trigger('change');
+    // });
+
     $('#id_material').on('change', () => {
+        console.log("SS")
         const input1 = document.getElementById("atention");
         let found
         console.log(found = materials[1])
@@ -153,8 +174,7 @@
         }else{
             found = materials[1][$('#id_material')[0].value]
         }
-        console.log(found.note )
-        found.note !== void 0 ? input1.innerHTML = found.note : input1.innerHTML = null
+        found && found.note !== void 0 ? input1.innerHTML = found.note : input1.innerHTML = null
     });
 
 
@@ -164,16 +184,16 @@
         const selectedCategory = itemElement.val();
         changeCategory(selectedCategory);
     }
-    console.log()
     
     $('#id_date').val( new Date().getFullYear() + '-' + (new Date().getMonth()+1).toString().padStart(2, '0') + '-' + (new Date().getDate()).toString().padStart(2, '0'));
-    
+    $('#id_item').select2().on('change', function (e) {
+        changeMaterial();
+        materialElement.val(null).trigger('change');
+    })
 
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Select2本体 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
 <script>$(function() {
-    console.log($('#id_material').select2())
+    
+    $('#id_material').select2()
 });</script>
 {% endblock %}
