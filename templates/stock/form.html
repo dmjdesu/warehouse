@@ -72,7 +72,7 @@
                     {
                         'pk': '{{ material.pk }}',
                         'name': '{{ material.name }}',
-                        'note': '{{ material.note }}'
+                        'note': '{{ material.note  | linebreaks  }}'
                     },
                 {% endfor %}
             ],
@@ -136,16 +136,20 @@
         changeMaterial();
         const input1 = document.getElementById("atention");
         console.log(materials[1][0])
-        input1.textContent = materials[1][0]["note"]
+        input1.innerHTML = materials[1][0]["note"]
     });
 
     $('#id_material').on('change', () => {
         const input1 = document.getElementById("atention");
-        console.log($('#id_material')[0].value)
-        console.log(materials[$('#id_item')[0].value])
-        const found = materials[$('#id_item')[0].value].find(element => element.pk == $('#id_material')[0].value);
-        console.log(found)
-        found.note !== void 0 ? input1.textContent = found.note : input1.textContent = null
+        let found
+        console.log(found = materials[1])
+        if($('#id_item')[0].value){
+            found = materials[$('#id_item')[0].value].find(element => element.pk == $('#id_material')[0].value);
+        }else{
+            found = materials[1][$('#id_material')[0].value]
+        }
+        console.log(found.note )
+        found.note !== void 0 ? input1.innerHTML = found.note : input1.innerHTML = null
     });
 
 
