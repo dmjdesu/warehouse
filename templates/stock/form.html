@@ -133,10 +133,12 @@
 
     $('#id_parent_category').on('change', () => {
         changeCategory();
+        $('#id_material').val(null).trigger('change');
     });
 
     $('#id_item').on('change', () => {
         changeMaterial();
+        $('#id_material').val(null).trigger('change');
         const input1 = document.getElementById("atention");
         console.log(materials[1][0])
         input1.innerHTML = materials[1][0]["note"]
