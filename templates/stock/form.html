@@ -12,11 +12,41 @@
     <form action="" method="POST">
         {% bootstrap_javascript jquery='full' %} 
         {{ form.media }}
-        {{ form.as_p }}
-        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="field">
+            {{ form.target_name.label_tag }}
+            {{ form.target_name }}
+            <span class="helptext">{{ form.target_name.help_text }}</span>
+            {{ form.target_name.errors }}
+        </div>
+        <div class="field">
+            {{ form.date.label_tag }}
+            {{ form.date }}
+            <span class="helptext">{{ form.date.help_text }}</span>
+            {{ form.date.errors }}
+        </div>
+        <div class="field">
+            {{ form.parent_category.label_tag }}
+            {{ form.parent_category }}
+            {{ form.parent_category.errors }}
+            {{ form.item.label_tag }}
+            {{ form.item }}
+            {{ form.item.errors }}
+        </div>
+        <div class="field">
+            {{ form.material.label_tag }}
+            {{ form.material }}
+            {{ form.material.errors }}
+        </div>
+        <div class="field">
+            {{ form.num.label_tag }}
+            {{ form.num }}
+            {{ form.num.errors }}
+        </div>        
         <p id="atention">ここに原材料の説明が追記されます。</p>
         <button type="submit">送信</button>
     </form>
+    
 </div>
 <script>
     const parentCategoryElement = $('#id_parent_category');
@@ -123,6 +153,9 @@
         const selectedCategory = itemElement.val();
         changeCategory(selectedCategory);
     }
+    console.log()
+    
+    $('#id_date').val( new Date().getFullYear() + '-' + (new Date().getMonth()+1).toString().padStart(2, '0') + '-' + (new Date().getDate()).toString().padStart(2, '0'));
 
 </script>
 {% endblock %}

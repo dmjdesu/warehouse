@@ -1,5 +1,6 @@
 from __future__ import barry_as_FLUFL
 from django.db import models
+from datetime import date
 
 class UnitChoices(models.TextChoices):
     GRAM = 'g', 'グラム'
@@ -52,7 +53,7 @@ class ShoppingHistory(models.Model):
     target_name = models.CharField(max_length=255,choices=TargetChoices.choices)
     material = models.ForeignKey(Material, verbose_name='原材料', on_delete=models.SET(get_deleted_material))
     num = models.IntegerField(verbose_name='数',default=0)
-    date = models.DateField(help_text='作成日') 
+    date = models.DateField(help_text='作成日',default=date.today) 
     is_send = models.BooleanField(null=True, blank=True,default=False)
 
 class ShoppingHistoryProxy(ShoppingHistory):

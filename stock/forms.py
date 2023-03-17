@@ -1,6 +1,6 @@
 from django import forms
 from stock.models import *
-from django.utils import timezone
+import datetime
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 TARGET = (
     ('penticton', 'ペンティクトン店'),
