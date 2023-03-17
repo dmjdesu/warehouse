@@ -44,6 +44,7 @@
             {{ form.num.errors }}
         </div>        
         <p id="atention">ここに原材料の説明が追記されます。</p>
+        {% csrf_token %}
         <button type="submit">送信</button>
     </form>
     
