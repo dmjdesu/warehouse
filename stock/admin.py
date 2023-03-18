@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.contrib import admin
 
 from .models import *
@@ -18,13 +19,13 @@ class ShoppingHistoryProxyResource(resources.ModelResource):
         model = ShoppingHistoryProxy
 
     def dehydrate_material_name(self, shopping_history):
-        return '%s' % (shopping_history.material)
+        return '%s' % (shopping_history.material_name)
 
     def dehydrate_is_send(self, shopping_history):
         return "送信済み"  if shopping_history.is_send  else "未送信"
 
     def dehydrate_total_value(self, shopping_history):
-        return '%s' % (shopping_history.num  * shopping_history.material.value)
+        return '%s' % (shopping_history.num  * shopping_history.value)
 
 class ShoppingHistoryResource(resources.ModelResource):
     class Meta:
@@ -32,13 +33,8 @@ class ShoppingHistoryResource(resources.ModelResource):
         model = ShoppingHistory
     
     def get_queryset():
-
-        metrics = {
-            'total': Count('id'),
-            'total_num': Sum('num'),
-        }
             
-        return super.get_queryset().values("total",'target_name','material__name','material__value','material__unit').annotate(total=Count('id')).order_by('-target_name')
+        return super.get_queryset().values("total",'target_name','material_name','value','material_unit').annotate(total=Count('id')).order_by('-target_name')
 
 class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
@@ -48,7 +44,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     actions = ['send_material','no_send_material']
 
     def articles(self,object):
-        return str(object.value) + object.material_unit
+        return str(object.num) + object.material_unit
 
     @admin.action(
         description="全て発送済みにする",
@@ -84,18 +80,23 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
             return response
         metrics = {
             'total': Count('id'),
+            'total_value': Sum('value'),
             'total_num': Sum('num'),
         }
         response.context_data['summary'] = list(
             qs
-            .values('target_name','material__name','material__value','material__weight__unit','material__weight__num')
+            .values('target_name','material_name','material_unit')
             .annotate(**metrics)
             .order_by('-target_name')
         )
         total_value = 0
+        total_num = 0
+        pprint(response.context_data['summary'])
         for data in  response.context_data['summary']:
-            total_value += int(data["total_num"] / data["material__weight__num"]) * data["material__value"]
+            total_value += data["total_value"]
+            total_num += data["total_num"]
         response.context_data['total_value'] = total_value
+        response.context_data['total_num'] = total_num
         return response
 
     # resource_class = ShoppingHistoryResource

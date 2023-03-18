@@ -1,6 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
-
+{% load mathfilters %}
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
 
 {% block coltype %}colMS{% endblock %}
@@ -47,6 +47,7 @@
             {{ form.num.errors }}
         </div>        
         <p id="atention">ここに原材料の説明が追記されます。</p>
+        <p id="unit">ここに原材料の単位が追記されます。</p>
         {% csrf_token %}
         <button type="submit">送信</button>
     </form>
@@ -79,7 +80,9 @@
                     {
                         'pk': '{{ material.pk }}',
                         'name': '{{ material.name }}',
-                        'note': '{{ material.note  | linebreaks  }}'
+                        'note': '{{ material.note  | linebreaks  }}',
+                        'num': '{{ material.weight|add:material.weight.unit}}',
+                        
                     },
                 {% endfor %}
             ],
@@ -167,6 +170,7 @@
     $('#id_material').on('change', () => {
         console.log("SS")
         const input1 = document.getElementById("atention");
+        const input2 = document.getElementById("unit");
         let found
         console.log(found = materials[1])
         if($('#id_item')[0].value){
@@ -175,6 +179,7 @@
             found = materials[1][$('#id_material')[0].value]
         }
         found && found.note !== void 0 ? input1.innerHTML = found.note : input1.innerHTML = null
+        found && found.num !== void 0 ? input2.innerHTML = found.num : input2.innerHTML = null
     });
 
 

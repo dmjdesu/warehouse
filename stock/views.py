@@ -2,11 +2,12 @@ from django.shortcuts import render
 from django.views.generic import CreateView
 from django.shortcuts import redirect
 from stock.forms import ShoppingHistoryForm,PurchaseHistoryForm
-from stock.models import ParentCategory, ShoppingHistory,PurchaseHistory,Item,Material,Warehouse
+from stock.models import *
 from django.contrib import messages
 from django.shortcuts import resolve_url
 from pprint import pprint
 from django.contrib.messages.views import SuccessMessageMixin
+from decimal import Decimal
 
 class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     model = ShoppingHistory
@@ -15,17 +16,19 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     success_message = "正常に登録されました。"
 
     def post(self, request, *args, **kwargs):
-        material = Material.objects.get(id=request.POST["material"])
         pprint(request.POST)
+        material = Material.objects.get(id=request.POST["material"])
         ShoppingHistory.objects.create(
             target_name = request.POST["target_name"],
-            value=material,
-            num=request.POST["num"],
-            material=material,
+            value=(Decimal(request.POST["num"]) / material.weight.num) * material.value,
+            num=(Decimal(request.POST["num"])),
+            material_name=material.name,
+            material_unit=material.weight.unit,
             date=request.POST["date"]
         ) 
+        pprint(material)
         werehouse = Warehouse.objects.get_or_create(material=material)
-        werehouse[0].num -= int(request.POST["num"])
+        werehouse[0].num -= Decimal(request.POST["num"])
         werehouse[0].save()
         messages.success(self.request, '作成に成功しました。')
         return redirect("/admin/")

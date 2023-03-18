@@ -83,11 +83,11 @@
                           <a href="#">件数</a>
                       </div>
                   </th>
-                    <th>
-                        <div class="text">
-                            <a href="#">合計数</a>
-                        </div>
-                    </th>
+                  <th>
+                    <div class="text">
+                        <a href="#">合計個数</a>
+                    </div>
+                </th>
                     <th>
                       <div class="text">
                           <a href="#">合計金額</a>
@@ -99,17 +99,17 @@
                 {% for row in summary %}
                 <tr class="{% cycle 'row1' 'row2' %}">
                     <td> {{ row.target_name }} </td>
-                    <td> {{ row.material__name }} </td>
+                    <td> {{ row.material_name }} </td>
                     <td> 合計：{{ row.total }}件 </td>
-                    <td> 合計：{{ row.total_num }}{{ row.material__unit }} </td>
-                    <td> 合計：{{row.material__value|mul:row.total_num}}$</td>  
+                    <td> 合計：{{row.total_num}}</td>  
+                    <td> 合計：{{row.total_value}}$</td>  
                 </tr>
                 {% endfor %}
                 <tr class="{% cycle 'row1' 'row2' %}">
                   <td>  </td>
                   <td> </td>
                   <td> </td>
-                  <td></td>
+                  <td> 合計個数：{{ total_num}} </td>
                   <td> 合計仕入れ金額：{{ total_value}}$ </td>
               </tr>
             </tbody>
