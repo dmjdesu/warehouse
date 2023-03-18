@@ -55,7 +55,7 @@ class PurchaseHistoryForm(forms.ModelForm):
 class CustomChoiceField(forms.ModelChoiceField):
     #ここで表示したい形式にします
     def label_from_instance(self, obj):
-        return u'%s %s' %(obj.name,obj.weight.unit) if(obj.weight) else ""
+        return u'%s %s' %(obj.name,obj.unit) if(obj.unit) else ""
         
 
 class WarehouseAdminForm(forms.ModelForm):

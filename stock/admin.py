@@ -106,18 +106,15 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ('name','value')
 
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('name','weight')
+    list_display = ('name',)
 
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
     form = WarehouseAdminForm
     list_filter = ['material',]
 
-class WeightAdmin(admin.ModelAdmin):
-    list_display = ('num','unit')
 
 admin.site.register(Item)
-admin.site.register(Weight,WeightAdmin)
 admin.site.register(ShoppingHistory,ShoppingHistoryAdmin)
 admin.site.register(ShoppingHistoryProxy,ShoppingHistoryProxyAdmin)
 admin.site.register(Material,MaterialAdmin)

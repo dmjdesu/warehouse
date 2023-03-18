@@ -24,18 +24,18 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-class Weight(models.Model):
-    num = models.IntegerField(verbose_name='数',default=0)
-    unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
-    def __str__(self):
-        return str(self.num) + self.unit
+# class Weight(models.Model):
+#     num = models.IntegerField(verbose_name='数',default=0)
+#     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
+#     def __str__(self):
+#         return str(self.num) + self.unit
 
 
 class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
     item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT,blank=True,null=True,)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=7,blank=True,null=True,default=1)
-    weight = models.ForeignKey(Weight, verbose_name='1つ当たりの単位', on_delete=models.PROTECT,blank=True,null=True,)
+    unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
     note = models.TextField(null=True,blank=True)
     def __str__(self):
         return self.name
