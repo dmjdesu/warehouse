@@ -94,7 +94,7 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         pprint(response.context_data['summary'])
         for data in  response.context_data['summary']:
             total_value += data["total_value"]
-            total_num += data["total_num"]
+            total_num += data["total"]
         response.context_data['total_value'] = total_value
         response.context_data['total_num'] = total_num
         return response
