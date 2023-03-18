@@ -48,7 +48,8 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     actions = ['send_material','no_send_material']
 
     def articles(self,object):
-        return (object.num * object.material.weight.num) + object.material.weight.get_unit_value()
+        pprint(object.material.weight.unit)
+        return str(object.num * object.material.weight.num) + object.material.weight.unit
 
     @admin.action(
         description="全て発送済みにする",
@@ -88,13 +89,13 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         }
         response.context_data['summary'] = list(
             qs
-            .values('target_name','material__name','material__value','material__weight__unit')
+            .values('target_name','material__name','material__value','material__weight__unit','material__weight__num')
             .annotate(**metrics)
             .order_by('-target_name')
         )
         total_value = 0
         for data in  response.context_data['summary']:
-            total_value += (data["total_num"] / data["material__weight__num"]) * data["material__value"]
+            total_value += int(data["total_num"] / data["material__weight__num"]) * data["material__value"]
         response.context_data['total_value'] = total_value
         return response
 
