@@ -101,7 +101,7 @@
                     <td> {{ row.target_name }} </td>
                     <td> {{ row.material_name }} </td>
                     <td> 合計：{{ row.total }}件 </td>
-                    <td> 合計：{{row.total_num}}</td>  
+                    <td> 合計：{{row.total_num}}{{row.material_unit}}</td>  
                     <td> 合計：{{row.total_value|floatformat:2 }}$</td>  
                 </tr>
                 {% endfor %}
