@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Material,ShoppingHistory,Item,ParentCategory,Warehouse,ShoppingHistoryProxy
+from .models import *
 from .forms import WarehouseAdminForm
 from django.db.models import Count, Sum #追加する
 from import_export import resources
@@ -28,7 +28,7 @@ class ShoppingHistoryProxyResource(resources.ModelResource):
 
 class ShoppingHistoryResource(resources.ModelResource):
     class Meta:
-        fields = ['target_name','material__name','material__value', 'material__unit',"total"]
+        fields = ['target_name','material__name', "total"]
         model = ShoppingHistory
     
     def get_queryset():
@@ -44,11 +44,11 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
     list_display = ('target_name','material','articles','date','is_send')
-    list_filter = ['target_name','date','is_send', ['date', DateRangeFilter],['num',NumericRangeFilter]]
+    list_filter = ['target_name','date','is_send','material', ['date', DateRangeFilter],['num',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
 
     def articles(self,object):
-        return str(object.num) + object.material.unit
+        return (object.num * object.material.weight.num) + object.material.weight.get_unit_value()
 
     @admin.action(
         description="全て発送済みにする",
@@ -67,7 +67,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
 class ShoppingHistoryAdmin(admin.ModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
-    list_filter = ['target_name','date', ['date', DateRangeFilter]]
+    list_filter = ['target_name','date','material', ['date', DateRangeFilter]]
     list_display = ('target_name','material','num','date','is_send')
 
     def regroup_by(self):
@@ -88,13 +88,13 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         }
         response.context_data['summary'] = list(
             qs
-            .values('target_name','material__name','material__value','material__unit')
+            .values('target_name','material__name','material__value','material__weight__unit')
             .annotate(**metrics)
             .order_by('-target_name')
         )
         total_value = 0
         for data in  response.context_data['summary']:
-            total_value += data["total_num"] * data["material__value"]
+            total_value += (data["total_num"] / data["material__weight__num"]) * data["material__value"]
         response.context_data['total_value'] = total_value
         return response
 
@@ -105,14 +105,18 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ('name','value')
 
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('name', 'unit')
+    list_display = ('name','weight')
 
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
     form = WarehouseAdminForm
-    list_filter = ['material','material__item','material__item__parent']
+    list_filter = ['material',]
+
+class WeightAdmin(admin.ModelAdmin):
+    list_display = ('num','unit')
 
 admin.site.register(Item)
+admin.site.register(Weight,WeightAdmin)
 admin.site.register(ShoppingHistory,ShoppingHistoryAdmin)
 admin.site.register(ShoppingHistoryProxy,ShoppingHistoryProxyAdmin)
 admin.site.register(Material,MaterialAdmin)
