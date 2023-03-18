@@ -106,7 +106,7 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ('name','value')
 
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name','unit','note')
 
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
