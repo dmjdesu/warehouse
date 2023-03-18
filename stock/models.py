@@ -34,7 +34,7 @@ class Item(models.Model):
 class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
     item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT,blank=True,null=True,)
-    value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=7,blank=True,null=True,default=1)
+    value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=3,blank=True,null=True,default=1)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
     note = models.TextField(null=True,blank=True)
     def __str__(self):
@@ -59,8 +59,8 @@ class TargetChoices(models.TextChoices):
 #これらの統計をとる
 class ShoppingHistory(models.Model):
     target_name = models.CharField(max_length=255,choices=TargetChoices.choices)
-    value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=7,blank=True,null=True,default=0)
-    num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=7,blank=True,null=True,default=0)
+    value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=3,blank=True,null=True,default=0)
+    num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=3,blank=True,null=True,default=0)
     material_name = models.CharField(verbose_name='材料名',max_length=255)
     material_unit = models.CharField(verbose_name='単位',max_length=255)
     date = models.DateField(help_text='作成日',default=date.today) 
@@ -74,7 +74,7 @@ class ShoppingHistoryProxy(ShoppingHistory):
 #倉庫の数
 class Warehouse(models.Model):
     material = models.ForeignKey(Material, verbose_name='原材料', on_delete=models.SET(get_deleted_material))
-    num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=7,blank=True,null=True,default=0)
+    num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=3,blank=True,null=True,default=0)
 
 #どれほど販売がされたか
 #これらの統計をとる
