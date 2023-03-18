@@ -19,6 +19,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
         pprint(request.POST)
         ShoppingHistory.objects.create(
             target_name = request.POST["target_name"],
+            value=material,
             num=request.POST["num"],
             material=material,
             date=request.POST["date"]

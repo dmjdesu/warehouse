@@ -21,22 +21,26 @@ class ShoppingHistoryForm(forms.ModelForm):
     parent_category = forms.ModelChoiceField(
         label='親カテゴリ',
         queryset=ParentCategory.objects,
-        required=False
+        required=True
     )
     item = forms.ModelChoiceField(
         label='子カテゴリ',
         queryset=Item.objects,
-        required=False
+        required=True
     )
     material = forms.ModelChoiceField(
         label='原材料',
         queryset=Material.objects,
-        required=False
+        required=True
+    )
+    num = forms.IntegerField(
+        label='数字',
+        required=True
     )
     field_order = ('target_name','parent_category', 'item',"material")
     class Meta:
         model = ShoppingHistory
-        fields = ("date","num")
+        fields = ("date","value")
     def __init__(self, material=None,*args, **kwargs):
         self.base_fields["material"].choices = material
         super().__init__(*args, **kwargs)
@@ -54,7 +58,8 @@ class PurchaseHistoryForm(forms.ModelForm):
 class CustomChoiceField(forms.ModelChoiceField):
     #ここで表示したい形式にします
     def label_from_instance(self, obj):
-        return u'%s %s' %(obj.name,obj.unit)
+        return u'%s %s' %(obj.name,obj.weight.unit) if(obj.weight) else ""
+        
 
 class WarehouseAdminForm(forms.ModelForm):
     """Django 管理サイト専用のフォーム
