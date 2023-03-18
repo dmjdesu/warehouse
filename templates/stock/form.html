@@ -81,7 +81,7 @@
                         'pk': '{{ material.pk }}',
                         'name': '{{ material.name }}',
                         'note': '{{ material.note  | linebreaks  }}',
-                        'num': '{{ material.weight|add:material.weight.unit}}',
+                        'num': '{{ material.weight}}',
                         
                     },
                 {% endfor %}
@@ -89,6 +89,7 @@
         {% endfor %}
     };
 
+    
 
     const changeCategory = (select) => {
         // 子カテゴリの選択欄を空にする。]
