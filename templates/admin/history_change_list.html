@@ -102,7 +102,7 @@
                     <td> {{ row.material_name }} </td>
                     <td> 合計：{{ row.total }}件 </td>
                     <td> 合計：{{row.total_num}}</td>  
-                    <td> 合計：{{row.total_value}}$</td>  
+                    <td> 合計：{{row.total_value|floatformat:2 }}$</td>  
                 </tr>
                 {% endfor %}
                 <tr class="{% cycle 'row1' 'row2' %}">
@@ -110,7 +110,7 @@
                   <td> </td>
                   <td> </td>
                   <td> 合計個数：{{ total_num}} </td>
-                  <td> 合計仕入れ金額：{{ total_value}}$ </td>
+                  <td> 合計仕入れ金額：{{ total_value|floatformat:2 }}$ </td>
               </tr>
             </tbody>
         </table>
