@@ -20,7 +20,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
         material = Material.objects.get(id=request.POST["material"])
         ShoppingHistory.objects.create(
             target_name = request.POST["target_name"],
-            value=(request.POST["num"]) * material.value,
+            value=Decimal(request.POST["num"]) * material.value,
             num=(Decimal(request.POST["num"])),
             material_name=material.name,
             material_unit=material.unit,
