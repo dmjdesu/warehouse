@@ -103,9 +103,6 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
     # resource_class = ShoppingHistoryResource
 
 
-class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name','value')
-
 class ItemFilter(admin.SimpleListFilter):
     title = '中分類'
     parameter_name = 'material__item__parent'
@@ -160,6 +157,9 @@ class InputFilter(admin.SimpleListFilter):
         )
         yield all_choice
 
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ('name','parent')
+    list_filter = ['parent']
 
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
@@ -174,7 +174,7 @@ class WarehouseAdmin(admin.ModelAdmin):
         return ((),)
 
 
-admin.site.register(Item)
+admin.site.register(Item,ItemAdmin)
 admin.site.register(ShoppingHistory,ShoppingHistoryAdmin)
 admin.site.register(ShoppingHistoryProxy,ShoppingHistoryProxyAdmin)
 admin.site.register(Material,MaterialAdmin)
