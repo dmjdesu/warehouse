@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'import_export',
     'mathfilters',
     'rangefilter',
+    'djfractions',
+    'django_admin_listfilter_dropdown',
 ]
 
 MIDDLEWARE = [
