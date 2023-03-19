@@ -103,7 +103,7 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
     # resource_class = ShoppingHistoryResource
 
 
-class ItemFilter(admin.SimpleListFilter):
+class MaterialItemFilter(admin.SimpleListFilter):
     title = '中分類'
     parameter_name = 'material__item__parent'
 
@@ -115,11 +115,11 @@ class ItemFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         pprint(self.value())
         if self.value():
-            return queryset.filter(material__item__parent__id=self.value())
+            return queryset.filter(material__item__id=self.value())
         else:
             return queryset.all()
 
-class MaterialItemFilter(admin.SimpleListFilter):
+class ItemFilter(admin.SimpleListFilter):
     title = '中分類'
     parameter_name = 'item__parent'
 
@@ -129,14 +129,15 @@ class MaterialItemFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         pprint(self.value())
+        pprint("self.value()")
         if self.value():
-            return queryset.filter(item__parent__id=self.value())
+            return queryset.filter(item__id=self.value())
         else:
             return queryset.all()
 
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')
-    list_filter = ['item__parent',MaterialItemFilter]
+    list_filter = ['item__parent',ItemFilter]
 
      
 
@@ -164,7 +165,7 @@ class ItemAdmin(admin.ModelAdmin):
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
     form = WarehouseAdminForm
-    list_filter = ['material__item__parent',ItemFilter]
+    list_filter = ['material__item__parent',MaterialItemFilter]
 
 
 
