@@ -139,7 +139,7 @@ class MaterialItemFilter(admin.SimpleListFilter):
 
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')
-    list_filter = ['item__parent',ItemFilter]
+    list_filter = ['item__parent',MaterialItemFilter]
 
      
 
