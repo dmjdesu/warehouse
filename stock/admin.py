@@ -41,7 +41,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
     list_display = ('target_name','material_name','articles','date','is_send')
-    list_filter = ['target_name','date','is_send','material_name', ['date', DateRangeFilter],['value',NumericRangeFilter]]
+    list_filter = ['target_name','date','material_item_name','is_send','material_name', ['date', DateRangeFilter],['value',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
 
     def articles(self,object):
@@ -64,7 +64,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
 class ShoppingHistoryAdmin(admin.ModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
-    list_filter = ['target_name','date','material_name', ['date', DateRangeFilter]]
+    list_filter = ['target_name','date','material_item_name','material_name', ['date', DateRangeFilter]]
     list_display = ('target_name','material_name','value','date','is_send')
 
     def regroup_by(self):

@@ -24,12 +24,6 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-# class Weight(models.Model):
-#     num = models.IntegerField(verbose_name='数',default=0)
-#     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
-#     def __str__(self):
-#         return str(self.num) + self.unit
-
 
 class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
@@ -62,6 +56,7 @@ class ShoppingHistory(models.Model):
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     material_name = models.CharField(verbose_name='材料名',max_length=255)
+    material_item_name = models.CharField(verbose_name='材料の商品名',max_length=255)
     material_unit = models.CharField(verbose_name='単位',max_length=255)
     date = models.DateField(help_text='作成日',default=date.today) 
     is_send = models.BooleanField(null=True, blank=True,default=False)

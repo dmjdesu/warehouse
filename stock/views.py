@@ -23,6 +23,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
             value=round(Decimal(request.POST["num"]) * material.value,4),
             num=(Decimal(request.POST["num"])),
             material_name=material.name,
+            material_item_name=material.item.name,
             material_unit=material.unit,
             date=request.POST["date"]
         ) 
