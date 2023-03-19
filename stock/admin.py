@@ -106,12 +106,9 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('name','value')
 
-class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('name','unit','note')
-
 class ItemFilter(admin.SimpleListFilter):
     title = '中分類'
-    parameter_name = 'material__item'
+    parameter_name = 'material__item__parent'
 
     def lookups(self, request, model_admin):
         pprint("Warehouse")
@@ -119,16 +116,31 @@ class ItemFilter(admin.SimpleListFilter):
         return warehouse
 
     def queryset(self, request, queryset):
-        if self.value() == 'True':
-            return queryset.filter(columnC=True)
-        elif self.value() == 'False':
-            return queryset.filter(columnC=False)
-        elif self.value() == 'Both':
-            return queryset.exclude(columnC__exact="")
-        elif self.value() == 'None':
-            return queryset.filter(columnC=None)
+        pprint(self.value())
+        if self.value():
+            return queryset.filter(material__item__parent__id=self.value())
         else:
             return queryset.all()
+
+class MaterialItemFilter(admin.SimpleListFilter):
+    title = '中分類'
+    parameter_name = 'item__parent'
+
+    def lookups(self, request, model_admin):
+        warehouse = Warehouse.objects.values_list("item__id","item__name",flat=False).filter(material__item__parent__id=request.GET.get("material__item__parent__id__exact")).distinct()
+        return warehouse
+
+    def queryset(self, request, queryset):
+        pprint(self.value())
+        if self.value():
+            return queryset.filter(item__parent__id=self.value())
+        else:
+            return queryset.all()
+
+class MaterialAdmin(admin.ModelAdmin):
+    list_display = ('name','unit','note')
+    list_filter = ['item__parent',ItemFilter]
+
      
 
 class InputFilter(admin.SimpleListFilter):
