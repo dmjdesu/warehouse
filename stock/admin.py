@@ -164,14 +164,8 @@ class ItemAdmin(admin.ModelAdmin):
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
     form = WarehouseAdminForm
-    search_fields = ['material','material__item','material__item__parent']
     list_filter = ['material__item__parent',ItemFilter]
 
-    pprint(DropdownFilter)
-
-    def lookups(self, request, model_admin):
-        # Dummy, required to show the filter.
-        return ((),)
 
 
 admin.site.register(Item,ItemAdmin)
