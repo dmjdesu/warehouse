@@ -9,6 +9,7 @@ from import_export.admin import ImportExportModelAdmin
 from import_export import fields
 from pprint import pprint
 from rangefilter.filters import DateRangeFilter,NumericRangeFilter
+from django_admin_listfilter_dropdown.filters import DropdownFilter
 
 class ShoppingHistoryProxyResource(resources.ModelResource):
     material_name = fields.Field()
@@ -108,10 +109,57 @@ class ItemAdmin(admin.ModelAdmin):
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')
 
+class ItemFilter(admin.SimpleListFilter):
+    title = '中分類'
+    parameter_name = 'material__item'
+
+    def lookups(self, request, model_admin):
+        pprint("Warehouse")
+        warehouse = Warehouse.objects.values_list("material__item__id","material__item__name",flat=False).filter(material__item__parent__id=request.GET.get("material__item__parent__id__exact")).distinct()
+        return warehouse
+
+    def queryset(self, request, queryset):
+        if self.value() == 'True':
+            return queryset.filter(columnC=True)
+        elif self.value() == 'False':
+            return queryset.filter(columnC=False)
+        elif self.value() == 'Both':
+            return queryset.exclude(columnC__exact="")
+        elif self.value() == 'None':
+            return queryset.filter(columnC=None)
+        else:
+            return queryset.all()
+     
+
+class InputFilter(admin.SimpleListFilter):
+    template = 'admin/input_filter.html'
+
+    def lookups(self, request, model_admin):
+        # Dummy, required to show the filter.
+        return ((),)
+
+    def choices(self, changelist):
+        # Grab only the "all" option.
+        all_choice = next(super().choices(changelist))
+        all_choice['query_parts'] = (
+            (k, v)
+            for k, v in changelist.get_filters_params().items()
+            if k != self.parameter_name
+        )
+        yield all_choice
+
+
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num')
     form = WarehouseAdminForm
-    list_filter = ['material',]
+    search_fields = ['material','material__item','material__item__parent']
+    list_filter = ['material__item__parent',ItemFilter]
+
+    pprint(DropdownFilter)
+
+    def lookups(self, request, model_admin):
+        # Dummy, required to show the filter.
+        return ((),)
 
 
 admin.site.register(Item)
