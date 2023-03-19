@@ -127,8 +127,8 @@ class MaterialItemFilter(admin.SimpleListFilter):
     parameter_name = 'item__parent'
 
     def lookups(self, request, model_admin):
-        warehouse = Warehouse.objects.values_list("item__id","item__name",flat=False).filter(material__item__parent__id=request.GET.get("material__item__parent__id__exact")).distinct()
-        return warehouse
+        material = Material.objects.values_list("item__id","item__name",flat=False).filter(item__parent__id=request.GET.get("item__parent__id__exact")).distinct()
+        return material
 
     def queryset(self, request, queryset):
         pprint(self.value())
