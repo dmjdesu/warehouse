@@ -1,1 +1,3 @@
 db.sqlite3
+shopenv/
+stock/__pycache__/*
