@@ -165,6 +165,7 @@ class ItemAdmin(admin.ModelAdmin):
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num_unit')
     form = WarehouseAdminForm
+    readonly_fields = ('num',)
     list_filter = ['material__item__parent',MaterialItemFilter]
 
     def num_unit(self,object):

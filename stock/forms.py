@@ -6,6 +6,7 @@ TARGET = (
     ('penticton', 'ペンティクトン店'),
     ('west', 'ウエスト'),
     ('koya', 'KOYA'),
+    ('warehouse', '倉庫'),
     ('others', 'OTHERS'),
     ('central', 'セントラルキッチン'),
 )

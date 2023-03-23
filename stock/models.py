@@ -45,6 +45,7 @@ class TargetChoices(models.TextChoices):
     PENTICNTON = 'penticton', 'ペンティクトン店'
     WEST = 'west', 'ウエスト'
     KOYA = 'koya', 'KOYA'
+    WAREHOUSE = 'warehouse', '倉庫'
     MEAT = 'others', 'OTHERS'
     CENTRAL = 'central', 'セントラルキッチン'
 
