@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     'rangefilter',
     'djfractions',
     'django_admin_listfilter_dropdown',
+    'rest_framework',
+    'django_extensions',
+    'api',
 ]
 
 MIDDLEWARE = [

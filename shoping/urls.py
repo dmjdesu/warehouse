@@ -23,6 +23,7 @@ admin.site.index_title = 'メニュー'
 
 urlpatterns = [
     path("",include('stock.urls')),
+    path("api/",include('api.urls')),
     path('admin/', admin.site.urls),
 ]
 
