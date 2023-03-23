@@ -16,7 +16,6 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     success_message = "正常に登録されました。"
 
     def post(self, request, *args, **kwargs):
-        pprint(request.POST)
         material = Material.objects.get(id=request.POST["material"])
         ShoppingHistory.objects.create(
             target_name = request.POST["target_name"],
@@ -25,7 +24,8 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
             material_name=material.name,
             material_item_name=material.item.name,
             material_unit=material.unit,
-            date=request.POST["date"]
+            date=request.POST["date"],
+            is_send=(request.POST["target_name"] != "warehouse")
         ) 
         
         werehouse = Warehouse.objects.get_or_create(material=material)
