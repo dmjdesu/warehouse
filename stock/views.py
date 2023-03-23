@@ -27,17 +27,12 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
             material_unit=material.unit,
             date=request.POST["date"]
         ) 
-        
+        pprint(material)
         werehouse = Warehouse.objects.get_or_create(material=material)
-        if request.POST["target_name"] == "warehouse" :
-            werehouse[0].num += Decimal(request.POST["num"])
-        else:
-            werehouse[0].num -= Decimal(request.POST["num"])
-        
-        
+        werehouse[0].num -= Decimal(request.POST["num"])
         werehouse[0].save()
         messages.success(self.request, '作成に成功しました。')
-        return redirect("shopping_history")
+        return redirect("/admin/")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
