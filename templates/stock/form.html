@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">
 <!-- jquery & iScroll -->
 <div id="content-main">
-    <form action="" method="POST">
+    <form id="form" action="" method="POST">
         {% bootstrap_javascript jquery='full' %} 
         {{ form.media }}
         {{ form.non_field_errors }}
@@ -51,7 +51,17 @@
         {% csrf_token %}
         <button type="submit">送信</button>
     </form>
-    
+    <table style="margin-top: 50px;">
+        <tbody>
+            <tr>
+                <td width="200" height="100" style="font-size: 200%;"><a  href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></td>
+                <td width="200" height="100" style="font-size: 200%;"><a  href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></td>
+            </tr>
+            <tr>
+                
+            </tr>
+        </tbody>
+    </table>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Select2本体 -->
@@ -196,6 +206,14 @@
         changeMaterial();
         materialElement.val(null).trigger('change');
     })
+
+    // $('#form').submit(function(){
+    //     console.log($('#id_target_name'))
+    //     let message = $('#id_material').select2('data')[0]['text'] + "を" + $('#id_date').val() + "に" + $('#id_target_name option:selected').text() + "に仕入れます。\nパスワードを入力してください。"
+    //     if(!(window.prompt(message, "") == "password")){
+    //         return false;
+    //     }
+    // })
 
 </script>
 <script>$(function() {

@@ -12,18 +12,20 @@
 {% block nav-sidebar %}{% endblock %}
 
 {% block content %}
-
 <div id="content-main">
-    <table>
-        <thead>
+    <table class="example">
+        <tbody>
             <tr>
-                <th><a  href="{% url 'shopping_history' %}">発注登録</a></th>
-                <th><a  href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></th>
-                <th><a  href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></th>
+                <td width="200" height="100" style="font-size: 200%;"><a  href="{% url 'shopping_history' %}">発注登録</a></td>
+                <td width="200" height="100" style="font-size: 200%;"><a  href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></td>
+                <td width="200" height="100" style="font-size: 200%;"><a  href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></td>
             </tr>
-        </thead>
+            <tr>
+
+            </tr>
+        </tbody>
     </table>
-  {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+  <!-- {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %} -->
 </div>
 {% endblock %}
 

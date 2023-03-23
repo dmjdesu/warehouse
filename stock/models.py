@@ -34,6 +34,9 @@ class Material(models.Model):
     def __str__(self):
         return self.name
 
+class MaterialProxy(Material):
+    class Meta:
+        proxy = True
 
 def get_deleted_material():
     return Material.objects.get_or_create(name="削除された材料")[0]
