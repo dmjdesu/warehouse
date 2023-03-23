@@ -25,7 +25,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
             material_item_name=material.item.name,
             material_unit=material.unit,
             date=request.POST["date"],
-            is_send=(request.POST["target_name"] != "warehouse")
+            is_send=(request.POST["target_name"] == "warehouse")
         ) 
         
         werehouse = Warehouse.objects.get_or_create(material=material)
