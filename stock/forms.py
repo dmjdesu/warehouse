@@ -22,12 +22,12 @@ class ShoppingHistoryForm(forms.ModelForm):
     parent_category = forms.ModelChoiceField(
         label='親カテゴリ',
         queryset=ParentCategory.objects,
-        required=True
+        required=False
     )
     item = forms.ModelChoiceField(
         label='子カテゴリ',
         queryset=Item.objects,
-        required=True
+        required=False
     )
     material = forms.ModelChoiceField(
         label='原材料',
