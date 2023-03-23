@@ -137,6 +137,11 @@ class ItemFilter(admin.SimpleListFilter):
 
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')
+    readonly_fields = ('value',)
+    list_filter = ['item__parent',ItemFilter]
+
+class MaterialProxyAdmin(admin.ModelAdmin):
+    list_display = ('name','unit','note')
     list_filter = ['item__parent',ItemFilter]
 
      
@@ -177,5 +182,7 @@ admin.site.register(Item,ItemAdmin)
 admin.site.register(ShoppingHistory,ShoppingHistoryAdmin)
 admin.site.register(ShoppingHistoryProxy,ShoppingHistoryProxyAdmin)
 admin.site.register(Material,MaterialAdmin)
+admin.site.register(MaterialProxy,MaterialProxyAdmin)
+
 admin.site.register(ParentCategory)
 admin.site.register(Warehouse,WarehouseAdmin)
