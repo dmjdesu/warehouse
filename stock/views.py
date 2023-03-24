@@ -18,7 +18,18 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     def post(self, request, *args, **kwargs):
         material = Material.objects.get(id=request.POST["material"])        
         werehouse = Warehouse.objects.get_or_create(material=material)
+        
         if request.POST["target_name"] == "warehouse" :
+            WarehouseHistory.objects.create(
+                target_name = request.POST["target_name"],
+                value=round(Decimal(request.POST["num"]) * material.value,4),
+                num=(Decimal(request.POST["num"])),
+                material_name=material.name,
+                material_item_name=material.item.name,
+                material_unit=material.unit,
+                date=request.POST["date"],
+                is_send=False
+            )
             werehouse[0].num += Decimal(request.POST["num"])
         else:
             ShoppingHistory.objects.create(

@@ -86,6 +86,7 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         }
         response.context_data['summary'] = list(
             qs
+            .exclude(target_name="warehouse")
             .values('target_name','material_name','material_unit')
             .annotate(**metrics)
             .order_by('-target_name')
