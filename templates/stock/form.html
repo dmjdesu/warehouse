@@ -1,4 +1,4 @@
-{% extends "admin/base_site.html" %}
+{% extends "admin/base_site_temp.html" %}
 {% load i18n static %}
 {% load mathfilters %}
 {% load widget_tweaks %}
@@ -57,8 +57,8 @@
     <table>
         <tbody>
             <tr>
-                <td width="200" height="100" style="font-size: 100%;"><button class="p-3" type="button" style="font-size: 150%;  background-color:#93ff93;" ><a  href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></button></td>
-                <td width="200" height="100" style="font-size: 100%;"><button class="p-3" type="button" style="font-size: 150%; background-color:#ff8e8e" ><a  href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></button></td>
+                <td width="200" height="100" style="font-size: 100%;"><button class="p-3" type="button" style="font-size: 150%;  background-color:#93ff93;" ><a style="color: #000000;"  href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></button></td>
+                <td width="200" height="100" style="font-size: 100%;"><button class="p-3" type="button" style="font-size: 150%; background-color:#ff8e8e" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></button></td>
             </tr>
         </tbody>
     </table>
