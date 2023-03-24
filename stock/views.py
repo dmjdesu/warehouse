@@ -16,8 +16,6 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     success_message = "正常に登録されました。"
 
     def post(self, request, *args, **kwargs):
-        if(not request.user.is_superuser):
-            return redirect("admin:index")
         material = Material.objects.get(id=request.POST["material"])        
         werehouse = Warehouse.objects.get_or_create(material=material)
         
