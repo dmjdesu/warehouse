@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 
-{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}| {{ site_title|default:_('D') }}{% endblock %}
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}| {{ site_title|default:_('KOYA 在庫管理システム') }}{% endblock %}
 
 {% block branding %}
 <h1 id="site-name"><a href="{% url 'admin:index' %}">KOYA 在庫管理システム</a></h1>
