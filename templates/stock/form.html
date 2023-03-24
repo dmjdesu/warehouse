@@ -1,6 +1,8 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
 {% load mathfilters %}
+{% load widget_tweaks %}
+{% load bootstrap4 %}
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
 
 {% block coltype %}colMS{% endblock %}
@@ -14,6 +16,7 @@
 <div id="content-main">
     <form id="form" action="" method="POST">
         {% bootstrap_javascript jquery='full' %} 
+        {% bootstrap_css %}
         {{ form.media }}
         {{ form.non_field_errors }}
         <div class="field">
@@ -22,7 +25,7 @@
             <span class="helptext">{{ form.target_name.help_text }}</span>
             {{ form.target_name.errors }}
         </div>
-        <div class="field">
+        <div class="field form-inline">
             {{ form.date.label_tag }}
             {{ form.date }}
             <span class="helptext">{{ form.date.help_text }}</span>
@@ -51,14 +54,11 @@
         {% csrf_token %}
         <button type="submit">送信</button>
     </form>
-    <table style="margin-top: 50px;">
+    <table>
         <tbody>
             <tr>
-                <td width="200" height="100" style="font-size: 200%;"><a  href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></td>
-                <td width="200" height="100" style="font-size: 200%;"><a  href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></td>
-            </tr>
-            <tr>
-                
+                <td width="200" height="100" style="font-size: 100%;"><button class="p-3" type="button" style="font-size: 150%;  background-color:#93ff93;" ><a  href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></button></td>
+                <td width="200" height="100" style="font-size: 100%;"><button class="p-3" type="button" style="font-size: 150%; background-color:#ff8e8e" ><a  href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></button></td>
             </tr>
         </tbody>
     </table>
