@@ -34,7 +34,7 @@ class ShoppingHistoryForm(forms.ModelForm):
         queryset=Material.objects,
         required=True
     )
-    num = forms.DecimalField( label='量', max_digits=12, decimal_places=10,)
+    num = forms.IntegerField(label="量", widget=forms.NumberInput(attrs={'step': 0.01}))
     field_order = ('target_name','parent_category', 'item',"material")
     class Meta:
         model = ShoppingHistory
