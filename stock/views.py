@@ -61,6 +61,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
         kwgs["material"] = list(Material.objects.values_list("id","name"))
         return kwgs
 
+
 from django.http import JsonResponse
 from django.views import View
 from sklearn.linear_model import LinearRegression
@@ -72,14 +73,14 @@ from datetime import date
 from .models import ShoppingHistory
 
 class ShoppingPredictionView(View):
-    template_name = "stock/predicitions.html"
     def get(self, request, *args, **kwargs):
         shopping_data = ShoppingHistory.objects.all().values()
         df = pd.DataFrame.from_records(shopping_data)
         df['date'] = pd.to_datetime(df['date'])
         df['date_ordinal'] = df['date'].apply(lambda x: x.toordinal())
+        min_date_ordinal = df['date_ordinal'].min()
+        df['date_ordinal'] -= min_date_ordinal  # Subtract the minimum date_ordinal to make it relative
         target_material_pairs = df[['target_name', 'material_name']].drop_duplicates().to_dict('records')
-        
 
         predictions = {}
         for pair in target_material_pairs:
@@ -109,8 +110,9 @@ class ShoppingPredictionView(View):
             latest_date_ordinal = target_df['date_ordinal'].max()
             next_date_ordinal = latest_date_ordinal + 1
             X_next = np.array([[next_date_ordinal, 0]])
-            next_num = round(model.predict(X_next)[0], 4) 
-            next_date = date.fromordinal(next_date_ordinal)
+            next_num = round(model.predict(X_next)[0], 4)  # Round to 4 decimal places
+            next_num = max(0, next_num)  # Ensure next_num is not negative
+            next_date = date.fromordinal(next_date_ordinal + min_date_ordinal)  # Add min_date_ordinal back
 
             key = f"{target_name}_{material_name}"
             predictions[key] = {
