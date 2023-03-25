@@ -1,0 +1,27 @@
+{% extends "admin/base_site_temp.html" %}
+
+{% block content %}
+    <h1>Shopping Predictions</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Target and Material</th>
+                <th>MSE</th>
+                <th>RMSE</th>
+                <th>Next Date</th>
+                <th>Next Num</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, prediction in predictions.items %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ prediction.mse|floatformat:4 }}</td>
+                    <td>{{ prediction.rmse|floatformat:4 }}</td>
+                    <td>{{ prediction.next_date }}</td>
+                    <td>{{ prediction.next_num|floatformat:4 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

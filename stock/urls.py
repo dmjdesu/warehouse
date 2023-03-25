@@ -1,8 +1,8 @@
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns = [
-    path('admin/stock/shoppinghistory/add/', views.ShoppingHistoryView.as_view(), name='shopping_history'),
-    path('admin/stock/shoppinghistoryproxy/add/', views.ShoppingHistoryView.as_view(), name='shopping_history'),
-    # path('purchase_history', views.PurchaseHistoryView.as_view(), name='stock'),
+    path('admin/stock/shoppinghistory/add/', ShoppingHistoryView.as_view(), name='shopping_history'),
+    path('admin/stock/shoppinghistoryproxy/add/', ShoppingHistoryView.as_view(), name='shopping_history'),
+    path('predict_purchase/', ShoppingPredictionView.as_view(), name='predict_purchase'),
 ]
