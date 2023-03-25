@@ -69,7 +69,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 import pandas as pd
 import numpy as np
-from datetime import date
+from datetime import date, datetime
 from .models import ShoppingHistory
 
 class ShoppingPredictionView(View):
@@ -81,6 +81,9 @@ class ShoppingPredictionView(View):
         min_date_ordinal = df['date_ordinal'].min()
         df['date_ordinal'] -= min_date_ordinal  # Subtract the minimum date_ordinal to make it relative
         target_material_pairs = df[['target_name', 'material_name']].drop_duplicates().to_dict('records')
+
+        today_date = datetime.now().date()
+        today_ordinal = today_date.toordinal() - min_date_ordinal
 
         predictions = {}
         for pair in target_material_pairs:
@@ -108,7 +111,7 @@ class ShoppingPredictionView(View):
                 rmse = np.sqrt(mse)
 
             latest_date_ordinal = target_df['date_ordinal'].max()
-            next_date_ordinal = latest_date_ordinal + 1
+            next_date_ordinal = max(latest_date_ordinal + 1, today_ordinal)
             X_next = np.array([[next_date_ordinal, 0]])
             next_num = round(model.predict(X_next)[0], 4)  # Round to 4 decimal places
             next_num = max(0, next_num)  # Ensure next_num is not negative
