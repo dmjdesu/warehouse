@@ -13,8 +13,7 @@
 
 {% block content %}
 <div>
-    <table>
-        <tbody>
+
             <ul>
                 <li width="400" height="100"" style="font-size: 200%; list-style:none"><button type="button" style="text-align:left;width:300px;background-color: #ffb6c1; border-radius: 5px; border: 1px dashed #ffb6c1;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'shopping_history' %}">商品登録<br/>Product registration</a></button></li>
             </ul>
@@ -24,8 +23,7 @@
             <ul>
                 <li width="400" height="100" style="font-size: 200%; list-style:none"><button type="button" style="text-align:left;width:300px;background-color: #ccccff; border-radius: 5px; border: 1px dashed #ccccff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧<br/>Order list</a></button></li>
             </li>
-        </tbody>
-    </table>
+
   <!-- {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %} -->
 </div>
 {% endblock %}

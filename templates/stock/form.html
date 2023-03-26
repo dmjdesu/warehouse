@@ -57,12 +57,12 @@
     <table>
         <tbody>
             <tr>
-                <tr>
-                    <td width="400" height="100" style="font-size: 120%;"><button type="button"  style="background-color: #bcffff; border-radius: 5px; border: 1px dashed #bcffff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報<br/>Order statistics</a></button></td>
-                </tr>
-                <tr>
-                    <td width="400" height="100" style="font-size: 120%;"><button type="button" style="background-color: #ccccff; border-radius: 5px; border: 1px dashed #ccccff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧<br/>Order list</a></button></td>
-                </tr>
+                <ul>
+                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button"  style="text-align:left;width:300px;background-color: #bcffff; border-radius: 5px; border: 1px dashed #bcffff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報<br/>Order statistics</a></button></li>
+                </ul>
+                <ul>
+                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button" style="text-align:left;width:300px;background-color: #ccccff; border-radius: 5px; border: 1px dashed #ccccff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧<br/>Order list</a></button></li>
+                </li>
             </tr>
         </tbody>
     </table>
