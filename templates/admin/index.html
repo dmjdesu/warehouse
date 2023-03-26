@@ -15,18 +15,15 @@
 <div>
     <table>
         <tbody>
-            <tr>
-                <td width="400" height="100"" style="font-size: 200%;"><button type="button" style="font-size: 200%; background-color:#93ffff" ><a  style="color: #000000;" href="{% url 'shopping_history' %}">発注登録</a></button></td>
-            </tr>
-            <tr>
-                <td width="400" height="100" style="font-size: 200%;"><button type="button" style="font-size: 200%; background-color:#93ff93;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報</a></button></td>
-            </tr>
-            <tr>
-                <td width="400" height="100" style="font-size: 200%;"><button type="button" style="font-size: 200%; background-color:#ff8e8e" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧</a></button></td>
-            </tr>
-            <tr>
-
-            </tr>
+            <ul>
+                <li width="400" height="100"" style="font-size: 200%; list-style:none"><button type="button" style="text-align:left;width:300px;background-color: #ffb6c1; border-radius: 5px; border: 1px dashed #ffb6c1;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'shopping_history' %}">商品登録<br/>Product registration</a></button></li>
+            </ul>
+            <ul>
+                <li width="400" height="100" style="font-size: 200%; list-style:none"><button type="button"  style="text-align:left;width:300px;background-color: #bcffff; border-radius: 5px; border: 1px dashed #bcffff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報<br/>Order statistics</a></button></li>
+            </ul>
+            <ul>
+                <li width="400" height="100" style="font-size: 200%; list-style:none"><button type="button" style="text-align:left;width:300px;background-color: #ccccff; border-radius: 5px; border: 1px dashed #ccccff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧<br/>Order list</a></button></li>
+            </li>
         </tbody>
     </table>
   <!-- {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %} -->
