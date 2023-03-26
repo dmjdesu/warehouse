@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'api',
     'widget_tweaks',
+    'adminlte3',
+    'adminlte3_theme',
 ]
 
 MIDDLEWARE = [
