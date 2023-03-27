@@ -80,30 +80,42 @@ class ShoppingPredictionView(View):
         df['date'] = pd.to_datetime(df['date'])
         df['date_ordinal'] = df['date'].apply(lambda x: x.toordinal())
         min_date_ordinal = df['date_ordinal'].min()
-        df['date_ordinal'] -= min_date_ordinal  # Subtract the minimum date_ordinal to make it relative
+        df['date_ordinal'] -= min_date_ordinal
         target_material_pairs = df[['target_name', 'material_name']].drop_duplicates().to_dict('records')
 
         today_date = datetime.now().date()
         today_ordinal = today_date.toordinal() - min_date_ordinal
 
         predictions = {}
+        model = LinearRegression()
         for pair in target_material_pairs:
             target_name = pair['target_name']
             material_name = pair['material_name']
             target_df = df[(df['target_name'] == target_name) & (df['material_name'] == material_name)]
             X = target_df[['date_ordinal', 'value']]
             y = target_df['num']
+            y_date = target_df['date_ordinal'].shift(-1).dropna()
+            X_date = X.iloc[:-1, :] 
 
             if len(X) > 5:
-                # Enough data, perform train-test split
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
             else:
-                # Not enough data, use all data as training set
                 X_train, y_train = X, y
                 X_test, y_test = None, None
 
-            model = LinearRegression()
+            if len(X_date) > 5:
+                X_train_date, X_test_date, y_train_date, y_test_date = train_test_split(X_date, y_date, test_size=0.2, random_state=42)
+            else:
+                X_train_date, y_train_date = X_date, y_date
+                X_test_date, y_test_date = None, None
+
             model.fit(X_train, y_train)
+
+            if len(X_date) > 0:
+                model_date = LinearRegression()
+                model_date.fit(X_train_date.drop(columns=['value']), y_train_date)
+            else:
+                model_date = None
 
             mse, rmse, y_pred = None, None, None
             if X_test is not None and y_test is not None:
@@ -113,17 +125,24 @@ class ShoppingPredictionView(View):
 
             latest_date_ordinal = target_df['date_ordinal'].max()
             next_date_ordinal = max(latest_date_ordinal + 1, today_ordinal)
+            X_next_date = np.array([[next_date_ordinal]])
             X_next = np.array([[next_date_ordinal, 0]])
+
+            if model_date is not None:
+                next_date_ordinal_pred = round(model_date.predict(X_next_date)[0])
+                next_date_pred = date.fromordinal(next_date_ordinal_pred + min_date_ordinal)
+            else:
+                next_date_pred = today_date
+
             next_num = round(model.predict(X_next)[0], 4)  # Round to 4 decimal places
             next_num = max(0, next_num)  # Ensure next_num is not negative
-            next_date = date.fromordinal(next_date_ordinal + min_date_ordinal)  # Add min_date_ordinal back
 
             key = f"{target_name}_{material_name}"
             predictions[key] = {
                 'mse': mse,
                 'rmse': rmse,
                 'predictions': y_pred.tolist() if y_pred is not None else None,
-                'next_date': next_date.isoformat(),
+                'next_date': next_date_pred.isoformat(),
                 'next_num': next_num,
             }
 
