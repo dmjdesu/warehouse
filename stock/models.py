@@ -62,8 +62,10 @@ class ShoppingHistory(models.Model):
     material_name = models.CharField(verbose_name='材料名',max_length=255)
     material_item_name = models.CharField(verbose_name='材料の商品名',max_length=255)
     material_unit = models.CharField(verbose_name='単位',max_length=255)
-    date = models.DateField(help_text='作成日',default=date.today) 
+    date = models.DateField(help_text='注文日',default=date.today) 
     is_send = models.BooleanField(null=True, blank=True,default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 #倉庫にどれほどの仕入れがあったか
 class WarehouseHistory(models.Model):
@@ -75,6 +77,8 @@ class WarehouseHistory(models.Model):
     material_unit = models.CharField(verbose_name='単位',max_length=255)
     date = models.DateField(help_text='作成日',default=date.today) 
     is_send = models.BooleanField(null=True, blank=True,default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class ShoppingHistoryProxy(ShoppingHistory):
     class Meta:
