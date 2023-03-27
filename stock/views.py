@@ -53,8 +53,8 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
         context = super().get_context_data(**kwargs)
         context['parentcategory_list'] = ParentCategory.objects.all()
         context['item_list'] = Item.objects.all()
-        context['history_list'] = ShoppingHistory.objects.order_by("-updated_at")
-        pprint(ShoppingHistory.objects.all()[0].num)
+        context['history_list'] = ShoppingHistory.objects.order_by("-updated_at")[0:10]
+        pprint(context['history_list'])
         return context
 
     def get_form_kwargs(self, *args, **kwargs):

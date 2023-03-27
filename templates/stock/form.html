@@ -209,11 +209,6 @@
     <div class="module" id="recent-actions-module">
         <h2>{% translate 'Recent actions' %}</h2>
         <h3>{% translate 'My actions' %}</h3>
-            {% load log %}
-            {% get_admin_log 10 as admin_log for_user user %}
-            {% if not admin_log %}
-            <p>{% translate 'None available' %}</p>
-            {% else %}
             <ul class="actionlist">
             {% for history in history_list %}
             <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
@@ -222,7 +217,6 @@
             </li>
             {% endfor %}
             </ul>
-            {% endif %}
     </div>
 </div>
 {% endblock %}
