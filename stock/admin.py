@@ -40,7 +40,7 @@ class ShoppingHistoryResource(resources.ModelResource):
 class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
-    list_display = ('target_name','material_name','num_unit','date','is_send')
+    list_display = ('target_name','material_name','num_unit','date','is_send','updated_at')
     list_filter = ['target_name','date','material_item_name','is_send','material_name', ['date', DateRangeFilter],['value',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
 
