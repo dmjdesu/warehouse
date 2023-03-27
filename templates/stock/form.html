@@ -135,19 +135,19 @@
 
         // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
         const parentId = itemElement.val();
+
+        console.log("{{ material_list }}")
         
-        const materialList = materials[parentId];
-
-        console.log(materials)
-
-        // 子カテゴリの選択肢を作成・追加。
-        for (const material of materialList) {
-            const option = $('<option>');
-            option.val(material['pk']);
-            option.text(material['name']);
-            materialElement.append(option);
+        const materialList = materials[parentId]
+        if(materialList){
+            // 子カテゴリの選択肢を作成・追加。
+            for (const material of materialList) {
+                const option = $('<option>');
+                option.val(material['pk']);
+                option.text(material['name']);
+                materialElement.append(option);
+            }
         }
-
         console.log(materialElement)
         // 指定があれば、そのカテゴリを選択する
         if (select !== undefined) {
@@ -158,29 +158,14 @@
 
     $('#id_parent_category').on('change', () => {
         changeCategory();
-        changeMaterial();
         itemElement.val(null).trigger('change');
-        console.log(itemElement)
-        $('#id_material').val(null).trigger('change');
     });
 
-    // $('#id_item').on('select2:select', () => {
-    //     console.log("SSS")
-    //     changeMaterial();
-    //     $('#id_material').val(null).trigger('change');
-    // });
 
     itemElement.trigger('change', () => {
-        console.log("SSS")
         changeMaterial();
         $('#id_material').val(null).trigger('change');
     });
-
-    // $('#id_item').on('selected', () => {
-    //     console.log("SSS")
-    //     changeMaterial();
-    //     $('#id_material').val(null).trigger('change');
-    // });
 
     $('#id_material').on('change', () => {
         console.log("SS")
@@ -190,7 +175,8 @@
         if($('#id_item')[0].value){
             found = materials[$('#id_item')[0].value].find(element => element.pk == $('#id_material')[0].value);
         }else{
-            found = materials[$('#id_material')[0].value][0]
+            if(!materials[$('#id_material')[0].value]) return
+            found = materials[$('#id_material')[0].value][0] 
         }
         found && found.note !== void 0 ? input1.innerHTML = found.note : input1.innerHTML = null
         found && found.num !== void 0 ? input2.innerHTML = found.num : input2.innerHTML = null
@@ -231,7 +217,8 @@
             <ul class="actionlist">
             {% for history in history_list %}
             <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
-                <p>{{history.target_name}}に{{history.material_name}}を{{history.num}}個{{history.date}}に仕入れました。</p>
+                <a href="{% url 'admin:stock_shoppinghistoryproxy_change' history.id %}">{{history.target_name}}に{{history.material_name}}を{{history.num}}個{{history.date}}に仕入れました。</a>
+                <p></p>
             </li>
             {% endfor %}
             </ul>
