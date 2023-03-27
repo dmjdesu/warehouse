@@ -187,11 +187,10 @@
         const input1 = document.getElementById("atention");
         const input2 = document.getElementById("unit");
         let found
-        console.log(found = materials[1])
         if($('#id_item')[0].value){
             found = materials[$('#id_item')[0].value].find(element => element.pk == $('#id_material')[0].value);
         }else{
-            found = materials[1][$('#id_material')[0].value]
+            found = materials[$('#id_material')[0].value][0]
         }
         found && found.note !== void 0 ? input1.innerHTML = found.note : input1.innerHTML = null
         found && found.num !== void 0 ? input2.innerHTML = found.num : input2.innerHTML = null
@@ -217,4 +216,26 @@
     
     $('#id_material').select2()
 });</script>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% translate 'Recent actions' %}</h2>
+        <h3>{% translate 'My actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% translate 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for history in history_list %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                <p>{{history.target_name}}に{{history.material_name}}を{{history.num}}個{{history.date}}に仕入れました。</p>
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
 {% endblock %}
