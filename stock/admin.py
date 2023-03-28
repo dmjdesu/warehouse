@@ -129,8 +129,6 @@ class ItemFilter(admin.SimpleListFilter):
         return material
 
     def queryset(self, request, queryset):
-        pprint(self.value())
-        pprint("self.value()")
         if self.value():
             return queryset.filter(item__id=self.value())
         else:
