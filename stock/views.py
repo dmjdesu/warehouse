@@ -8,6 +8,8 @@ from django.shortcuts import resolve_url
 from pprint import pprint
 from django.contrib.messages.views import SuccessMessageMixin
 from decimal import Decimal
+from django.db.models.functions import Concat
+from django.db.models import Value
 
 class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     model = ShoppingHistory
@@ -59,7 +61,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
 
     def get_form_kwargs(self, *args, **kwargs):
         kwgs = super().get_form_kwargs(*args, **kwargs)
-        kwgs["material"] = list(Material.objects.values_list("id","name"))
+        kwgs["material"] = list(Material.objects.annotate(full_name=Concat( Value('【') ,'place',Value('】'),'name')).values_list("id","full_name"))
         return kwgs
 
 
