@@ -137,7 +137,7 @@ class ItemFilter(admin.SimpleListFilter):
             return queryset.all()
 
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('name','unit','note')
+    list_display = ('name','place','unit','note')
     readonly_fields = ('value',)
     list_filter = ['item__parent',ItemFilter]
 
