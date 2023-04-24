@@ -80,6 +80,8 @@
     const parentCategoryElement = $('#id_parent_category');
     const itemElement = $('#id_item');
     const materialElement = $('#id_material');
+    const roleElement = $('#id_role');
+    
     const categories = {
         {% for parent in parentcategory_list %}
             '{{ parent.pk }}': [
@@ -98,7 +100,8 @@
                 {% for material in item.material_set.all %}
                     {
                         'pk': '{{ material.pk }}',
-                        'name': '{{ material.name }}',
+                        'name': '{{ "【" | add:material.place | add:"】" | add:material.name }}',
+                        'role': '{{ material.material_role_name }}',
                         'note': '{{ material.note  | linebreaks  }}',
                         'num': '{{ material.unit}}',
                         
@@ -115,7 +118,8 @@
                 {% for material in item.material_set.all %}
                     {
                         'pk': '{{ material.pk }}',
-                        'name': '{{ material.name }}',
+                        'name': '{{ "【"| add:material.place | add:"】" | add:material.name  }}',
+                        'role': '{{ parent.item_material_role_name }}',
                         'note': '{{ material.note  | linebreaks  }}',
                         'num': '{{ material.unit}}',
                         
@@ -126,7 +130,20 @@
         {% endfor %}
     };
 
-    
+    const allMaterialList = 
+    [
+        {% for material in material_list %}
+                    {
+                        'name': '{{ "【" | add:material.place |  add:"】" |add:material.name }}',
+                        'role': '{{ material.role_name }}',
+                        'note': '{{ material.note  | linebreaks  }}',
+                        'num': '{{ material.unit}}',
+                        
+                    },
+        {% endfor %}
+    ];
+
+    let tempMaterialList = allMaterialList
 
     const changeCategory = (select) => {
         // 子カテゴリの選択欄を空にする。]
@@ -136,6 +153,8 @@
         // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
         const parentId = parentCategoryElement.val();
         const categoryList = categories[parentId];
+
+        console.log(tempMaterialList)
 
         // 子カテゴリの選択肢を作成・追加。
         for (const category of categoryList) {
@@ -151,6 +170,36 @@
         }
     };
 
+    const changeRole = (select) => {
+
+        console.log(select)
+
+        console.log(tempMaterialList)
+        materialElement.children().remove();
+        const str1 = $("#id_role option:selected").text();
+        if (str1 == "---------"){
+        for (const material of tempMaterialList) {
+                const option = $('<option>');
+                option.val(material['pk']);
+                option.text(material['name']);
+                materialElement.append(option);
+        }
+        }else{
+            for (const material of tempMaterialList) {
+                console.log(material['role'])
+            if(material['role'] === str1){
+                const option = $('<option>');
+                option.val(material['pk']);
+                option.text(material['name']);
+                materialElement.append(option);
+            }
+        }
+        }
+
+        
+
+    };
+
     const changeParentMaterial = (select) => {
         // 子カテゴリの選択欄を空にする。]
         materialElement.children().remove();
@@ -158,6 +207,10 @@
         // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
         const parentId = parentCategoryElement.val();
         const materialList = parent_materials[parentId];
+
+        console.log(materialList)
+
+        tempMaterialList = materialList
 
         // 子カテゴリの選択肢を作成・追加。
         for (const material of materialList) {
@@ -180,10 +233,11 @@
 
         // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
         const parentId = itemElement.val();
-
-        console.log("{{ material_list }}")
         
         const materialList = materials[parentId]
+
+        tempMaterialList = materialList
+
         if(materialList){
             // 子カテゴリの選択肢を作成・追加。
             for (const material of materialList) {
@@ -212,6 +266,11 @@
     itemElement.trigger('change', () => {
         changeMaterial();
         $('#id_material').val(null).trigger('change');
+    });
+
+    $('#id_role').on('change', (val) => {
+        changeRole();
+        materialElement.val(null).trigger('change');
     });
 
     $('#id_material').on('change', () => {
@@ -246,7 +305,6 @@
 
 </script>
 <script>$(function() {
-    $('#id_role').select2()
     $('#id_material').select2()
 });</script>
 {% endblock %}

@@ -179,6 +179,7 @@ class WarehouseAdmin(admin.ModelAdmin):
 admin.site.register(Item,ItemAdmin)
 admin.site.register(ShoppingHistory,ShoppingHistoryAdmin)
 admin.site.register(ShoppingHistoryProxy,ShoppingHistoryProxyAdmin)
+admin.site.register(Role)
 admin.site.register(Material,MaterialAdmin)
 admin.site.register(MaterialProxy,MaterialProxyAdmin)
 

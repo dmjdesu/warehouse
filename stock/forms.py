@@ -2,14 +2,12 @@ from django import forms
 from stock.models import *
 import datetime
 from bootstrap_datepicker_plus.widgets import DatePickerInput
-TARGET = (
-    ('penticton', 'ペンティクトン店'),
-    ('west', 'ウエスト'),
-    ('koya', 'KOYA'),
-    ('warehouse', '倉庫'),
-    ('others', 'OTHERS'),
-    ('central', 'セントラルキッチン'),
-)
+
+class ShopChoices(models.TextChoices):
+    ALL = "",""
+    KITCHEN = 'kitchen', 'Kitchen'
+    HOLE = 'Sushi', 'Sushi'
+    OTHER = 'dishup', 'Dish Up'
 
 class ShoppingHistoryForm(forms.ModelForm):
     target_name = forms.fields.ChoiceField(
@@ -18,10 +16,10 @@ class ShoppingHistoryForm(forms.ModelForm):
         label='店舗',
         # widget=forms.widgets.Select,
     )
-    role = forms.MultipleChoiceField(
-        choices=ShopChoices.choices,
-        required=False,
+    role = forms.ModelChoiceField(
         label='店舗カテゴリー',
+        queryset=Role.objects,
+        required=False
     )
     
     date = forms.DateTimeField(widget=DatePickerInput(format='%Y-%m-%d'))

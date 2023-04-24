@@ -9,7 +9,7 @@ from pprint import pprint
 from django.contrib.messages.views import SuccessMessageMixin
 from decimal import Decimal
 from django.db.models.functions import Concat
-from django.db.models import Value
+from django.db.models import Value,F
 
 class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     model = ShoppingHistory
@@ -54,8 +54,10 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['parentcategory_list'] = ParentCategory.objects.all()
-        context['item_list'] = Item.objects.all()
+        context['parentcategory_list'] = ParentCategory.objects.annotate(item_material_role_name=F('item__material__role__name'))
+        context['item_list'] = Item.objects.annotate(material_role_name=F('material__role__name'))
+        context['material_list'] = Material.objects.annotate(role_name=F('role__name'))
+        pprint(context['material_list'] )
         context['history_list'] = ShoppingHistory.objects.order_by("-updated_at")[0:10]
         pprint(context['history_list'])
         return context

@@ -2,6 +2,20 @@ from __future__ import barry_as_FLUFL
 from django.db import models
 from datetime import date
 
+class TargetChoices(models.TextChoices):
+    PENTICNTON = 'penticton', 'ペンティクトン店'
+    WEST = 'west', 'ウエスト'
+    KOYA = 'koya', 'KOYA'
+    WAREHOUSE = 'warehouse', '倉庫'
+    MEAT = 'others', 'OTHERS'
+    CENTRAL = 'central', 'セントラルキッチン'
+
+class ShopChoices(models.TextChoices):
+    KITCHEN = 'kitchen', 'Kitchen'
+    HOLE = 'Sushi', 'Sushi'
+    OTHER = 'dishup', 'Dish Up'
+
+
 class UnitChoices(models.TextChoices):
     GRAM = 'g', 'グラム'
     PACK = 'p', 'パック'
@@ -9,6 +23,12 @@ class UnitChoices(models.TextChoices):
     CASE = 'cs', 'ケース'
     BOX = "box", "ボックス"
     SET = "set", "セット"
+
+class Role(models.Model):
+    name = models.CharField(max_length=255,choices=ShopChoices.choices)
+
+    def __str__(self):
+        return self.name
 
 class ParentCategory(models.Model):
     name = models.CharField('親カテゴリ名', max_length=255)
@@ -28,6 +48,7 @@ class Item(models.Model):
 class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
     place = models.CharField(verbose_name='場所名',max_length=255)
+    role = models.ManyToManyField(Role, blank=True)
     item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT,blank=True,null=True,)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=1)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
@@ -45,25 +66,14 @@ def get_deleted_material():
 def get_deleted_item():
     return Item.objects.get_or_create(name="削除された商品")[0]
 
-class TargetChoices(models.TextChoices):
-    PENTICNTON = 'penticton', 'ペンティクトン店'
-    WEST = 'west', 'ウエスト'
-    KOYA = 'koya', 'KOYA'
-    WAREHOUSE = 'warehouse', '倉庫'
-    MEAT = 'others', 'OTHERS'
-    CENTRAL = 'central', 'セントラルキッチン'
 
-class ShopChoices(models.TextChoices):
-    KITCHEN = 'kitchen', 'Kitchen'
-    HOLE = 'Sushi', 'Sushi'
-    OTHER = 'dishup', 'Dish Up'
 
 
 #倉庫から店舗に仕入れがどれほどあったか
 #これらの統計をとる
 class ShoppingHistory(models.Model):
     target_name = models.CharField(max_length=255,choices=TargetChoices.choices)
-    role = models.CharField(max_length=255,choices=ShopChoices.choices)
+    role = models.ManyToManyField(Role, blank=True)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     material_name = models.CharField(verbose_name='材料名',max_length=255)
