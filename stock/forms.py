@@ -18,6 +18,12 @@ class ShoppingHistoryForm(forms.ModelForm):
         label='店舗',
         # widget=forms.widgets.Select,
     )
+    role = forms.MultipleChoiceField(
+        choices=ShopChoices.choices,
+        required=True,
+        label='店舗カテゴリー',
+    )
+    
     date = forms.DateTimeField(widget=DatePickerInput(format='%Y-%m-%d'))
     parent_category = forms.ModelChoiceField(
         label='親カテゴリ',
@@ -35,7 +41,7 @@ class ShoppingHistoryForm(forms.ModelForm):
         required=True
     )
     num = forms.IntegerField(label="量", widget=forms.NumberInput(attrs={'step': 0.01}))
-    field_order = ('target_name','parent_category', 'item',"material")
+    field_order = ('target_name','parent_category', 'item',"material","role")
     class Meta:
         model = ShoppingHistory
         fields = ("date","value")

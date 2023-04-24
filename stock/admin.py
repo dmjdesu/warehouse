@@ -41,7 +41,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
     list_display = ('target_name','material_name','num_unit','date','is_send','updated_at')
-    list_filter = ['target_name','date','material_item_name','is_send','material_name', ['date', DateRangeFilter],['value',NumericRangeFilter]]
+    list_filter = ['target_name','date','material_item_name','is_send','material_name','material_parent_category_name', ['date', DateRangeFilter],['value',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
 
     def num_unit(self,object):
@@ -64,7 +64,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
 class ShoppingHistoryAdmin(admin.ModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
-    list_filter = ['target_name','date','material_item_name','material_name', ['date', DateRangeFilter]]
+    list_filter = ['target_name','date','material_item_name','material_name','material_parent_category_name', ['date', DateRangeFilter]]
     list_display = ('target_name','material_name','value','date','is_send')
 
     def regroup_by(self):
@@ -93,7 +93,6 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         )
         total_value = 0
         total_num = 0
-        pprint(response.context_data['summary'])
         for data in  response.context_data['summary']:
             total_value += data["total_value"]
             total_num += data["total"]

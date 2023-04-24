@@ -40,6 +40,11 @@
             {{ form.item.errors }}
         </div>
         <div class="field">
+            {{ form.role.label_tag }}
+            {{ form.role }}
+            {{ form.role.errors }}
+            </div>
+        <div class="field">
             {{ form.material.label_tag }}
             {{ form.material }}
             {{ form.material.errors }}
@@ -103,6 +108,24 @@
         {% endfor %}
     };
 
+    const parent_materials = {
+        {% for parent in parentcategory_list %}
+            '{{ parent.pk }}': [
+                {% for item in parent.item_set.all %}
+                {% for material in item.material_set.all %}
+                    {
+                        'pk': '{{ material.pk }}',
+                        'name': '{{ material.name }}',
+                        'note': '{{ material.note  | linebreaks  }}',
+                        'num': '{{ material.unit}}',
+                        
+                    },
+                {% endfor %}
+                {% endfor %}
+            ],
+        {% endfor %}
+    };
+
     
 
     const changeCategory = (select) => {
@@ -125,6 +148,28 @@
         // 指定があれば、そのカテゴリを選択する
         if (select !== undefined) {
             itemElement.val(select);
+        }
+    };
+
+    const changeParentMaterial = (select) => {
+        // 子カテゴリの選択欄を空にする。]
+        materialElement.children().remove();
+
+        // 選択した親カテゴリに紐づく子カテゴリの一覧を取得する。
+        const parentId = parentCategoryElement.val();
+        const materialList = parent_materials[parentId];
+
+        // 子カテゴリの選択肢を作成・追加。
+        for (const material of materialList) {
+            const option = $('<option>');
+            option.val(material['pk']);
+            option.text(material['name']);
+            materialElement.append(option);
+        }
+
+        // 指定があれば、そのカテゴリを選択する
+        if (select !== undefined) {
+            materialElement.val(select);
         }
     };
 
@@ -156,9 +201,11 @@
     };
 
 
-    $('#id_parent_category').on('change', () => {
+    parentCategoryElement.on('change', () => {
         changeCategory();
         itemElement.val(null).trigger('change');
+        changeParentMaterial();
+        materialElement.val(null).trigger('change');
     });
 
 
@@ -199,7 +246,7 @@
 
 </script>
 <script>$(function() {
-    
+    $('#id_role').select2()
     $('#id_material').select2()
 });</script>
 {% endblock %}

@@ -53,15 +53,22 @@ class TargetChoices(models.TextChoices):
     MEAT = 'others', 'OTHERS'
     CENTRAL = 'central', 'セントラルキッチン'
 
+class ShopChoices(models.TextChoices):
+    KITCHEN = 'kitchen', 'キッチン'
+    HOLE = 'hole', 'ホール'
+    OTHER = 'other', 'その他'
+
 
 #倉庫から店舗に仕入れがどれほどあったか
 #これらの統計をとる
 class ShoppingHistory(models.Model):
     target_name = models.CharField(max_length=255,choices=TargetChoices.choices)
+    role = models.CharField(max_length=255,choices=ShopChoices.choices)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     material_name = models.CharField(verbose_name='材料名',max_length=255)
     material_item_name = models.CharField(verbose_name='材料の商品名',max_length=255)
+    material_parent_category_name = models.CharField(verbose_name='材料の親カテゴリー名',max_length=255)
     material_unit = models.CharField(verbose_name='単位',max_length=255)
     date = models.DateField(help_text='注文日',default=date.today) 
     is_send = models.BooleanField(null=True, blank=True,default=False)

@@ -40,6 +40,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
                 num=(Decimal(request.POST["num"])),
                 material_name=material.name,
                 material_item_name=material.item.name,
+                material_parent_category_name=material.item.parent.name,
                 material_unit=material.unit,
                 date=request.POST["date"],
                 is_send=False
