@@ -101,7 +101,7 @@
                     {
                         'pk': '{{ material.pk }}',
                         'name': '{{ "【" | add:material.place | add:"】" | add:material.name }}',
-                        'role': '{{ material.material_role_name }}',
+                        'role': '{{ item.material_role_name }}',
                         'note': '{{ material.note  | linebreaks  }}',
                         'num': '{{ material.unit}}',
                         
