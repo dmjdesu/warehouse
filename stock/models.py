@@ -54,9 +54,9 @@ class TargetChoices(models.TextChoices):
     CENTRAL = 'central', 'セントラルキッチン'
 
 class ShopChoices(models.TextChoices):
-    KITCHEN = 'kitchen', 'キッチン'
-    HOLE = 'hole', 'ホール'
-    OTHER = 'other', 'その他'
+    KITCHEN = 'kitchen', 'Kitchen'
+    HOLE = 'Sushi', 'Sushi'
+    OTHER = 'dishup', 'Dish Up'
 
 
 #倉庫から店舗に仕入れがどれほどあったか

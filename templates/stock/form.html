@@ -43,7 +43,7 @@
             {{ form.role.label_tag }}
             {{ form.role }}
             {{ form.role.errors }}
-            </div>
+        </div>
         <div class="field">
             {{ form.material.label_tag }}
             {{ form.material }}
@@ -63,10 +63,10 @@
         <tbody>
             <tr>
                 <ul>
-                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button"  style="text-align:left;width:300px;background-color: #bcffff; border-radius: 5px; border: 1px dashed #bcffff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報<br/><font size="4">Order statistics</font></a></button></li>
+                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button"  style="text-align:left;width:300px;background-color: #bcffff; border-radius: 5px; border: 1px dashed #bcffff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報(金額)<br/><font size="4">Order statistics</font></a></button></li>
                 </ul>
                 <ul>
-                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button" style="text-align:left;width:300px;background-color: #ccccff; border-radius: 5px; border: 1px dashed #ccccff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧<br/><font size="4">Order list</font></a></button></li>
+                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button" style="text-align:left;width:300px;background-color: #ccccff; border-radius: 5px; border: 1px dashed #ccccff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧確認(数量)<br/><font size="4">Order list</font></a></button></li>
                 </li>
             </tr>
         </tbody>

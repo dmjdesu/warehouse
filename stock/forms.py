@@ -20,7 +20,7 @@ class ShoppingHistoryForm(forms.ModelForm):
     )
     role = forms.MultipleChoiceField(
         choices=ShopChoices.choices,
-        required=True,
+        required=False,
         label='店舗カテゴリー',
     )
     
