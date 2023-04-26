@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'api',
     'widget_tweaks',
+    'dbbackup',
 ]
 
 MIDDLEWARE = [
@@ -142,6 +144,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/static/' 
+
+# 追加
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# BASE_DIR/backups/にバックアップファイルを保存する設定
+DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, 'backups')}
 
 import mimetypes
 mimetypes.add_type("text/javascript", ".js", True)

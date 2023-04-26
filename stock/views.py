@@ -172,7 +172,7 @@ class ShoppingPredictionView(View):
             rmse = np.sqrt(mse)
         return mse, rmse, y_pred
 
-    def predict_next_date_and_num(self,model, model_date, target_df, today_ordinal):
+    def predict_next_date_and_num(self, model, model_date, target_df, today_ordinal):
         min_date_ordinal = target_df['date_ordinal'].min()
         latest_date_ordinal = target_df['date_ordinal'].max()
         next_date_ordinal = max(latest_date_ordinal + 1, today_ordinal)
@@ -181,6 +181,7 @@ class ShoppingPredictionView(View):
 
         if model_date is not None:
             next_date_ordinal_pred = round(model_date.predict(X_next_date)[0])
+            next_date_ordinal_pred = min(next_date_ordinal_pred, today_ordinal + 365 * 100) # 100年以内に制限
             next_date_pred = date.fromordinal(next_date_ordinal_pred + min_date_ordinal)
         else:
             next_date_pred = date.fromordinal(today_ordinal + min_date_ordinal)
