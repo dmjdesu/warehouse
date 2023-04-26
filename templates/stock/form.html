@@ -273,11 +273,15 @@
         const input1 = document.getElementById("atention");
         const input2 = document.getElementById("unit");
         let found
+        console.log($('#id_material')[0].value)
+        console.log(materials)
+        console.log(allMaterialList)
+        console.log(allMaterialList[$('#id_material')[0].value])
         if($('#id_item')[0].value){
             found = materials[$('#id_item')[0].value].find(element => element.pk == $('#id_material')[0].value);
         }else{
-            if(!materials[$('#id_material')[0].value]) return
-            found = materials[$('#id_material')[0].value][0] 
+            if(!allMaterialList[$('#id_material')[0].value]) return
+            found = allMaterialList[$('#id_material')[0].value]
         }
         found && found.note !== void 0 ? input1.innerHTML = found.note : input1.innerHTML = null
         found && found.num !== void 0 ? input2.innerHTML = found.num : input2.innerHTML = null

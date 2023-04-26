@@ -20,31 +20,42 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     def post(self, request, *args, **kwargs):
         material = Material.objects.get(id=request.POST["material"])        
         werehouse = Warehouse.objects.get_or_create(material=material)
+
+        pprint(material)
         
         if request.POST["target_name"] == "warehouse" :
-            WarehouseHistory.objects.create(
-                target_name = request.POST["target_name"],
-                value=round(Decimal(request.POST["num"]) * material.value,4),
-                num=(Decimal(request.POST["num"])),
-                material_name=material.name,
-                material_item_name=material.item.name,
-                material_unit=material.unit,
-                date=request.POST["date"],
-                is_send=False
-            )
+            
+            try:
+                WarehouseHistory.objects.create(
+                    target_name = request.POST["target_name"],
+                    value=round(Decimal(request.POST["num"]) * material.value,4),
+                    num=(Decimal(request.POST["num"])),
+                    material_name=material.name,
+                    material_item_name=material.item.name,
+                    material_unit=material.unit,
+                    date=request.POST["date"],
+                    is_send=False
+                )
+            except Exception:
+                messages.error(self.request, '作成に失敗しました。原材料に商品が紐づかれているかなどの確認をお願いします。')
+                return redirect("shopping_history")
             werehouse[0].num += Decimal(request.POST["num"])
         else:
-            ShoppingHistory.objects.create(
-                target_name = request.POST["target_name"],
-                value=round(Decimal(request.POST["num"]) * material.value,4),
-                num=(Decimal(request.POST["num"])),
-                material_name=material.name,
-                material_item_name=material.item.name,
-                material_parent_category_name=material.item.parent.name,
-                material_unit=material.unit,
-                date=request.POST["date"],
-                is_send=False
-            ) 
+            try:
+                ShoppingHistory.objects.create(
+                    target_name = request.POST["target_name"],
+                    value=round(Decimal(request.POST["num"]) * material.value,4),
+                    num=(Decimal(request.POST["num"])),
+                    material_name=material.name,
+                    material_item_name=material.item.name,
+                    material_parent_category_name=material.item.parent.name,
+                    material_unit=material.unit,
+                    date=request.POST["date"],
+                    is_send=False
+                ) 
+            except Exception:
+                messages.error(self.request, '作成に失敗しました。原材料に商品が紐づかれているかなどの確認をお願いします。')
+                return redirect("shopping_history")
             werehouse[0].num -= Decimal(request.POST["num"])
         
         
