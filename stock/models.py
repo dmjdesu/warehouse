@@ -49,7 +49,7 @@ class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
     place = models.CharField(verbose_name='場所名',max_length=255)
     role = models.ManyToManyField(Role, blank=True)
-    item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT,blank=True,null=True,)
+    item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT,blank=False,null=False,)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=1)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
     note = models.TextField(null=True,blank=True)
