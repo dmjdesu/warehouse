@@ -134,6 +134,7 @@
     [
         {% for material in material_list %}
                     {
+                        'pk': '{{ material.pk }}',
                         'name': '{{ "【" | add:material.place |  add:"】" |add:material.name }}',
                         'role': '{{ material.role_name }}',
                         'note': '{{ material.note  | linebreaks  }}',
@@ -280,9 +281,10 @@
         if($('#id_item')[0].value){
             found = materials[$('#id_item')[0].value].find(element => element.pk == $('#id_material')[0].value);
         }else{
-            if(!allMaterialList[$('#id_material')[0].value]) return
-            found = allMaterialList[$('#id_material')[0].value]
+            console.log(allMaterialList)
+            found =allMaterialList.find(material => material.pk == $('#id_material')[0].value);
         }
+        console.log(found)
         found && found.note !== void 0 ? input1.innerHTML = found.note : input1.innerHTML = null
         found && found.num !== void 0 ? input2.innerHTML = found.num : input2.innerHTML = null
     });

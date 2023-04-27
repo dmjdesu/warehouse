@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'api',
     'widget_tweaks',
-    'dbbackup',
 ]
 
 MIDDLEWARE = [
