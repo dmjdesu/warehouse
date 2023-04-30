@@ -141,11 +141,6 @@ class MaterialAdmin(admin.ModelAdmin):
     readonly_fields = ('value',)
     list_filter = ['item__parent',ItemFilter]
 
-    def has_change_permission(self, request, obj=None):
-        if obj is not None:
-            return False
-        return True
-
 class MaterialProxyAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')
     list_filter = ['item__parent',ItemFilter]
