@@ -65,7 +65,7 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
     list_filter = ['target_name','date','material_item_name','material_name','material_parent_category_name', ['date', DateRangeFilter]]
-    list_display = ('target_name','material_name','value','date','is_send')
+    list_display = ('material_parent_category_name','target_name','material_name','value','date','is_send')
 
     def regroup_by(self):
         return 'date'
