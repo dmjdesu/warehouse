@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import CreateView
 from django.shortcuts import redirect
-from stock.forms import ShoppingHistoryForm,PurchaseHistoryForm
+from stock.forms import *
 from stock.models import *
 from django.contrib import messages
 from django.shortcuts import resolve_url
@@ -73,9 +73,8 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
         context['parentcategory_list'] = ParentCategory.objects.annotate(item_material_role_name=F('item__material__role__name'))
         context['item_list'] = Item.objects.annotate(material_role_name=F('material__role__name'))
         context['material_list'] = Material.objects.annotate(role_name=F('role__name'))
-        pprint(context['material_list'] )
         context['history_list'] = ShoppingHistory.objects.order_by("-updated_at")[0:10]
-        pprint(context['history_list'])
+        pprint(context['history_list'] )
         return context
 
     def get_form_kwargs(self, *args, **kwargs):

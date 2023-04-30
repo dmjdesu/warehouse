@@ -40,7 +40,7 @@ class ShoppingHistoryResource(resources.ModelResource):
 class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
-    list_display = ('target_name','material_name','material_parent_category_name','num_unit','date','is_send','updated_at')
+    list_display = ('id','target_name','material_name','material_parent_category_name','num_unit','date','is_send','updated_at')
     list_filter = ['target_name','date','material_item_name','is_send','material_name','material_parent_category_name', ['date', DateRangeFilter],['value',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
 
@@ -100,7 +100,7 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         response.context_data['total_num'] = total_num
         return response
 
-    # resource_class = ShoppingHistoryResource
+    resource_class = ShoppingHistoryResource
 
 
 class MaterialItemFilter(admin.SimpleListFilter):
