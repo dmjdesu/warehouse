@@ -90,11 +90,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
             cache.set('material_list', material_list, 3600)
         context['material_list'] = material_list
 
-        history_list = cache.get('history_list')
-        if history_list is None:
-            history_list = ShoppingHistory.objects.order_by("-updated_at")[0:10]
-            cache.set('history_list', history_list, 3600)
-        context['history_list'] = history_list
+        context['history_list'] = ShoppingHistory.objects.order_by("-updated_at")[0:10]
     
         return context
 
