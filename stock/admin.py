@@ -10,6 +10,8 @@ from import_export import fields
 from pprint import pprint
 from rangefilter.filters import DateRangeFilter,NumericRangeFilter
 from django_admin_listfilter_dropdown.filters import DropdownFilter
+from more_admin_filters import MultiSelectDropdownFilter
+
 
 class ShoppingHistoryProxyResource(resources.ModelResource):
     material_name = fields.Field()
@@ -41,7 +43,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
     list_display = ('id','target_name','material_name','material_parent_category_name','num_unit','date','is_send','updated_at')
-    list_filter = ['target_name','date','material_item_name','is_send','material_name','material_parent_category_name', ['date', DateRangeFilter],['value',NumericRangeFilter]]
+    list_filter = [('target_name',MultiSelectDropdownFilter),'date', ('material_item_name', MultiSelectDropdownFilter),'is_send',('material_name',MultiSelectDropdownFilter),('material_parent_category_name',MultiSelectDropdownFilter), ['date', DateRangeFilter],['value',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
     list_per_page = 16384
 
@@ -65,7 +67,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
 class ShoppingHistoryAdmin(admin.ModelAdmin):
     change_list_template = 'admin/history_change_list.html'
     date_hierarchy = 'date'
-    list_filter = ['target_name','date','material_item_name','material_name','material_parent_category_name', ['date', DateRangeFilter]]
+    list_filter = [('target_name',MultiSelectDropdownFilter),'date',('material_item_name',MultiSelectDropdownFilter),('material_name',MultiSelectDropdownFilter),('material_parent_category_name',MultiSelectDropdownFilter), ['date', DateRangeFilter]]
     list_display = ('material_parent_category_name','target_name','material_name','value','date','is_send')
 
     def regroup_by(self):

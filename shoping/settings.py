@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'api',
     'widget_tweaks',
     'dbbackup',
+    'more_admin_filters',
 ]
 
 MIDDLEWARE = [
