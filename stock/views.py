@@ -75,25 +75,25 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
         parentcategory_list = cache.get('parentcategory_list')
         if parentcategory_list is None:
             parentcategory_list = ParentCategory.objects.annotate(item_material_role_name=F('item__material__role__name'))
-            cache.set('parentcategory_list', parentcategory_list, 300)
+            cache.set('parentcategory_list', parentcategory_list, 3600)
         context['parentcategory_list'] = parentcategory_list
         
         item_list = cache.get('item_list')
         if item_list is None:
             item_list = Item.objects.annotate(material_role_name=F('material__role__name'))
-            cache.set('item_list', item_list, 300)
+            cache.set('item_list', item_list, 3600)
         context['item_list'] = item_list
 
         material_list = cache.get('material_list')
         if material_list is None:
             material_list = Material.objects.annotate(role_name=F('role__name'))
-            cache.set('material_list', material_list, 300)
+            cache.set('material_list', material_list, 3600)
         context['material_list'] = material_list
 
         history_list = cache.get('history_list')
         if history_list is None:
             history_list = ShoppingHistory.objects.order_by("-updated_at")[0:10]
-            cache.set('history_list', history_list, 300)
+            cache.set('history_list', history_list, 3600)
         context['history_list'] = history_list
     
         return context
@@ -103,7 +103,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
         material = cache.get('material')
         if material is None:
             material = list(Material.objects.annotate(full_name=Concat( Value('【') ,'place',Value('】'),'name')).values_list("id","full_name"))
-            cache.set('material', material, 300)
+            cache.set('material', material, 3600)
         kwgs["material"] = material
         try:
             kwgs["target_name"] = self.request.GET.get("target_name") if self.request.GET.get("target_name") else self.request.user.profile.affiliated_store
