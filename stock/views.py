@@ -11,6 +11,7 @@ from decimal import Decimal
 from django.db.models.functions import Concat
 from django.db.models import Value,F
 from urllib.parse import urlencode
+from django.core.cache import cache
 
 class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     model = ShoppingHistory
@@ -70,16 +71,40 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['parentcategory_list'] = ParentCategory.objects.annotate(item_material_role_name=F('item__material__role__name'))
-        context['item_list'] = Item.objects.annotate(material_role_name=F('material__role__name'))
-        context['material_list'] = Material.objects.annotate(role_name=F('role__name'))
-        context['history_list'] = ShoppingHistory.objects.order_by("-updated_at")[0:10]
-        pprint(context['history_list'] )
+
+        parentcategory_list = cache.get('parentcategory_list')
+        if parentcategory_list is None:
+            parentcategory_list = ParentCategory.objects.annotate(item_material_role_name=F('item__material__role__name'))
+            cache.set('parentcategory_list', parentcategory_list, 300)
+        context['parentcategory_list'] = parentcategory_list
+        
+        item_list = cache.get('item_list')
+        if item_list is None:
+            item_list = Item.objects.annotate(material_role_name=F('material__role__name'))
+            cache.set('item_list', item_list, 300)
+        context['item_list'] = item_list
+
+        material_list = cache.get('material_list')
+        if material_list is None:
+            material_list = Material.objects.annotate(role_name=F('role__name'))
+            cache.set('material_list', material_list, 300)
+        context['material_list'] = material_list
+
+        history_list = cache.get('history_list')
+        if history_list is None:
+            history_list = ShoppingHistory.objects.order_by("-updated_at")[0:10]
+            cache.set('history_list', history_list, 300)
+        context['history_list'] = history_list
+    
         return context
 
     def get_form_kwargs(self, *args, **kwargs):
         kwgs = super().get_form_kwargs(*args, **kwargs)
-        kwgs["material"] = list(Material.objects.annotate(full_name=Concat( Value('【') ,'place',Value('】'),'name')).values_list("id","full_name"))
+        material = cache.get('material')
+        if material is None:
+            material = list(Material.objects.annotate(full_name=Concat( Value('【') ,'place',Value('】'),'name')).values_list("id","full_name"))
+            cache.set('material', material, 300)
+        kwgs["material"] = material
         try:
             kwgs["target_name"] = self.request.GET.get("target_name") if self.request.GET.get("target_name") else self.request.user.profile.affiliated_store
         except Exception:
