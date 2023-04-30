@@ -43,8 +43,9 @@ class ShoppingHistoryForm(forms.ModelForm):
     class Meta:
         model = ShoppingHistory
         fields = ("date","value")
-    def __init__(self, material=None,*args, **kwargs):
+    def __init__(self, material=None,target_name=None,*args, **kwargs):
         self.base_fields["material"].choices = material
+        self.base_fields["target_name"].initial = target_name
         super().__init__(*args, **kwargs)
 
 class PurchaseHistoryForm(forms.ModelForm):

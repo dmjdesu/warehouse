@@ -10,6 +10,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from decimal import Decimal
 from django.db.models.functions import Concat
 from django.db.models import Value,F
+from urllib.parse import urlencode
 
 class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     model = ShoppingHistory
@@ -21,8 +22,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
         material = Material.objects.get(id=request.POST["material"])        
         werehouse = Warehouse.objects.get_or_create(material=material)
 
-        pprint(material)
-        
+
         if request.POST["target_name"] == "warehouse" :
             
             try:
@@ -59,9 +59,14 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
             werehouse[0].num -= Decimal(request.POST["num"])
         
         
+        
         werehouse[0].save()
         messages.success(self.request, '作成に成功しました。')
-        return redirect("shopping_history")
+
+        base_url = '/admin/stock/shoppinghistory/add/'
+        query_parameters = urlencode({'target_name': request.POST["target_name"]})
+        url = '{}?{}'.format(base_url, query_parameters)
+        return redirect(url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -76,6 +81,8 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     def get_form_kwargs(self, *args, **kwargs):
         kwgs = super().get_form_kwargs(*args, **kwargs)
         kwgs["material"] = list(Material.objects.annotate(full_name=Concat( Value('【') ,'place',Value('】'),'name')).values_list("id","full_name"))
+        kwgs["target_name"]=self.request.GET.get("target_name")
+        pprint(self.request.GET.get("target_name"))
         return kwgs
 
 from django.db.models import Sum
