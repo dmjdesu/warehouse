@@ -43,6 +43,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     list_display = ('id','target_name','material_name','material_parent_category_name','num_unit','date','is_send','updated_at')
     list_filter = ['target_name','date','material_item_name','is_send','material_name','material_parent_category_name', ['date', DateRangeFilter],['value',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
+    list_per_page = 16384
 
     def num_unit(self,object):
         return str(object.num) + object.material_unit
@@ -137,6 +138,11 @@ class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name','place','unit','note')
     readonly_fields = ('value',)
     list_filter = ['item__parent',ItemFilter]
+
+    def has_change_permission(self, request, obj=None):
+        if obj is not None:
+            return False
+        return True
 
 class MaterialProxyAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')
