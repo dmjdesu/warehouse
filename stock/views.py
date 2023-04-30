@@ -80,7 +80,10 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     def get_form_kwargs(self, *args, **kwargs):
         kwgs = super().get_form_kwargs(*args, **kwargs)
         kwgs["material"] = list(Material.objects.annotate(full_name=Concat( Value('【') ,'place',Value('】'),'name')).values_list("id","full_name"))
-        kwgs["target_name"]=self.request.GET.get("target_name")
+        try:
+            kwgs["target_name"] = self.request.GET.get("target_name") if self.request.GET.get("target_name") else self.request.user.profile.affiliated_store
+        except Exception:
+            kwgs["target_name"] = self.request.GET.get("target_name")
         pprint(self.request.GET.get("target_name"))
         return kwgs
 

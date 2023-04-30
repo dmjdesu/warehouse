@@ -165,6 +165,10 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ('name','parent')
     list_filter = ['parent']
 
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user','affiliated_store')
+    list_filter = ['affiliated_store']
+
 class WarehouseAdmin(admin.ModelAdmin):
     list_display = ('material','num_unit')
     form = WarehouseAdminForm
@@ -177,6 +181,7 @@ class WarehouseAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Item,ItemAdmin)
+admin.site.register(Profile,ProfileAdmin)
 admin.site.register(ShoppingHistory,ShoppingHistoryAdmin)
 admin.site.register(ShoppingHistoryProxy,ShoppingHistoryProxyAdmin)
 admin.site.register(Role)

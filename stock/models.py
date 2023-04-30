@@ -1,6 +1,10 @@
 from __future__ import barry_as_FLUFL
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 class TargetChoices(models.TextChoices):
     PENTICNTON = 'penticton', 'ペンティクトン店'
@@ -23,6 +27,10 @@ class UnitChoices(models.TextChoices):
     CASE = 'cs', 'ケース'
     BOX = "box", "ボックス"
     SET = "set", "セット"
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    affiliated_store =  models.CharField(max_length=255,choices=TargetChoices.choices)
 
 class Role(models.Model):
     name = models.CharField(max_length=255,choices=ShopChoices.choices)
