@@ -40,7 +40,6 @@ class ShoppingHistoryResource(resources.ModelResource):
         return super.get_queryset().values("total",'target_name','material_name','value','material_unit').annotate(total=Count('id')).order_by('-target_name')
 
 class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
-    # ImportExportModelAdminを利用するようにする
     ordering = ['-date']
     list_display = ('target_name','material_name','material_parent_category_name','num_unit','date','is_send','updated_at')
     list_filter = [('target_name',MultiSelectDropdownFilter),'date', ('material_item_name', MultiSelectDropdownFilter),'is_send',('material_name',MultiSelectDropdownFilter),('material_parent_category_name',MultiSelectDropdownFilter), ['date', DateRangeFilter],['value',NumericRangeFilter]]
