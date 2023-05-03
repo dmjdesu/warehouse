@@ -311,10 +311,11 @@
 <script type="text/javascript">
 // CSRF setup for Django
 $(document).ready(function(){
+    var material_id 
     $("#submit").on('click', (e) => {
         let target_name = $("#id_target_name").val();
         let num = $("#id_num").val();
-        let material_id = $("#id_material").val();
+        material_id = $("#id_material").val() ?? material_id;
         let material_name = $("#id_material option:selected").text();
         let date = $("#id_date").val();
 
