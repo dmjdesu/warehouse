@@ -348,6 +348,8 @@ $(document).ready(function(){
             var historyId = jqXHR.id;
             var url = "/admin/stock/shoppinghistoryproxy/" + historyId + "/change/"; // URLを適切なものに変更してください
              $('#history_list').prepend('<li><a href="' + url + '" style="color: red;">' + target_name + "に" + material_name + "を" + num + "個" + date + "に仕入れました。" + '</a> ' + "</li>");console.log(jqXHR)
+         }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("作成に失敗しました。原材料に商品が紐づかれているかなどの確認をお願いします。")
         });
     });
 });
