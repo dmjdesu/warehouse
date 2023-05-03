@@ -362,7 +362,7 @@ $(document).ready(function(){
             <ul id="history_list" class="actionlist">
             {% for history in history_list %}
             <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
-                <a href="{% url 'admin:stock_shoppinghistoryproxy_change' history.id %}">{{history.target_name}}に{{history.material_name}}を{{history.num}}個{{history.date}}に仕入れました。</a>
+                <a href="{% url 'admin:stock_shoppinghistoryproxy_change' history.id %}">{{history.target_name}}に{{history.material_name}}を{{history.num | floatformat }}個{{history.date}}に仕入れました。</a>
                 <p></p>
             </li>
             {% endfor %}
