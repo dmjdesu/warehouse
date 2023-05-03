@@ -14,7 +14,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">
 <!-- jquery & iScroll -->
 <div id="content-main">
-    <form id="form" action="" method="POST">
         {% bootstrap_javascript jquery='full' %} 
         {% bootstrap_css %}
         {{ form.media }}
@@ -57,8 +56,7 @@
         <p id="atention">ここに原材料の説明が追記されます。</p>
         <p id="unit">ここに原材料の単位が追記されます。</p>
         {% csrf_token %}
-        <button type="submit">送信</button>
-    </form>
+        <button id="submit">送信</button>
     <table>
         <tbody>
             <tr>
@@ -77,6 +75,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
 
 <script>
+    
     const parentCategoryElement = $('#id_parent_category');
     const itemElement = $('#id_item');
     const materialElement = $('#id_material');
@@ -309,14 +308,57 @@
 <script>$(function() {
     $('#id_material').select2()
 });</script>
+<script type="text/javascript">
+// CSRF setup for Django
+$(document).ready(function(){
+    $("#submit").on('click', (e) => {
+        let target_name = $("#id_target_name").val();
+        let num = $("#id_num").val();
+        let material_id = $("#id_material").val();
+        let material_name = $("#id_material option:selected").text();
+        let date = $("#id_date").val();
+
+        console.log(material_name)
+
+        data = {
+                target_name: target_name,
+                num: num,
+                material_id: material_id,
+                date: date,
+            }
+
+        console.log(data)
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'shoppinghistory-list'  %}",
+            data: data,
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+        }).done(function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR)
+            console.log(textStatus)
+            console.log(errorThrown)
+            $("#id_num").val("");
+            materialElement.val(null);
+            var historyId = jqXHR.id;
+            var url = "/admin/stock/shoppinghistoryproxy/" + historyId + "/change/"; // URLを適切なものに変更してください
+             $('#history_list').prepend('<li><a href="' + url + '" style="color: red;">' + target_name + "に" + material_name + "を" + num + "個" + date + "に仕入れました。" + '</a> ' + "</li>");console.log(jqXHR)
+        });
+    });
+});
+</script>
 {% endblock %}
 
 {% block sidebar %}
 <div id="content-related">
     <div class="module" id="recent-actions-module">
         <h2>{% translate 'Recent actions' %}</h2>
-        <h3>{% translate 'My actions' %}</h3>
-            <ul class="actionlist">
+        <h3>{% translate '未送信リスト' %}</h3>
+            <ul id="history_list" class="actionlist">
             {% for history in history_list %}
             <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
                 <a href="{% url 'admin:stock_shoppinghistoryproxy_change' history.id %}">{{history.target_name}}に{{history.material_name}}を{{history.num}}個{{history.date}}に仕入れました。</a>
