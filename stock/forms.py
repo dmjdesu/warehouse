@@ -21,7 +21,6 @@ class ShoppingHistoryForm(forms.ModelForm):
         queryset=Role.objects,
         required=False
     )
-    
     date = forms.DateTimeField(widget=DatePickerInput(format='%Y-%m-%d'))
     parent_category = forms.ModelChoiceField(
         label='親カテゴリ',
