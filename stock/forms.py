@@ -17,7 +17,7 @@ class ShoppingHistoryForm(forms.ModelForm):
         # widget=forms.widgets.Select,
     )
     role = forms.ModelChoiceField(
-        label='店舗カテゴリー',
+        label='ポジション',
         queryset=Role.objects,
         required=False
     )
