@@ -12,6 +12,7 @@ from django.db.models.functions import Concat
 from django.db.models import Value,F
 from urllib.parse import urlencode
 from django.core.cache import cache
+from django.views import View
 
 class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     model = ShoppingHistory
@@ -107,11 +108,15 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
             kwgs["target_name"] = self.request.GET.get("target_name")
         pprint(self.request.GET.get("target_name"))
         return kwgs
+    
+class RedirectToShoppingHistoryView(View):
+    def get(self, request, *args, **kwargs):
+        return redirect('shopping_history')
 
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.views import View
+
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error

@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
+from django.views import View
 from stock.models import *
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
@@ -52,7 +53,3 @@ class ShoppingHistoryJson(ModelViewSet):
                 return Response({'id': history.id}, status=status.HTTP_200_OK)
             except Exception:            
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            
-            
-
-        
