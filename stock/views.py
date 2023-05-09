@@ -46,8 +46,8 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
             try:
                 ShoppingHistory.objects.create(
                     target_name = request.POST["target_name"],
-                    value=round(Decimal(request.POST["num"]) * (material.value + material.extra),4),
-                    tax_value=round(Decimal(request.POST["num"]) * (material.value),4),
+                    value=round(Decimal(request.POST["num"]) * (material.value ),4),
+                    tax_value=round(Decimal(request.POST["num"]) * (material.value + material.extra ),4),
                     num=(Decimal(request.POST["num"])),
                     material_name=material.name,
                     material_item_name=material.item.name,
