@@ -38,6 +38,7 @@ class Role(models.Model):
     def __str__(self):
         return self.name
 
+
 class ParentCategory(models.Model):
     name = models.CharField('親カテゴリ名', max_length=255)
 
@@ -59,6 +60,7 @@ class Material(models.Model):
     role = models.ManyToManyField(Role, blank=True)
     item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT,blank=True,null=True,)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=1)
+    extra = models.DecimalField(verbose_name='税金及び余分にかかる費用',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
     note = models.TextField(null=True,blank=True)
     def __str__(self):

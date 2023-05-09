@@ -139,6 +139,7 @@ class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name','place','unit','note')
     readonly_fields = ('value',)
     list_filter = ['item__parent',ItemFilter]
+    list_per_page = 16384
 
 class MaterialProxyAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')
