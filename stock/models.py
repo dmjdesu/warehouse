@@ -84,6 +84,7 @@ def get_deleted_item():
 class ShoppingHistory(models.Model):
     target_name = models.CharField(max_length=255,choices=TargetChoices.choices)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
+    tax_value = models.DecimalField(verbose_name='税込価格',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     material_name = models.CharField(verbose_name='材料名',max_length=255)
     material_item_name = models.CharField(verbose_name='材料の商品名',max_length=255)
