@@ -12,6 +12,9 @@ class Command(BaseCommand):
                 name=history.material_name,
                 item__name=history.material_item_name
             )
-            history.tax_value = (history.num * (material.value + material.extra))
+            if material.extra:
+                history.tax_value = (history.num * (material.value + material.extra))
+            else:
+                history.tax_value = (history.num * (material.value))
             history.save()
             time.sleep(1)
