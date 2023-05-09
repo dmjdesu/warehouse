@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from stock.models import *
+import time
 
 class Command(BaseCommand):
     help = "テストコマンド"
@@ -13,3 +14,4 @@ class Command(BaseCommand):
             )
             history.tax_value = (history.num * (material.value + material.extra))
             history.save()
+            time.sleep(1)
