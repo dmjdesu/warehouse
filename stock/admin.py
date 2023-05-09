@@ -84,6 +84,7 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         metrics = {
             'total': Count('id'),
             'total_value': Sum('value'),
+            'total_tax_value': Sum('tax_value'),
             'total_num': Sum('num'),
         }
         response.context_data['summary'] = list(
@@ -95,9 +96,12 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         )
         total_value = 0
         total_num = 0
+        total_tax_value = 0
         for data in  response.context_data['summary']:
+            total_tax_value += data["total_tax_value"]
             total_value += data["total_value"]
             total_num += data["total"]
+        response.context_data['total_tax_value'] = total_tax_value
         response.context_data['total_value'] = total_value
         response.context_data['total_num'] = total_num
         return response
