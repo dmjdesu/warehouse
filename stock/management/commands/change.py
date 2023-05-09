@@ -17,4 +17,3 @@ class Command(BaseCommand):
             else:
                 history.tax_value = (history.num * (material.value))
             history.save()
-            time.sleep(1)
