@@ -7,6 +7,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         histories = ShoppingHistory.objects.all()
         for history in histories:
-            material = Material.objects.get(name=history.material_name,item__name=history.material_item_name)
-            history.material_parent_category_name = material.item.parent.name
+            material = Material.objects.get(
+                name=history.material_name,
+                item__name=history.material_item_name
+            )
+            history.tax_value = (history.num * (material.value + material.extra))
             history.save()
