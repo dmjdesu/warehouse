@@ -41,7 +41,7 @@ class ShoppingHistoryResource(resources.ModelResource):
 
 class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     ordering = ['-date']
-    list_display = ('target_name','material_name','material_parent_category_name','num_unit','date','is_send','updated_at')
+    list_display = ('target_name','material_name','material_parent_category_name','num_unit','date','is_send','created_at')
     list_filter = [('target_name',MultiSelectDropdownFilter),'date', ('material_item_name', MultiSelectDropdownFilter),'is_send',('material_name',MultiSelectDropdownFilter),('material_parent_category_name',MultiSelectDropdownFilter), ['date', DateRangeFilter],['value',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
     list_per_page = 16384
