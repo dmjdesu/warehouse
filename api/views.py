@@ -37,10 +37,24 @@ class ShoppingHistoryJson(ModelViewSet):
             
         else:
             try:
+                gst = 0
+                pst = 0
+                drink_gst = 0
+                bottle_deposit = 0
+                recycle_fee = 0
+                if material.is_gst : gst = round(Decimal(request.POST["num"]) * material.value * Decimal(0.05),4)
+                if material.is_pst : pst = round(Decimal(request.POST["num"]) * material.value * Decimal(0.07),4)
+                if material.is_drink_gst : drink_gst = round(Decimal(request.POST["num"]) * material.value * Decimal(0.05),4)
+                if material.is_bottle_deposit : bottle_deposit = material.bottle_num * 0.1
+                if material.is_recycle_fee : recycle_fee = material.bottle_num * 0.02
                 history = ShoppingHistory.objects.create(
                     target_name = request.POST["target_name"],
                     value=round(Decimal(request.POST["num"]) * material.value,4),
-                    tax_value=round(Decimal(request.POST["num"]) * (material.value + material.extra ),4),
+                    gst= gst,
+                    pst= pst,
+                    bottle_deposit=bottle_deposit,
+                    recycle_fee=recycle_fee,
+                    drink_gst=drink_gst,
                     num=(Decimal(request.POST["num"])),
                     material_name=material.name,
                     material_item_name=material.item.name,

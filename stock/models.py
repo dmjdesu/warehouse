@@ -60,8 +60,13 @@ class Material(models.Model):
     role = models.ManyToManyField(Role, blank=True)
     item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT,blank=True,null=True,)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=1)
-    extra = models.DecimalField(verbose_name='税金及び余分にかかる費用',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
+    is_gst = models.BooleanField(verbose_name='GST対象か',null=True, blank=True,default=False)
+    is_pst = models.BooleanField(verbose_name='PST対象か',null=True, blank=True,default=False)
+    is_bottle_deposit = models.BooleanField(verbose_name='ボトルデポジット対象か',null=True, blank=True,default=False)
+    is_recycle_fee = models.BooleanField(verbose_name='リサイクルFeeか',null=True, blank=True,default=False)
+    is_drink_gst = models.BooleanField(verbose_name='Drink GST対象か',null=True, blank=True,default=False)
+    bottle_num = models.IntegerField(verbose_name='ボトルの数',blank=True,null=True,default=0)
     note = models.TextField(null=True,blank=True)
     def __str__(self):
         return self.name
@@ -84,7 +89,11 @@ def get_deleted_item():
 class ShoppingHistory(models.Model):
     target_name = models.CharField(max_length=255,choices=TargetChoices.choices)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
-    tax_value = models.DecimalField(verbose_name='税込価格',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
+    gst = models.DecimalField(verbose_name='GST',max_digits=8,decimal_places=6,blank=True,null=True,default=0)
+    pst = models.DecimalField(verbose_name='PST',max_digits=8,decimal_places=6,blank=True,null=True,default=0)
+    bottle_deposit = models.DecimalField(verbose_name='ボトルデポジット',max_digits=8,decimal_places=6,blank=True,null=True,default=0)
+    recycle_fee = models.DecimalField(verbose_name='リサイクルFee',max_digits=8,decimal_places=6,blank=True,null=True,default=0)
+    drink_gst = models.DecimalField(verbose_name='Drink GST',max_digits=8,decimal_places=6,blank=True,null=True,default=0)
     num = models.DecimalField(verbose_name='数',max_digits=12,decimal_places=4,blank=True,null=True,default=0)
     material_name = models.CharField(verbose_name='材料名',max_length=255)
     material_item_name = models.CharField(verbose_name='材料の商品名',max_length=255)

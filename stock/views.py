@@ -21,51 +21,6 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
     success_message = "正常に登録されました。"
 
     def post(self, request, *args, **kwargs):
-        material = Material.objects.get(id=request.POST["material"])        
-        werehouse = Warehouse.objects.get_or_create(material=material)
-
-
-        if request.POST["target_name"] == "warehouse" :
-            
-            try:
-                WarehouseHistory.objects.create(
-                    target_name = request.POST["target_name"],
-                    value=round(Decimal(request.POST["num"]) * (material.value + material.extra),4),
-                    num=(Decimal(request.POST["num"])),
-                    material_name=material.name,
-                    material_item_name=material.item.name,
-                    material_unit=material.unit,
-                    date=request.POST["date"],
-                    is_send=False
-                )
-            except Exception:
-                messages.error(self.request, '作成に失敗しました。原材料に商品が紐づかれているかなどの確認をお願いします。')
-                return redirect("shopping_history")
-            werehouse[0].num += Decimal(request.POST["num"])
-        else:
-            try:
-                ShoppingHistory.objects.create(
-                    target_name = request.POST["target_name"],
-                    value=round(Decimal(request.POST["num"]) * (material.value ),4),
-                    tax_value=round(Decimal(request.POST["num"]) * (material.value + material.extra ),4),
-                    num=(Decimal(request.POST["num"])),
-                    material_name=material.name,
-                    material_item_name=material.item.name,
-                    material_parent_category_name=material.item.parent.name,
-                    material_unit=material.unit,
-                    date=request.POST["date"],
-                    is_send=False
-                ) 
-            except Exception:
-                messages.error(self.request, '作成に失敗しました。原材料に商品が紐づかれているかなどの確認をお願いします。')
-                return redirect("shopping_history")
-            werehouse[0].num -= Decimal(request.POST["num"])
-        
-        
-        
-        werehouse[0].save()
-        messages.success(self.request, '作成に成功しました。')
-
         base_url = '/admin/stock/shoppinghistory/add/'
         query_parameters = urlencode({'target_name': request.POST["target_name"]})
         url = '{}?{}'.format(base_url, query_parameters)
@@ -153,7 +108,7 @@ class ShoppingPredictionView(View):
         return render(request, 'stock/predictions.html', {'predictions': predictions})
 
     def prepare_dataframe(self):
-        shopping_data = ShoppingHistory.objects.values('date', 'target_name', 'material_name').annotate(total_num=Sum('num')).order_by('date')
+        shopping_data = ShoppingHistory.objects.values('date', 'target_name', 'material_name').annotate(total_num=Sum('num')).order_by('date','total_num')
         df = pd.DataFrame.from_records(shopping_data)
         df['date'] = pd.to_datetime(df['date'])
         df['date_ordinal'] = df['date'].apply(lambda x: x.toordinal())

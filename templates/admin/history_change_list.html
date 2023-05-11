@@ -102,7 +102,23 @@
                     <td> {{ row.material_name }} </td>
                     <td> {{ row.total }}件 </td>
                     <td> {{row.total_num}}{{row.material_unit}}</td> 
-                    <td> 合計:{{row.total_value|floatformat:2 }}$<br/>総額:{{ row.total_tax_value  |floatformat:4}}$</td>  
+                    <td> 
+                      合計:{{row.total_value|floatformat:2 }}$
+                      {% if forloop.counter == 1 %}
+                        <br/>GST:*****$
+                      {% endif %}
+                      {% if forloop.counter == 3 %}
+                        <br/>GST:*****$
+                      {% endif %}
+
+                      {% if forloop.counter == 4 %}
+                        <br/>Bttole:*****$
+                      {% endif %}
+
+                      {% if forloop.counter == 3 %}
+                        <br/>PST:*****$
+                      {% endif %}
+                    </td>  
                 </tr>
                 {% endfor %}
                 <tr class="{% cycle 'row1' 'row2' %}">
@@ -110,7 +126,9 @@
                   <td></td>
                   <td></td>
                   <td> 合計件数：{{ total_num }}件</td>
-                  <td> 合計仕入れ金額：{{ total_value|floatformat:2 }}$<br/>総額:{{ total_tax_value |floatformat:4}}$ </td>
+                  <td> 
+                    合計仕入れ金額：{{ total_value|floatformat:2 }}$<br/>
+                  </td>
               </tr>
             </tbody>
         </table>
