@@ -104,20 +104,25 @@
                     <td> {{row.total_num}}{{row.material_unit}}</td> 
                     <td> 
                       合計:{{row.total_value|floatformat:2 }}$
-                      {% if forloop.counter == 1 %}
-                        <br/>GST:*****$
+                      {% if row.total_gst  %}
+                        <br/>GST:{{row.total_gst |floatformat:4 }}$
                       {% endif %}
-                      {% if forloop.counter == 3 %}
-                        <br/>GST:*****$
+                      {% if row.total_pst %}
+                        <br/>PST:{{row.total_pst |floatformat:4 }}$
                       {% endif %}
-
-                      {% if forloop.counter == 4 %}
-                        <br/>Bttole:*****$
+                      {% if row.total_bottle_deposit %}
+                        <br/>Bottle Deposit:{{row.total_bottle_deposit |floatformat:4 }}$
                       {% endif %}
-
-                      {% if forloop.counter == 3 %}
-                        <br/>PST:*****$
+                      {% if row.total_recycle_fee %}
+                        <br/>Recycle Fee:{{row.total_recycle_fee |floatformat:4 }}$
                       {% endif %}
+                      {% if row.total_drink_gst %}
+                        <br/>Drink GST:{{row.total_drink_gst |floatformat:4 }}$
+                      {% endif %}
+                      {% if row.total_gst or row.total_pst or row.total_bottle_deposit or row.total_recycle_fee or row.total_drink_gst %}
+                        <br/>総額:{{row.total_tax_value |floatformat:4 }}$
+                      {% endif %}
+                      
                     </td>  
                 </tr>
                 {% endfor %}
@@ -128,6 +133,22 @@
                   <td> 合計件数：{{ total_num }}件</td>
                   <td> 
                     合計仕入れ金額：{{ total_value|floatformat:2 }}$<br/>
+                    {% if total_gst %}
+                    合計GST：{{ total_gst|floatformat:4 }}$<br/>
+                    {% endif %}
+                    {% if total_pst %}
+                    合計PST：{{ total_pst|floatformat:4 }}$<br/>
+                    {% endif %}
+                    {% if total_bottle_deposit %}
+                    合計Bottle Deposit：{{ total_bottle_deposit|floatformat:4 }}$<br/>
+                    {% endif %}
+                    {% if total_recycle_fee %}
+                    合計Recycle Fee：{{ total_recycle_fee|floatformat:4 }}$<br/>
+                    {% endif %}
+                    {% if total_drink_gst %}
+                    合計Drink GST：{{ total_drink_gst|floatformat:4 }}$<br/>
+                    {% endif %}
+                    総額仕入れ金額：{{ total_tax_value|floatformat:4 }}$<br/>
                   </td>
               </tr>
             </tbody>

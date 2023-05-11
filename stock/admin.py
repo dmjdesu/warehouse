@@ -84,6 +84,12 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         metrics = {
             'total': Count('id'),
             'total_value': Sum('value'),
+            'total_gst': Sum('gst'),
+            'total_pst': Sum('pst'),
+            'total_bottle_deposit': Sum('bottle_deposit'),
+            'total_recycle_fee': Sum('recycle_fee'),
+            'total_drink_gst': Sum('drink_gst'),
+            'total_tax_value': Sum('value') + Sum('drink_gst') + Sum('bottle_deposit') + Sum('recycle_fee') + Sum('gst') + Sum('pst'),
             'total_num': Sum('num'),
         }
         response.context_data['summary'] = list(
@@ -94,11 +100,29 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
             .order_by('-target_name')
         )
         total_value = 0
+        total_gst = 0
+        total_pst = 0
+        total_bottle_deposit = 0
+        total_recycle_fee = 0
+        total_drink_gst = 0
+        total_tax_value = 0
         total_num = 0
         for data in  response.context_data['summary']:
             total_value += data["total_value"]
+            total_gst += data["total_gst"]
+            total_pst += data["total_pst"]
+            total_bottle_deposit += data["total_bottle_deposit"]
+            total_recycle_fee += data["total_recycle_fee"]
+            total_drink_gst += data["total_drink_gst"]
+            total_tax_value += data["total_tax_value"]
             total_num += data["total"]
         response.context_data['total_value'] = total_value
+        response.context_data['total_gst'] = total_gst
+        response.context_data['total_pst'] = total_pst
+        response.context_data['total_bottle_deposit'] = total_bottle_deposit
+        response.context_data['total_recycle_fee'] = total_recycle_fee
+        response.context_data['total_drink_gst'] = total_drink_gst
+        response.context_data['total_tax_value'] = total_tax_value
         response.context_data['total_num'] = total_num
         return response
 
