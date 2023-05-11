@@ -61,10 +61,33 @@
         <tbody>
             <tr>
                 <ul>
-                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button"  style="text-align:left;width:300px;background-color: #bcffff; border-radius: 5px; border: 1px dashed #bcffff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistory_changelist' %}">発注統計情報(金額)<br/><font size="4">Order statistics</font></a></button></li>
+                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button"  style="text-align:left;width:300px;background-color: #bcffff; border-radius: 5px; border: 1px dashed #bcffff;font-size: 100%; padding: 20px;" >
+                        <a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistory_changelist' %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16">
+                            <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg>
+                            発注統計情報(金額)<br/>
+                            <font size="4">
+                                Order statistics
+                            </font>
+                        </a>
+                    </button>
+                </li>
                 </ul>
                 <ul>
-                    <li width="400" height="100" style="font-size: 150%; list-style:none"><button type="button" style="text-align:left;width:300px;background-color: #ccccff; border-radius: 5px; border: 1px dashed #ccccff;font-size: 100%; padding: 20px;" ><a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">発注一覧確認(数量)<br/><font size="4">Order list</font></a></button></li>
+                    <li width="400" height="100" style="font-size: 150%; list-style:none">
+                        <button type="button" style="text-align:left;width:300px;background-color: #ccccff; border-radius: 5px; border: 1px dashed #ccccff;font-size: 100%; padding: 20px;" >
+                            <a  style="color: #000000;" href="{% url 'admin:stock_shoppinghistoryproxy_changelist' %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5Zm4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5Zm-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Z"/>
+                                </svg>
+                                発注一覧確認(数量)<br/>
+                                <font size="4">Order list</font>
+                            </a>
+                        </button>
+                    </li>
                 </li>
             </tr>
         </tbody>
