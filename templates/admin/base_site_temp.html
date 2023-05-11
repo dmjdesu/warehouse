@@ -1,7 +1,5 @@
 {% extends "admin/base.html" %}
-
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}| {{ site_title|default:_('KOYAグループ在庫管理システム') }}{% endblock %}
-
 {% block branding %}
 <h1 id="site-name"><a href="{% url 'admin:index' %}">KOYAグループ在庫管理システム</a></h1>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -21,14 +19,9 @@
         return cookieValue;
     }
     const csrftoken = getCookie('csrftoken');
-
     function csrfSafeMethod(method) {
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
-
-    console.log("csrftoken")
-    console.log(csrftoken)
-
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
