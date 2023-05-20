@@ -12,6 +12,11 @@
 {% block content %}
 <!-- Select2.css -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+</head>
 <!-- jquery & iScroll -->
 <div id="content-main">
         {% bootstrap_javascript jquery='full' %} 
@@ -88,7 +93,7 @@
                             </a>
                         </button>
                     </li>
-                </li>
+                </ul>
             </tr>
         </tbody>
     </table>
@@ -363,9 +368,6 @@ $(document).ready(function(){
                 }
             },
         }).done(function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR)
-            console.log(textStatus)
-            console.log(errorThrown)
             $("#id_num").val("");
             materialElement.val(null);
             var historyId = jqXHR.id;
@@ -380,18 +382,32 @@ $(document).ready(function(){
 {% endblock %}
 
 {% block sidebar %}
-<div id="content-related">
-    <div class="module" id="recent-actions-module">
-        <h2>{% translate 'Recent actions' %}</h2>
-        <h3>{% translate '未送信リスト' %}</h3>
-            <ul id="history_list" class="actionlist">
-            {% for history in history_list %}
-            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
-                <a href="{% url 'admin:stock_shoppinghistoryproxy_change' history.id %}">{{history.target_name}}に{{history.material_name}}を{{history.num | floatformat }}個{{history.date}}に仕入れました。</a>
-                <p></p>
-            </li>
-            {% endfor %}
-            </ul>
-    </div>
-</div>
+
+         <table id="dataTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+              <tr>
+                <th>注文日</th>
+                <th>原材料名</th>
+                <th>数</th>
+              </tr>
+            </thead>
+          </table>
+
+  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var table = $('#dataTable').DataTable({
+              "serverSide": true,
+              "ajax": "{% url 'shoppinghistory-list' %}" + "?format=datatables",
+              "columns": [
+                  {"data": "date", },
+                  {"data": "material_name",},
+                  {"data": "num",},
+                  
+                  
+              ]
+          });
+      });
+</script>
 {% endblock %}

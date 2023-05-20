@@ -5,3 +5,5 @@ class ShoppingHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ShoppingHistory
         fields = '__all__' 
+
+        datatables_always_serialize = ('id',)

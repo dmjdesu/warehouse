@@ -11,7 +11,7 @@ from api.serializers import *
 
 class ShoppingHistoryJson(ModelViewSet):
     serializer_class = ShoppingHistorySerializer
-    queryset = ShoppingHistory.objects.all()
+    queryset = ShoppingHistory.objects.order_by("-updated_at")
 
     def create(self, request, *args, **kwargs):
         material = Material.objects.get(id=request.POST["material_id"])
