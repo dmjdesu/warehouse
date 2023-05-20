@@ -13,6 +13,16 @@ class ShoppingHistoryJson(ModelViewSet):
     serializer_class = ShoppingHistorySerializer
     queryset = ShoppingHistory.objects.order_by("-updated_at")
 
+    def get_queryset(self):
+        queryset = None
+
+        if self.kwargs.get('fk1'):
+            queryset = ShoppingHistory.objects.filter(target_name=self.kwargs.get('fk1'))
+        else:
+            queryset = ShoppingHistory.objects.order_by("-updated_at")
+
+        return queryset
+
     def create(self, request, *args, **kwargs):
         material = Material.objects.get(id=request.POST["material_id"])
         werehouse = Warehouse.objects.get_or_create(material=material)

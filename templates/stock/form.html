@@ -297,6 +297,15 @@
         materialElement.val(null).trigger('change');
     });
 
+    $('#id_target_name').on('change', (val) => {
+        setTimeout(function () {
+            let url = "{% url 'shoppinghistory-list' fk1=999999 %}".replace(/999999/, $("#id_target_name").val()) + "?format=datatables"
+        $('#dataTable').DataTable().ajax.url(url).load();
+          }, 300);
+    });
+
+    
+
     $('#id_material').on('change', () => {
         const input1 = document.getElementById("atention");
         const input2 = document.getElementById("unit");
@@ -360,7 +369,7 @@ $(document).ready(function(){
 
         $.ajax({
             type: "POST",
-            url: "{% url 'shoppinghistory-list'  %}",
+            url: "{% url 'shoppinghistory-list'  fk1=999999 %}".replace(/999999/, $("#id_target_name").val()),
             data: data,
             beforeSend: function (xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -389,6 +398,7 @@ $(document).ready(function(){
                 <th>注文日</th>
                 <th>原材料名</th>
                 <th>数</th>
+                <th>対象店舗</th>
               </tr>
             </thead>
           </table>
@@ -397,14 +407,15 @@ $(document).ready(function(){
   <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 <script>
     $(document).ready(function() {
+        console.log($("#id_target_name").val())
         var table = $('#dataTable').DataTable({
               "serverSide": true,
-              "ajax": "{% url 'shoppinghistory-list' %}" + "?format=datatables",
+              "ajax": "{% url 'shoppinghistory-list' fk1=999999 %}".replace(/999999/, $("#id_target_name").val()) + "?format=datatables",
               "columns": [
                   {"data": "date", },
                   {"data": "material_name",},
                   {"data": "num",},
-                  
+                  {"data": "target_name",},
                   
               ]
           });
