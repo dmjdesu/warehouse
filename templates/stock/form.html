@@ -370,7 +370,7 @@ $(document).ready(function(){
 
         $.ajax({
             type: "POST",
-            url: "{% url 'shoppinghistory-list'  fk1=999999 %}".replace(/999999/, $("#id_target_name").val()),
+            url: "{% url 'shoppinghistory-list'  %}",
             data: data,
             beforeSend: function (xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
