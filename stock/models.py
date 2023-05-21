@@ -57,7 +57,7 @@ class Item(models.Model):
 class Material(models.Model):
     name = models.CharField(verbose_name='材料名',max_length=255)
     place = models.CharField(verbose_name='場所名',max_length=255)
-    role = models.ManyToManyField(Role, blank=True)
+    role = models.ManyToManyField(Role,verbose_name='ポジション名', blank=True)
     item = models.ForeignKey(Item, verbose_name='カテゴリ', on_delete=models.PROTECT,blank=True,null=True,)
     value = models.DecimalField(verbose_name='価格',max_digits=12,decimal_places=4,blank=True,null=True,default=1)
     unit = models.CharField(verbose_name='単位',max_length=255,choices=UnitChoices.choices)
@@ -98,6 +98,7 @@ class ShoppingHistory(models.Model):
     material_name = models.CharField(verbose_name='材料名',max_length=255)
     material_item_name = models.CharField(verbose_name='材料の商品名',max_length=255)
     material_parent_category_name = models.CharField(verbose_name='材料の親カテゴリー名',max_length=255)
+    material_position_name = models.CharField(verbose_name='材料のポジション',max_length=255,blank=True,null=True)
     material_unit = models.CharField(verbose_name='単位',max_length=255)
     date = models.DateField(help_text='注文日',default=date.today) 
     is_send = models.BooleanField(null=True, blank=True,default=False)
