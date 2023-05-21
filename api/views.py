@@ -70,7 +70,7 @@ class ShoppingHistoryJson(ModelViewSet):
                     material_item_name=material.item.name,
                     material_parent_category_name=material.item.parent.name,
                     material_unit=material.unit,
-                    material_position_name=material.role,
+                    material_position_name=",".join(material.role.values_list("name", flat=True)),
                     date=request.POST["date"],
                     is_send=False
                 ) 
