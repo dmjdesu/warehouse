@@ -28,12 +28,7 @@ class ShoppingHistoryView(SuccessMessageMixin,CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        parentcategory_list = cache.get('parentcategory_list')
-        if parentcategory_list is None:
-            parentcategory_list = ParentCategory.objects.annotate(item_material_role_name=F('item__material__role__name'))
-            cache.set('parentcategory_list', parentcategory_list, 3600)
-        context['parentcategory_list'] = parentcategory_list
+        context['parentcategory_list'] = ParentCategory.objects.annotate(item_material_role_name=F('item__material__role__name'))
         
         item_list = cache.get('item_list')
         if item_list is None:
