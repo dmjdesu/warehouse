@@ -130,7 +130,7 @@
                         'pk': '{{ material.pk }}',
                         'name': '{{ "【" | add:material.place | add:"】" | add:material.name }}',
                         'role': '{{ item.material_role_name }}',
-                        'note': '{{ material.note  | linebreaks  }}',
+                        'note': '{{ material.note  | linebreaksbr  }}',
                         'num': '{{ material.unit}}',
                         
                     },
@@ -148,7 +148,7 @@
                         'pk': '{{ material.pk }}',
                         'name': '{{ "【"| add:material.place | add:"】" | add:material.name  }}',
                         'role': '{{ parent.item_material_role_name }}',
-                        'note': '{{ material.note  | linebreaks  }}',
+                        'note': '{{ material.note  | linebreaksbr  }}',
                         'num': '{{ material.unit}}',
                         
                     },
