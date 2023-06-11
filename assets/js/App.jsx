@@ -3,6 +3,8 @@ import axios from 'axios';
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, EllipsisHorizontalIcon } from '@heroicons/react/20/solid'
 import { Menu, Transition } from '@headlessui/react'
 import { baseURL } from "./export.js";
+import { useWindowSize } from "./useWindowSize.js";
+
 
 
 const App = () => {
@@ -11,15 +13,8 @@ const App = () => {
   const containerNav = useRef(null)
   const containerOffset = useRef(null)
   const [results, setResults,] = useState([]);
+  const [width, height] = useWindowSize();
 
-  useEffect(() => {
-    // Set the container scroll position based on the current time.
-    const currentMinute = new Date().getHours() * 60
-    container.current.scrollTop =
-      ((container.current.scrollHeight - containerNav.current.offsetHeight - containerOffset.current.offsetHeight) *
-        currentMinute) /
-      1440
-  }, [])
 
   useEffect(()=>{
         console.log(baseURL)
@@ -264,60 +259,38 @@ const App = () => {
             ref={containerNav}
             className="sticky top-0 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8"
           >
-            <div className="grid grid-cols-4 text-sm leading-6 text-gray-500">
-              <button type="button" className="flex flex-col items-center pb-3 pt-2">
+            <div className="grid grid-cols-2 text-sm leading-6 text-gray-500">
+              <div className="flex flex-col items-center pb-3 pt-2">
                 原材料
-              </button>
+              </div>
               <button type="button" className="flex flex-col items-center pb-3 pt-2">
                 M <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">10</span>
               </button>
-              <button type="button" className="flex flex-col items-center pb-3 pt-2">
-                T <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">11</span>
-              </button>
-              <button type="button" className="flex flex-col items-center pb-3 pt-2">
-                W{' '}
-                <span className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white">
-                  12
-                </span>
-              </button>
             </div>
 
-            <div className="-mr-px hidden grid-cols-4 divide-x divide-gray-100 border-r border-gray-100 text-sm leading-6 text-gray-500 sm:grid">
+            <div className="-mr-px hidden grid-cols-2 divide-x divide-gray-100 border-r border-gray-100 text-sm leading-6 text-gray-500 sm:grid">
               <div className="col-end-1 w-14" />
               <div className="flex items-center justify-center py-3">
                 <span>
                   Mon <span className="items-center justify-center font-semibold text-gray-900">10</span>
                 </span>
               </div>
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Tue <span className="items-center justify-center font-semibold text-gray-900">11</span>
-                </span>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span className="flex items-baseline">
-                  Wed{' '}
-                  <span className="ml-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white">
-                    12
-                  </span>
-                </span>
-              </div>
             </div>
           </div>
           <div className="flex flex-auto">
-            <div className="sticky left-0 z-10 w-80 flex-none bg-white ring-1 ring-gray-100">
+            <ul role="list" className="divide-y flex-1 divide-gray-100">
               {results.map((result,index) => {
                 return (
-                  <li key={index} className="relative h-50 flex">
-                      <div className="order-1 font-semibold text-blue-700">
-                        <p>{result.name}</p>
+                  <li key={index} className="h-50">
+                      <div className="order-1 font-semibold">
+                        <p className='text-blue-700'>{result.name}</p>
                         {result.item_set.map((item, itemIndex) => {
                           return (
-                            <div key={itemIndex} className="text-green-500">
-                              <p>{item.name}</p>
+                            <div key={itemIndex}>
+                              <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
                                 return <div key={materialIndex} className="text-black">
-                                        <p className="text-black">{material.name}</p>
+                                        <p className="text-black whitespace-nowrap">{material.name}</p>
                                       </div>
                               })}
                             </div>
@@ -327,65 +300,34 @@ const App = () => {
                   </li>
                 );
               })}
-              </div>
-            <div className="grid flex-auto grid-cols-1 grid-rows-1">
-              {/* Horizontal lines */}
-              <div
-                className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-100"
-                style={{ gridTemplateRows: 'repeat(48, minmax(3.5rem, 1fr))' }}
-              >
-                <div ref={containerOffset} className="row-end-1 h-7"></div>
-              </div>
-
-              {/* Vertical lines */}
-              <div className="col-start-1 col-end-2 row-start-1 hidden grid-cols-4 grid-rows-1 divide-x divide-gray-100 sm:grid sm:grid-cols-4">
-                <div className="col-start-1 row-span-full" />
-                <div className="col-start-2 row-span-full" />
-                <div className="col-start-3 row-span-full w-8" />
-              </div>
-
+              </ul>
               {/* Events */}
-              <ol
-                className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-3 sm:pr-8"
-                style={{ gridTemplateRows: '1.75rem repeat(288, minmax(0, 1fr)) auto' }}
-              >
-                <li className="relative mt-px flex sm:col-start-3" style={{ gridRow: '74 / span 12' }}>
-                  <a
-                    href="#"
-                    className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100"
-                  >
-                    <p className="order-1 font-semibold text-blue-700">Breakfast</p>
-                    <p className="text-blue-500 group-hover:text-blue-700">
-                      <time dateTime="2022-01-12T06:00">6:00 AM</time>
-                    </p>
-                  </a>
-                </li>
-                <li className="relative mt-px flex sm:col-start-3" style={{ gridRow: '92 / span 30' }}>
-                  <a
-                    href="#"
-                    className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-pink-50 p-2 text-xs leading-5 hover:bg-pink-100"
-                  >
-                    <p className="order-1 font-semibold text-pink-700">Flight to Paris</p>
-                    <p className="text-pink-500 group-hover:text-pink-700">
-                      <time dateTime="2022-01-12T07:30">7:30 AM</time>
-                    </p>
-                  </a>
-                </li>
-                <li className="relative mt-px hidden sm:col-start-6 sm:flex" style={{ gridRow: '122 / span 24' }}>
-                  <a
-                    href="#"
-                    className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-gray-100 p-2 text-xs leading-5 hover:bg-gray-200"
-                  >
-                    <p className="order-1 font-semibold text-gray-700">Meeting with design team at Disney</p>
-                    <p className="text-gray-500 group-hover:text-gray-700">
-                      <time dateTime="2022-01-15T10:00">10:00 AM</time>
-                    </p>
-                  </a>
-                </li>
-              </ol>
+              <ul role="list" className="divide-y flex-1 divide-gray-100">
+                {results.map((result,index) => {
+                return (
+                  <li key={index} className="h-50">
+                      <div className="order-1 font-semibold">
+                        <p className='text-blue-700'>{result.name}</p>
+                        {result.item_set.map((item, itemIndex) => {
+                          return (
+                            <div key={itemIndex}>
+                              <p className="text-green-500">{item.name}</p>
+                              {item.material_set.map((material, materialIndex) => {
+                                console.log(material.shopping_history_today)
+                                return <div key={materialIndex} className="text-black">
+                                        <p className="text-black whitespace-nowrap">{material.name}</p>
+                                      </div>
+                              })}
+                            </div>
+                          )
+                        })}
+                      </div>
+                  </li>
+                );
+              })}
+              </ul>
+              </div>
             </div>
-          </div>
-        </div>
       </div>
     </div>    </>
     );
