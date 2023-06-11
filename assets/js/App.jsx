@@ -257,12 +257,12 @@ const App = () => {
         </div>
       </header>
       <div ref={container} className="isolate flex flex-auto flex-col overflow-auto bg-white">
-        <div style={{ width: '165%' }} className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full">
+        <div style={{ width: '165%' }} className="flex max-w-full flex-none flex-col md:max-w-full">
           <div
-    ref={containerNav}
-    className="sticky top-0 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8 w-full"
->
-    <div className="grid grid-cols-1 sm:grid-cols-3 text-sm leading-6 text-gray-500 w-full">
+            ref={containerNav}
+            className="sticky top-0 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8"
+          >
+            <div className="grid grid-cols-3 text-sm leading-6 text-gray-500">
               <div className="flex flex-col items-center pb-3 pt-2">
                 原材料
               </div>
