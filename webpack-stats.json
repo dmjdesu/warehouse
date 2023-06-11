@@ -1,14 +1,14 @@
 {
   "status": "done",
   "assets": {
-    "main-a82d6687d02059b87ae2.js": {
-      "name": "main-a82d6687d02059b87ae2.js",
-      "path": "/Users/koudaseiryuu/shoping/static/bundles/main-a82d6687d02059b87ae2.js"
+    "main-98d05b339bded1f079db.js": {
+      "name": "main-98d05b339bded1f079db.js",
+      "path": "/Users/koudaseiryuu/shoping/static/bundles/main-98d05b339bded1f079db.js"
     }
   },
   "chunks": {
     "main": [
-      "main-a82d6687d02059b87ae2.js"
+      "main-98d05b339bded1f079db.js"
     ]
   }
 }
