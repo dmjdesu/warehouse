@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "./node_modules/.bin/webpack --watch --progress",
-    "build": "./node_modules/.bin/webpack --config webpack.config.js"
+    "build:tailwind": "tailwind build ./static/css/tailwind.css -o ./static/css/style.css && cleancss -o ./static/css/style.min.css ./static/css/style.css",
+    "build": "./node_modules/.bin/webpack --config webpack.config.js",
+    "start": "react-scripts start"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,7 @@
     "@babel/core": "^7.22.5",
     "@babel/plugin-syntax-jsx": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
+    "autoprefixer": "^10.4.14",
     "babel-core": "^4.7.16",
     "babel-loader": "^9.1.2",
     "babel-preset-es2015": "^6.24.1",
@@ -22,15 +25,21 @@
     "css-loader": "^6.8.1",
     "jquery": "^3.7.0",
     "popper.js": "^1.16.1",
+    "postcss": "^8.4.24",
     "style-loader": "^3.3.3",
+    "tailwindcss": "^3.3.2",
     "webpack": "^5.86.0",
     "webpack-bundle-tracker": "^2.0.0",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@babel/preset-react": "^7.22.5",
+    "@headlessui/react": "^1.7.15",
+    "@heroicons/react": "^2.0.18",
     "@popperjs/core": "^2.11.8",
+    "axios": "^1.4.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1"
   }
 }
