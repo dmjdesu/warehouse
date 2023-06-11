@@ -15,6 +15,19 @@ class ParentCategoryJson(ModelViewSet):
 
     def get_queryset(self):
         return ParentCategory.objects.order_by("-name").prefetch_related('item_set')
+    
+    def get_serializer_context(self):
+        """
+        Overriding the default method to add the 'requested_date' to the serializer context.
+        """
+        context = super().get_serializer_context()
+
+        requested_date = self.request.GET.get('date')  # Get date from query parameter
+        if requested_date:
+            requested_date = datetime.strptime(requested_date, "%Y-%m-%d").date()  # Convert to datetime object
+            context['requested_date'] = requested_date
+
+        return context
 
 class ShoppingHistoryJson(ModelViewSet):
     serializer_class = ShoppingHistorySerializer
@@ -29,7 +42,7 @@ class ShoppingHistoryJson(ModelViewSet):
             queryset = ShoppingHistory.objects.order_by("-updated_at")
 
         return queryset
-
+    
     def create(self, request, *args, **kwargs):
         material = Material.objects.get(id=request.POST["material_id"])
         werehouse = Warehouse.objects.get_or_create(material=material)

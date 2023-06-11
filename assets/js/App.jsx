@@ -17,15 +17,18 @@ const App = () => {
 
 
   useEffect(()=>{
-        console.log(baseURL)
-        axios.get(`${baseURL}parent_category/`)
-          .then(res => {
-            setResults(res.data.results);
-            console.log(res.data.results)
-          }).catch(function (error) {
-            console.log(error.response);
-          });
-    },[])  
+    const today = new Date();
+    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+    console.log(baseURL)
+    axios.get(`${baseURL}parent_category?date=${date}`)
+      .then(res => {
+        setResults(res.data.results);
+        console.log(res.data.results)
+      }).catch(function (error) {
+        console.log(error.response);
+      });
+  },[])  
     
 
     return (
@@ -259,22 +262,16 @@ const App = () => {
             ref={containerNav}
             className="sticky top-0 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8"
           >
-            <div className="grid grid-cols-2 text-sm leading-6 text-gray-500">
+            <div className="grid grid-cols-3 text-sm leading-6 text-gray-500">
               <div className="flex flex-col items-center pb-3 pt-2">
                 原材料
               </div>
               <button type="button" className="flex flex-col items-center pb-3 pt-2">
+                T <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">9</span>
+              </button>
+              <button type="button" className="flex flex-col items-center pb-3 pt-2">
                 M <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">10</span>
               </button>
-            </div>
-
-            <div className="-mr-px hidden grid-cols-2 divide-x divide-gray-100 border-r border-gray-100 text-sm leading-6 text-gray-500 sm:grid">
-              <div className="col-end-1 w-14" />
-              <div className="flex items-center justify-center py-3">
-                <span>
-                  Mon <span className="items-center justify-center font-semibold text-gray-900">10</span>
-                </span>
-              </div>
             </div>
           </div>
           <div className="flex flex-auto">
@@ -307,15 +304,56 @@ const App = () => {
                 return (
                   <li key={index} className="h-50">
                       <div className="order-1 font-semibold">
-                        <p className='text-blue-700'>{result.name}</p>
+                        {/* <p className='text-blue-700'>{result.name}</p> */}
                         {result.item_set.map((item, itemIndex) => {
                           return (
                             <div key={itemIndex}>
-                              <p className="text-green-500">{item.name}</p>
+                              {/* <p className="text-green-500">{item.name}</p> */}
+                              {item.material_set.map((material, materialIndex) => {
+                                console.log(material.value)
+                                if (material.shopping_history_yesterday[0]) {
+                                  return <div key={materialIndex} className="h-16 text-black">
+                                        <label>個数:</label>
+                                        <input 
+                                            onChange={()=>console.log(material?.shopping_history_yesterday?.[0]?.num)} 
+                                            type="text" 
+                                            value={material?.shopping_history_yesterday?.[0]?.num || ''}
+                                        /><br/>
+                                        <label>価格:{material.shopping_history_yesterday[0].value}$
+                                        </label>
+                                      </div>
+                                }else{
+                                  return <div key={materialIndex} className="h-20 text-black">
+                                         <label>個数:</label>
+                                        <input  type="text" value={0}/>
+                                        <br/>
+                                        <label>価格:0$</label>                                        
+                                      </div>
+                                }
+                                
+                              })}
+                            </div>
+                          )
+                        })}
+                      </div>
+                  </li>
+                );
+              })}
+              </ul>
+              <ul role="list" className="divide-y flex-1 divide-gray-100">
+                {results.map((result,index) => {
+                return (
+                  <li key={index} className="h-50">
+                      <div className="order-1 font-semibold">
+                        {/* <p className='text-blue-700'>{result.name}</p> */}
+                        {result.item_set.map((item, itemIndex) => {
+                          return (
+                            <div key={itemIndex}>
+                              {/* <p className="text-green-500">{item.name}</p> */}
                               {item.material_set.map((material, materialIndex) => {
                                 console.log(material)
                                 if (material.shopping_history_today[0]) {
-                                  return <div key={materialIndex} className="h-20 text-black">
+                                  return <div key={materialIndex} className="h-16 text-black">
                                         <label>個数:</label>
                                         <input  type="text" value={material.shopping_history_today[0].num}/>
                                         <br/>
