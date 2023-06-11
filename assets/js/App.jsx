@@ -20,7 +20,8 @@ const App = () => {
   }, [])
 
   useEffect(()=>{
-        axios.get(`http://127.0.0.1:8000/api/parent_category/`)
+        const baseUrl = process.env.REACT_APP_API_BASE_URL;
+        axios.get(`${baseUrl}parent_category/`)
           .then(res => {
             setResults(res.data.results);
             console.log(res.data.results)
