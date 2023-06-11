@@ -289,7 +289,7 @@ const App = () => {
                             <div key={itemIndex}>
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
-                                return <div key={materialIndex} className="text-black">
+                                return <div key={materialIndex} className="h-20 text-black">
                                         <p className="text-black whitespace-nowrap">{material.name}</p>
                                       </div>
                               })}
@@ -313,10 +313,24 @@ const App = () => {
                             <div key={itemIndex}>
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
-                                console.log(material.shopping_history_today)
-                                return <div key={materialIndex} className="text-black">
-                                        <p className="text-black whitespace-nowrap">{material.name}</p>
+                                console.log(material)
+                                if (material.shopping_history_today[0]) {
+                                  return <div key={materialIndex} className="h-20 text-black">
+                                        <label>個数:</label>
+                                        <input  type="text" value={material.shopping_history_today[0].num}/>
+                                        <br/>
+                                        <label>価格:{material.shopping_history_today[0].value}$
+                                        </label>
                                       </div>
+                                }else{
+                                  return <div key={materialIndex} className="h-20 text-black">
+                                         <label>個数:</label>
+                                        <input  type="text" value={0}/>
+                                        <br/>
+                                        <label>価格:0$</label>                                        
+                                      </div>
+                                }
+                                
                               })}
                             </div>
                           )
