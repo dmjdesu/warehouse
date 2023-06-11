@@ -9,6 +9,13 @@ from decimal import Decimal
 from api.models import *
 from api.serializers import *
 
+class ParentCategoryJson(ModelViewSet):
+    serializer_class = ParentCategorySerializer
+    queryset = ParentCategory.objects.order_by("-name").prefetch_related('item_set')
+
+    def get_queryset(self):
+        return ParentCategory.objects.order_by("-name").prefetch_related('item_set')
+
 class ShoppingHistoryJson(ModelViewSet):
     serializer_class = ShoppingHistorySerializer
     queryset = ShoppingHistory.objects.order_by("-updated_at")

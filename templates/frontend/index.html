@@ -1,20 +1,19 @@
 {% extends "admin/base_site_temp.html" %}
 {% load render_bundle from webpack_loader %}
-
+{% load static %}
 {% block content %}
 <!DOCTYPE html>
 <html>
  <head>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <link rel="stylesheet" type="text/css" href="{% static 'css/style.min.css' %}" />
  </head>
  <body>
   <div id="app"></div>
   <div class="alert alert-success" role="alert">
   　<h4 class="alert-heading">Well done!</h4>
-  　<p>Bootstrap4をmezzanine上で動かしています</p>
-  　<hr>
-  　<p class="mb-0">webpackを使っています</p>
+  　<div class="text-3xl font-bold text-blue-500">DjangoでTailwindCSSを使用する方法</div>
 　</div>
  {% render_bundle 'main' %}
  </body>
