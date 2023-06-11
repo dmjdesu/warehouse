@@ -274,7 +274,7 @@ const App = () => {
               </button>
             </div>
           </div>
-          <div className="flex flex-auto">
+          <div className="flex flex-auto overflow-x-auto">
             <ul role="list" className="divide-y flex-1 divide-gray-100">
               {results.map((result,index) => {
                 return (
