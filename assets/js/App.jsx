@@ -2,6 +2,8 @@ import React, { Fragment,useRef,useState, useEffect } from 'react';
 import axios from 'axios';
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, EllipsisHorizontalIcon } from '@heroicons/react/20/solid'
 import { Menu, Transition } from '@headlessui/react'
+import { baseURL } from "./export.js";
+
 
 const App = () => {
 
@@ -20,8 +22,8 @@ const App = () => {
   }, [])
 
   useEffect(()=>{
-        const baseUrl = process.env.REACT_APP_API_BASE_URL;
-        axios.get(`${baseUrl}parent_category/`)
+        console.log(baseURL)
+        axios.get(`${baseURL}parent_category/`)
           .then(res => {
             setResults(res.data.results);
             console.log(res.data.results)
