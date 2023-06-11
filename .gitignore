@@ -1,2 +1,3 @@
 shopenv/
+node_modules/
 stock/__pycache__/*

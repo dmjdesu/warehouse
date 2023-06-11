@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'dbbackup',
     'more_admin_filters',
     'rest_framework_datatables',
+    'webpack_loader',
+    'frontend',
 ]
 
 MIDDLEWARE = [
@@ -146,6 +148,21 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/static/' 
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+    }
+}
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'assets'), 
+    os.path.join(BASE_DIR, 'static'),
+)
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
