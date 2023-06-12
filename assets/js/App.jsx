@@ -220,7 +220,7 @@ const App = () => {
             <ul role="list" className="divide-y flex-1 divide-gray-100">
               {results.map((result,index) => {
                 return (
-                  <li key={index} className="h-50">
+                  <li key={index}>
                       <div className="order-1 font-semibold">
                         <p className='text-blue-700'>{result.name}</p>
                         {result.item_set.map((item, itemIndex) => {
@@ -228,7 +228,7 @@ const App = () => {
                             <div key={itemIndex}>
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
-                                return <div key={materialIndex} className="h-20 text-black">
+                                return <div key={materialIndex} className="h-24 text-black">
                                         <p className="text-black whitespace-nowrap">{material.name}</p>
                                       </div>
                               })}
@@ -244,17 +244,17 @@ const App = () => {
               <ul role="list" className="divide-y flex-1 divide-gray-100">
                 {results.map((result,index) => {
                 return (
-                  <li key={index} className="h-50">
+                  <li key={index}>
                       <div className="order-1 font-semibold">
-                        {/* <p className='text-blue-700'>{result.name}</p> */}
+                        <p className='text-blue-700'>{result.name}</p>
                         {result.item_set.map((item, itemIndex) => {
                           return (
                             <div key={itemIndex}>
-                              {/* <p className="text-green-500">{item.name}</p> */}
+                              <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
                                 console.log(material.value)
                                 if (material.shopping_history_yesterday[0]) {
-                                  return <div key={materialIndex} className="h-16 text-black">
+                                  return <div key={materialIndex} className="h-24 text-black">
                                         <label>個数:</label>
                                         <input 
                                             onChange={()=>console.log(material?.shopping_history_yesterday?.[0]?.num)} 
@@ -265,7 +265,7 @@ const App = () => {
                                         </label>
                                       </div>
                                 }else{
-                                  return <div key={materialIndex} className="h-20 text-black">
+                                  return <div  key={materialIndex} className="h-24 text-black">
                                          <label>個数:</label>
                                         <input  type="text" value={0}/>
                                         <br/>
@@ -285,17 +285,17 @@ const App = () => {
               <ul role="list" className="divide-y flex-1 divide-gray-100">
                 {results.map((result,index) => {
                 return (
-                  <li key={index} className="h-50">
+                  <li key={index}>
                       <div className="order-1 font-semibold">
-                        {/* <p className='text-blue-700'>{result.name}</p> */}
+                        <p className='text-blue-700'>{result.name}</p>
                         {result.item_set.map((item, itemIndex) => {
                           return (
                             <div key={itemIndex}>
-                              {/* <p className="text-green-500">{item.name}</p> */}
+                              <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
                                 console.log(material)
                                 if (material.shopping_history_today[0]) {
-                                  return <div key={materialIndex} className="h-16 text-black">
+                                  return <div  key={materialIndex} className="h-24 text-black">
                                         <label>個数:</label>
                                         <input  type="text" value={material.shopping_history_today[0].num}/>
                                         <br/>
@@ -303,7 +303,7 @@ const App = () => {
                                         </label>
                                       </div>
                                 }else{
-                                  return <div key={materialIndex} className="h-20 text-black">
+                                  return <div  key={materialIndex} className="h-24 text-black">
                                          <label>個数:</label>
                                         <input  type="text" value={0}/>
                                         <br/>
