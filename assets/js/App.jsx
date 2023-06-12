@@ -14,21 +14,57 @@ const App = () => {
   const containerOffset = useRef(null)
   const [results, setResults,] = useState([]);
   const [width, height] = useWindowSize();
+  const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  // const decrementDate = () => {
+  //     let previousDay = new Date(currentDate);
+  //     previousDay.setDate(previousDay.getDate() - 1);
+  //     setCurrentDate(previousDay);
+  // }
+  
+
+  // useEffect(() => {
+  //     decrementDate();
+  // }, []);
+
+  const displayDate = new Date(currentDate).getDate(); // 現在の日付を取得
+  const displayDay = weekDays[new Date(currentDate).getDay()];
+  
+  const today = new Date();
+  const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+  const [currentDate, setCurrentDate] = useState(formattedDate);
+
+  const decreaseDateByOneDay = () => {
+        let tempDate = new Date(currentDate);
+        tempDate.setDate(tempDate.getDate() - 1);
+        setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
+    }
+
+  const riseDateByOneDay = () => {
+        let tempDate = new Date(currentDate);
+        tempDate.setDate(tempDate.getDate() + 1);
+        setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
+    }
+  const toDayByOneDay = () => {
+        let tempDate = new Date(currentDate);
+        tempDate.setDate(tempDate.getDate() + 1);
+        setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
+    }
+
+  const nextDate = new Date(currentDate);
+  nextDate.setDate(nextDate.getDate() + 1);
 
 
   useEffect(()=>{
-    const today = new Date();
-    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-    console.log(baseURL)
-    axios.get(`${baseURL}parent_category?date=${date}`)
+    axios.get(`${baseURL}parent_category?date=${currentDate}`)
       .then(res => {
         setResults(res.data.results);
         console.log(res.data.results)
       }).catch(function (error) {
         console.log(error.response);
       });
-  },[])  
+  },[currentDate])  
     
 
     return (
@@ -36,7 +72,7 @@ const App = () => {
 <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-200 px-6 py-4">
         <h1 className="text-base font-semibold leading-6 text-gray-900">
-          <time dateTime="2022-01">January 2022</time>
+          <time dateTime="2022-01">{currentDate}</time>
         </h1>
         <div className="flex items-center">
           <div className="relative flex items-center rounded-md bg-white shadow-sm md:items-stretch">
@@ -46,6 +82,7 @@ const App = () => {
             />
             <button
               type="button"
+              onClick={decreaseDateByOneDay}
               className="flex items-center justify-center rounded-l-md py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
             >
               <span className="sr-only">Previous week</span>
@@ -53,13 +90,15 @@ const App = () => {
             </button>
             <button
               type="button"
-              className="hidden px-3.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus:relative md:block"
+              onClick={toDayByOneDay}
+              className="px-3.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus:relative md:block"
             >
               Today
             </button>
             <span className="relative -mx-px h-5 w-px bg-gray-300 md:hidden" />
             <button
               type="button"
+              onClick={riseDateByOneDay}
               className="flex items-center justify-center rounded-r-md py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
             >
               <span className="sr-only">Next week</span>
@@ -151,109 +190,6 @@ const App = () => {
               Add event
             </button>
           </div>
-          <Menu as="div" className="relative ml-6 md:hidden">
-            <Menu.Button className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">
-              <span className="sr-only">Open menu</span>
-              <EllipsisHorizontalIcon className="h-5 w-5" aria-hidden="true" />
-            </Menu.Button>
-
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
-              <Menu.Items className="absolute right-0 z-10 mt-3 w-36 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="py-1">
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'block px-4 py-2 text-sm'
-                        )}
-                      >
-                        Create event
-                      </a>
-                    )}
-                  </Menu.Item>
-                </div>
-                <div className="py-1">
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'block px-4 py-2 text-sm'
-                        )}
-                      >
-                        Go to today
-                      </a>
-                    )}
-                  </Menu.Item>
-                </div>
-                <div className="py-1">
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'block px-4 py-2 text-sm'
-                        )}
-                      >
-                        Day view
-                      </a>
-                    )}
-                  </Menu.Item>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'block px-4 py-2 text-sm'
-                        )}
-                      >
-                        Week view
-                      </a>
-                    )}
-                  </Menu.Item>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'block px-4 py-2 text-sm'
-                        )}
-                      >
-                        Month view
-                      </a>
-                    )}
-                  </Menu.Item>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'block px-4 py-2 text-sm'
-                        )}
-                      >
-                        Year view
-                      </a>
-                    )}
-                  </Menu.Item>
-                </div>
-              </Menu.Items>
-            </Transition>
-          </Menu>
         </div>
       </header>
       <div ref={container} className="isolate flex flex-auto flex-col bg-white">
@@ -266,12 +202,18 @@ const App = () => {
               <div className="flex flex-col items-center pb-3 pt-2">
                 原材料
               </div>
-              <button type="button" className="flex flex-col items-center pb-3 pt-2">
-                T <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">9</span>
-              </button>
-              <button type="button" className="flex flex-col items-center pb-3 pt-2">
-                M <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">10</span>
-              </button>
+              <button
+                type="button"
+                className="flex flex-col items-center pb-3 pt-2"
+                >
+                    <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">{new Date(currentDate).getDate()}</span>
+                </button>
+                <button
+                    type="button"
+                    className="flex flex-col items-center pb-3 pt-2"
+                >
+                    <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">{nextDate.getDate()}</span>
+                </button>
             </div>
           </div>
           <div className="flex flex-auto overflow-auto">
