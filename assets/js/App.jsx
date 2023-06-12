@@ -256,7 +256,7 @@ const App = () => {
           </Menu>
         </div>
       </header>
-      <div ref={container} className="isolate flex flex-auto flex-col overflow-auto bg-white">
+      <div ref={container} className="isolate flex flex-auto flex-col bg-white">
         <div style={{ width: '165%' }} className="flex max-w-full flex-none flex-col md:max-w-full">
           <div
             ref={containerNav}
@@ -274,7 +274,7 @@ const App = () => {
               </button>
             </div>
           </div>
-          <div className="flex flex-auto">
+          <div className="flex flex-auto overflow-auto">
             <ul role="list" className="divide-y flex-1 divide-gray-100">
               {results.map((result,index) => {
                 return (
