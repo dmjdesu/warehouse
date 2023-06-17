@@ -129,7 +129,7 @@ const handleTodayBlur = (e, materialId,num) => {
 
 
         try {
-            const res = await axios.post(`${baseURL}history/`, data, {
+            const res = await axios.post(`${baseURL}react_history/`, data, {
                 headers:{
                   'X-CSRFToken':cookies.csrftoken,
                   'Accept': 'application/json',

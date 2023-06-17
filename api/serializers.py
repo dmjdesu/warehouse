@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from pprint import pprint
 from django.db.models import Sum
 
-class ShoppingHistorySerializer(serializers.ModelSerializer):
+class ShoppingHistoryReactSerializer(serializers.ModelSerializer):
     total_num = serializers.SerializerMethodField()
     total_value = serializers.SerializerMethodField()
 
@@ -18,6 +18,12 @@ class ShoppingHistorySerializer(serializers.ModelSerializer):
 
     def get_total_value(self, obj):
         return obj.total_value
+
+class ShoppingHistorySerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ShoppingHistory
+        fields = '__all__'
 
 class MaterialSerializer(serializers.ModelSerializer):
     shopping_history_today = serializers.SerializerMethodField()
