@@ -204,7 +204,7 @@ const handleTodayBlur = (e, materialId,num) => {
         <div style={{ width: '165%' }} className="flex max-w-full flex-none flex-col md:max-w-full">
           <div
   ref={containerNav}
-  className="overflow-auto sticky top-0 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8"
+  className="overflow-auto sticky top-120 z-30 flex-none bg-white shadow ring-1 ring-black ring-opacity-5 sm:pr-8"
 >
     <div className="grid grid-cols-3 text-sm leading-6 text-gray-500">
       <div className="flex flex-col items-center pb-3 pt-2">
