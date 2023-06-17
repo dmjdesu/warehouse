@@ -61,8 +61,6 @@ const handleInputTodayChange = (e, materialId) => {
 
 // 入力フィールドからフォーカスが外れた時に呼び出す関数
 const handleTodayBlur = (e, materialId,num) => {
-  console.log("handleTodayBlur")
-  console.log(num)
   submitToday(e, materialId, num);
   setInputTodayValues({
     ...inputTodayValues,
@@ -73,6 +71,13 @@ const handleTodayBlur = (e, materialId,num) => {
   const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   const [currentDate, setCurrentDate] = useState(formattedDate);
+
+  // Create a new Date object for yesterday's date
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const formattedYesterday = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+  const [yesterDay, setYesterDay] = useState(formattedYesterday);
 
   const decreaseDateByOneDay = () => {
         let tempDate = new Date(currentDate);
@@ -91,15 +96,11 @@ const handleTodayBlur = (e, materialId,num) => {
     }
 
   const  handleChange = (targetName) => {
-    console.log(targetName.value)
     setTargetName(targetName)
   }
   
 
   const submitYesterdayDate = async (e,materialId,originNum) => {
-    console.log("submitYesterdayDate")
-    const yesterDay = new Date(currentDate);
-    yesterDay.setDate(yesterDay.getDate() - 1);
     let format_yesterDay = `${yesterDay.getFullYear()}-${String(yesterDay.getMonth() + 1).padStart(2, '0')}-${String(yesterDay.getDate()).padStart(2, '0')}`;
     submit(e,materialId,format_yesterDay,originNum)
   }
@@ -110,7 +111,6 @@ const handleTodayBlur = (e, materialId,num) => {
 
     const submit = async (e,materialId,date,originNum) => {
         e.preventDefault();
-        console.log(date)
 
         if (Math.floor(e.target.value) - Math.floor(originNum) === 0) return
 
@@ -120,10 +120,6 @@ const handleTodayBlur = (e, materialId,num) => {
             material_id: materialId,
             date: date,
         }
-
-        console.log(data)
-        console.log(e.target.value )
-        console.log(originNum)
 
         axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
@@ -136,24 +132,20 @@ const handleTodayBlur = (e, materialId,num) => {
                   'Content-Type': 'application/json',
               },
             });
-            console.log(res);
             setHandleSubmit(!handleSubmit)
         } catch (err) {
-            console.error(err);
         }
     };
 
-  const yesterDay = new Date(currentDate);
-  yesterDay.setDate(yesterDay.getDate() - 1);
 
 
   useEffect(()=>{
-    console.log(targetName)
-    console.log(currentDate)
     axios.get(`${baseURL}parent_category?date=${currentDate}&target_name=${targetName?.value}`)
       .then(res => {
         setResults(res.data.results);
-        console.log(res.data.results)
+        console.log(res.data.results[0].item_set[0].material_set[0])
+        setCurrentDate(res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
+        setYesterDay(res.data.results[0].item_set[0].material_set[0].shopping_history_yesterday.date )
       }).catch(function (error) {
         console.log(error.response);
       });
@@ -221,7 +213,7 @@ const handleTodayBlur = (e, materialId,num) => {
       >
         <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">
           
-          {yesterDay.getDate()}
+          {new Date(yesterDay).getDate()}
         </span>
       </button>
       <button
@@ -271,7 +263,6 @@ const handleTodayBlur = (e, materialId,num) => {
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
                                 if (material.shopping_history_yesterday.total_num) {
-                                  console.log(material?.shopping_history_yesterday?.total_num)
                                   return <div key={materialIndex} className="h-24 text-black">
                                         <label>個数:</label>
                                         {

@@ -10,7 +10,7 @@ class ShoppingHistoryReactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingHistory
-        fields = ['total_num', 'total_value'] 
+        fields = ['total_num', 'total_value','date'] 
         datatables_always_serialize = ('id',)
 
     def get_total_num(self, obj):
@@ -20,7 +20,7 @@ class ShoppingHistoryReactSerializer(serializers.ModelSerializer):
         return obj.total_value
 
 class ShoppingHistorySerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = ShoppingHistory
         fields = '__all__'
@@ -37,34 +37,61 @@ class MaterialSerializer(serializers.ModelSerializer):
 
     def get_shopping_history_today(self, obj):
         requested_date = self.context.get('requested_date') 
-        queryset = ShoppingHistory.objects.filter(material_name=obj.name, date=requested_date)
-        
         target_name = self.context.get('target_name') 
         if target_name != "all" and target_name != "undefined":
             queryset = queryset.filter(target_name=target_name)
 
-        totals = queryset.aggregate(
-            total_num=Sum('num'),
-            total_value=Sum('value'),
-        )
+        while True:
+            queryset = ShoppingHistory.objects.filter(date=requested_date)
+
+            if target_name != "all" and target_name != "undefined":
+                queryset = queryset.filter(target_name=target_name)
+
+            
+
+            totals = queryset.aggregate(
+                total_num=Sum('num'),
+                total_value=Sum('value'),
+            )
+            
+            
+            if not queryset.exists():
+                requested_date = requested_date - timedelta(days=1) 
+            else:
+                queryset = queryset.filter(material_name=obj.name)
+                totals['date'] = requested_date
+                break
 
         return totals
 
     def get_shopping_history_yesterday(self, obj):
         requested_date = self.context.get('requested_date') 
-        day_before_requested_date = requested_date - timedelta(days=1)  # Get the day before the requested date
-        queryset = ShoppingHistory.objects.filter(material_name=obj.name, date=day_before_requested_date)
+
+        pprint(requested_date)
         target_name = self.context.get('target_name') 
-        if target_name != "all" and target_name != "undefined":
-            queryset = queryset.filter(target_name=target_name)
+        day_before_requested_date = None
+        while True:
+            day_before_requested_date = requested_date - timedelta(days=1)  # Get the day before the requested date
+            queryset = ShoppingHistory.objects.filter(date=day_before_requested_date)
 
-        totals = queryset.aggregate(
-            total_num=Sum('num'),
-            total_value=Sum('value'),
-        )
+            if target_name != "all" and target_name != "undefined":
+                queryset = queryset.filter(target_name=target_name)
 
-        print(totals)
-        
+            
+
+            totals = queryset.aggregate(
+                total_num=Sum('num'),
+                total_value=Sum('value'),
+            )
+            
+            
+            if not queryset.exists():
+                requested_date = day_before_requested_date
+            else:
+                queryset = queryset.filter(material_name=obj.name)
+                totals['date'] = day_before_requested_date
+                break
+
         return totals
 
 class ItemSerializer(serializers.ModelSerializer):
