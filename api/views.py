@@ -27,6 +27,10 @@ class ParentCategoryJson(ModelViewSet):
             requested_date = datetime.strptime(requested_date, "%Y-%m-%d").date()  # Convert to datetime object
             context['requested_date'] = requested_date
 
+        requested_date = self.request.GET.get('target_name')  # Get date from query parameter
+        if requested_date:
+            context['target_name'] = requested_date
+
         return context
 
 class ShoppingHistoryJson(ModelViewSet):
@@ -44,58 +48,54 @@ class ShoppingHistoryJson(ModelViewSet):
         return queryset
     
     def create(self, request, *args, **kwargs):
-        material = Material.objects.get(id=request.POST["material_id"])
+        material = Material.objects.get(id=request.data["material_id"])
         werehouse = Warehouse.objects.get_or_create(material=material)
 
-        if request.POST["target_name"] == "warehouse" :
-            try:
-                WarehouseHistory.objects.create(
-                    target_name = request.POST["target_name"],
-                    value=round(Decimal(request.POST["num"]) * material.value,4),
-                    num=(Decimal(request.POST["num"])),
-                    material_name=material.name,
-                    material_item_name=material.item.name,
-                    material_unit=material.unit,
-                    date=request.POST["date"],
-                    is_send=False
-                )
-                werehouse[0].num += Decimal(request.POST["num"])
-                werehouse[0].save()
-                return Response(status=status.HTTP_200_OK)
-            except Exception:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            
+        datetime_object = datetime.strptime(request.data["date"], "%Y-%m-%d")
+        formatted_date = datetime_object.strftime("%Y-%m-%d")
+
+        if request.data["target_name"] == "warehouse" :
+            WarehouseHistory.objects.create(
+                target_name = request.data["target_name"],
+                value=round(Decimal(request.data["num"]) * material.value,4),
+                num=(Decimal(request.data["num"])),
+                material_name=material.name,
+                material_item_name=material.item.name,
+                material_unit=material.unit,
+                date=formatted_date,
+                is_send=False
+            )
+            werehouse[0].num += Decimal(request.data["num"])
+            werehouse[0].save()
         else:
-            try:
-                gst = 0
-                pst = 0
-                drink_gst = 0
-                bottle_deposit = 0
-                recycle_fee = 0
-                if material.is_gst : gst = round(Decimal(request.POST["num"]) * material.value * Decimal(0.05),4)
-                if material.is_pst : pst = round(Decimal(request.POST["num"]) * material.value * Decimal(0.07),4)
-                if material.is_drink_gst : drink_gst = round(Decimal(request.POST["num"]) * material.value * Decimal(0.05),4)
-                if material.is_bottle_deposit : bottle_deposit = material.bottle_num * 0.1
-                if material.is_recycle_fee : recycle_fee = material.bottle_num * 0.02
-                history = ShoppingHistory.objects.create(
-                    target_name = request.POST["target_name"],
-                    value=round(Decimal(request.POST["num"]) * material.value,4),
-                    gst= gst,
-                    pst= pst,
-                    bottle_deposit=bottle_deposit,
-                    recycle_fee=recycle_fee,
-                    drink_gst=drink_gst,
-                    num=(Decimal(request.POST["num"])),
-                    material_name=material.name,
-                    material_item_name=material.item.name,
-                    material_parent_category_name=material.item.parent.name,
-                    material_unit=material.unit,
-                    material_position_name=",".join(material.role.values_list("name", flat=True)),
-                    date=request.POST["date"],
-                    is_send=False
-                ) 
-                werehouse[0].num -= Decimal(request.POST["num"])
-                werehouse[0].save()
-                return Response({'id': history.id}, status=status.HTTP_200_OK)
-            except Exception:            
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+            gst = 0
+            pst = 0
+            drink_gst = 0
+            bottle_deposit = 0
+            recycle_fee = 0
+            if material.is_gst : gst = round(Decimal(request.data["num"]) * material.value * Decimal(0.05),4)
+            if material.is_pst : pst = round(Decimal(request.data["num"]) * material.value * Decimal(0.07),4)
+            if material.is_drink_gst : drink_gst = round(Decimal(request.data["num"]) * material.value * Decimal(0.05),4)
+            if material.is_bottle_deposit : bottle_deposit = material.bottle_num * 0.1
+            if material.is_recycle_fee : recycle_fee = material.bottle_num * 0.02
+            ShoppingHistory.objects.create(
+                target_name = request.data["target_name"],
+                value=round(Decimal(request.data["num"]) * material.value,4),
+                gst= gst,
+                pst= pst,
+                bottle_deposit=bottle_deposit,
+                recycle_fee=recycle_fee,
+                drink_gst=drink_gst,
+                num=(Decimal(request.data["num"])),
+                material_name=material.name,
+                material_item_name=material.item.name,
+                material_parent_category_name=material.item.parent.name,
+                material_unit=material.unit,
+                material_position_name=",".join(material.role.values_list("name", flat=True)),
+                date=formatted_date,
+                is_send=False
+            ) 
+            werehouse[0].num -= Decimal(request.data["num"])
+            werehouse[0].save()
+
+        return Response(status=status.HTTP_200_OK)

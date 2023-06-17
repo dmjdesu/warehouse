@@ -4,7 +4,8 @@ import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, EllipsisHorizontalI
 import { Menu, Transition } from '@headlessui/react'
 import { baseURL } from "./export.js";
 import { useWindowSize } from "./useWindowSize.js";
-
+import Select from 'react-select';
+import { useCookies } from 'react-cookie';
 
 
 const App = () => {
@@ -13,23 +14,61 @@ const App = () => {
   const containerNav = useRef(null)
   const containerOffset = useRef(null)
   const [results, setResults,] = useState([]);
+  const [handleSubmit, setHandleSubmit,] = useState(false);
+  const [targetName, setTargetName,] = useState({ value: 'all', label: '全て' });
+  const [inputYesterdayValues, setInputYesterdayDayValues] = useState({});
+  const [inputTodayValues, setInputTodayValues] = useState({});
+  const [cookies, setCookie, removeCookie] = useCookies(['csrftoken']);
+  
   const [width, height] = useWindowSize();
   const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  // const decrementDate = () => {
-  //     let previousDay = new Date(currentDate);
-  //     previousDay.setDate(previousDay.getDate() - 1);
-  //     setCurrentDate(previousDay);
-  // }
   
 
-  // useEffect(() => {
-  //     decrementDate();
-  // }, []);
+  const options = [
+    { value: 'all', label: '全て' },
+    { value: 'penticton', label: 'ペンティクトン店' },
+    { value: 'west', label: 'ウエスト' },
+    { value: 'koya', label: 'KOYA' },
+    { value: 'warehouse', label: '倉庫' },
+    { value: 'others', label: 'OTHERS' },
+    { value: 'central', label: 'セントラルキッチン' },
+  ];
 
-  const displayDate = new Date(currentDate).getDate(); // 現在の日付を取得
-  const displayDay = weekDays[new Date(currentDate).getDay()];
-  
+  // 入力フィールドの値が変わった時に呼び出す関数
+const handleInputYesterdayChange = (e, materialId) => {
+  setInputYesterdayDayValues({
+    ...inputYesterdayValues,
+    [materialId]: e.target.value
+  });
+}
+
+// 入力フィールドからフォーカスが外れた時に呼び出す関数
+const handleYesterdayBlur = (e, materialId,total_num) => {
+  submitYesterdayDate(e, materialId, total_num);
+  setInputYesterdayDayValues({
+    ...inputYesterdayValues,
+    [materialId]: '' // リセット
+  });
+}  
+
+  // 入力フィールドの値が変わった時に呼び出す関数
+const handleInputTodayChange = (e, materialId) => {
+  setInputTodayValues({
+    ...inputTodayValues,
+    [materialId]: e.target.value
+  });
+}
+
+// 入力フィールドからフォーカスが外れた時に呼び出す関数
+const handleTodayBlur = (e, materialId,num) => {
+  console.log("handleTodayBlur")
+  console.log(num)
+  submitToday(e, materialId, num);
+  setInputTodayValues({
+    ...inputTodayValues,
+    [materialId]: '' // リセット
+  });
+}  
   const today = new Date();
   const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
@@ -51,19 +90,74 @@ const App = () => {
         setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
     }
 
-  const nextDate = new Date(currentDate);
-  nextDate.setDate(nextDate.getDate() + 1);
+  const  handleChange = (targetName) => {
+    console.log(targetName.value)
+    setTargetName(targetName)
+  }
+  
+
+  const submitYesterdayDate = async (e,materialId,originNum) => {
+    console.log("submitYesterdayDate")
+    const yesterDay = new Date(currentDate);
+    yesterDay.setDate(yesterDay.getDate() - 1);
+    let format_yesterDay = `${yesterDay.getFullYear()}-${String(yesterDay.getMonth() + 1).padStart(2, '0')}-${String(yesterDay.getDate()).padStart(2, '0')}`;
+    submit(e,materialId,format_yesterDay,originNum)
+  }
+
+  const submitToday  = async (e,materialId,originNum) => {
+    submit(e,materialId,currentDate,originNum)
+  }
+
+    const submit = async (e,materialId,date,originNum) => {
+        e.preventDefault();
+        console.log(date)
+
+        if (Math.floor(e.target.value) - Math.floor(originNum) === 0) return
+
+        const data = {
+            target_name: targetName.value,
+            num:  e.target.value - originNum,
+            material_id: materialId,
+            date: date,
+        }
+
+        console.log(data)
+        console.log(e.target.value )
+        console.log(originNum)
+
+        axios.defaults.xsrfHeaderName = "X-CSRFToken";
+
+
+        try {
+            const res = await axios.post('http://127.0.0.1:8000/api/history/', data, {
+                headers:{
+                  'X-CSRFToken':cookies.csrftoken,
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+            });
+            console.log(res);
+            setHandleSubmit(!handleSubmit)
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+  const yesterDay = new Date(currentDate);
+  yesterDay.setDate(yesterDay.getDate() - 1);
 
 
   useEffect(()=>{
-    axios.get(`${baseURL}parent_category?date=${currentDate}`)
+    console.log(targetName)
+    console.log(currentDate)
+    axios.get(`${baseURL}parent_category?date=${currentDate}&target_name=${targetName?.value}`)
       .then(res => {
         setResults(res.data.results);
         console.log(res.data.results)
       }).catch(function (error) {
         console.log(error.response);
       });
-  },[currentDate])  
+  },[currentDate,targetName,handleSubmit])  
     
 
     return (
@@ -74,6 +168,13 @@ const App = () => {
     <time dateTime="2022-01">{currentDate}</time>
   </h1>
   <div className="flex items-center">
+    <Select
+        defaultValue="all"
+        value={targetName}
+        onChange={handleChange}
+        options={options}
+        placeholder="店舗を選択してください。"
+      />
     <div className="relative flex items-center rounded-md bg-white shadow-sm md:items-stretch">
       <div
         className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-inset ring-gray-300"
@@ -119,7 +220,8 @@ const App = () => {
         className="flex flex-col items-center pb-3 pt-2"
       >
         <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">
-          {new Date(currentDate).getDate()}
+          
+          {yesterDay.getDate()}
         </span>
       </button>
       <button
@@ -127,7 +229,7 @@ const App = () => {
         className="flex flex-col items-center pb-3 pt-2"
       >
         <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">
-          {nextDate.getDate()}
+          {new Date(currentDate).getDate()}
         </span>
       </button>
     </div>
@@ -168,22 +270,38 @@ const App = () => {
                             <div key={itemIndex}>
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
-                                console.log(material.value)
-                                if (material.shopping_history_yesterday[0]) {
+                                if (material.shopping_history_yesterday.total_num) {
+                                  console.log(material?.shopping_history_yesterday?.total_num)
                                   return <div key={materialIndex} className="h-24 text-black">
                                         <label>個数:</label>
-                                        <input 
-                                            onChange={()=>console.log(material?.shopping_history_yesterday?.[0]?.num)} 
-                                            type="text" 
-                                            value={material?.shopping_history_yesterday?.[0]?.num || ''}
-                                        /><br/>
-                                        <label>価格:{material.shopping_history_yesterday[0].value}$
+                                        {
+                                        (targetName.value != 'all') ?
+                                        <input
+                                          onBlur={(e) => handleYesterdayBlur(e, material.id,material?.shopping_history_yesterday.total_num)}
+                                          onChange={(e) => handleInputYesterdayChange(e, material.id)}
+                                          type="text"
+                                          value={inputYesterdayValues[material.id] || (material ? material?.shopping_history_yesterday.total_num || "" : "")}
+                                        />  
+                                        : 
+                                        <label>個数:{material?.shopping_history_yesterday?.total_num} </label>}
+                                        <br/>
+                                        <label>価格:{material.shopping_history_yesterday.total_value}$
                                         </label>
                                       </div>
                                 }else{
                                   return <div  key={materialIndex} className="h-24 text-black">
                                          <label>個数:</label>
-                                        <input  type="text" value={0}/>
+                                        { (targetName.value != 'all') ?
+                                        <input 
+                                          onBlur={(e) => { 
+                                            submitYesterdayDate(e, material.id, 0); 
+                                            setInputYesterdayDayValues(prev => ({...prev, [material.id]: ''})); 
+                                          }}
+                                          onChange={(e) => handleInputYesterdayChange(e, material.id)}
+                                          type="text" 
+                                          value={inputYesterdayValues[material.id] || ""}
+                                        />
+                                         :  <label>個数:0</label>}
                                         <br/>
                                         <label>価格:0$</label>                                        
                                       </div>
@@ -209,19 +327,34 @@ const App = () => {
                             <div key={itemIndex}>
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
-                                console.log(material)
-                                if (material.shopping_history_today[0]) {
+                                if (material.shopping_history_today.total_num) {
                                   return <div  key={materialIndex} className="h-24 text-black">
                                         <label>個数:</label>
-                                        <input  type="text" value={material.shopping_history_today[0].num}/>
+                                         { (targetName.value != 'all') ? 
+                                         <input
+                                          onBlur={(e) => handleTodayBlur(e, material.id,material.shopping_history_today.total_num)}
+                                          onChange={(e) => handleInputTodayChange(e, material.id)}
+                                          type="text"
+                                          value={inputTodayValues[material.id] || (material ? material?.shopping_history_today.total_num || "": "")}
+                                        /> 
+                                          : <label>個数:{material.shopping_history_today.total_num} </label>}
                                         <br/>
-                                        <label>価格:{material.shopping_history_today[0].value}$
+                                        <label>価格:{material.shopping_history_today.total_value}$
                                         </label>
                                       </div>
                                 }else{
                                   return <div  key={materialIndex} className="h-24 text-black">
                                          <label>個数:</label>
-                                        <input  type="text" value={0}/>
+                                        { (targetName.value != 'all') ?  <input 
+                                            onBlur={(e) => { 
+                                              submitToday(e, material.id, 0); 
+                                              setInputTodayValues(prev => ({...prev, [material.id]: ''})); 
+                                            }}
+                                            onChange={(e) => handleInputTodayChange(e, material.id)}
+                                            type="text" 
+                                            value={inputTodayValues[material.id] || ""}
+                                          />
+                                        : <label>個数:0</label>}
                                         <br/>
                                         <label>価格:0$</label>                                        
                                       </div>
