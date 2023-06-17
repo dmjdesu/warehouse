@@ -14,7 +14,14 @@ class ParentCategoryJson(ModelViewSet):
     queryset = ParentCategory.objects.order_by("-name").prefetch_related('item_set')
 
     def get_queryset(self):
-        return ParentCategory.objects.order_by("-name").prefetch_related('item_set')
+        queryset = ParentCategory.objects.order_by("-name").prefetch_related('item_set','item_set__material_set')
+        category_name = self.request.GET.get('category_name') 
+        if category_name != "all" and category_name != "undefined":
+            queryset = queryset.filter(name=category_name)
+
+        pprint("queryset")
+        pprint(queryset.distinct().count())
+        return queryset.distinct()
     
     def get_serializer_context(self):
         """
@@ -27,9 +34,13 @@ class ParentCategoryJson(ModelViewSet):
             requested_date = datetime.strptime(requested_date, "%Y-%m-%d").date()  # Convert to datetime object
             context['requested_date'] = requested_date
 
-        requested_date = self.request.GET.get('target_name')  # Get date from query parameter
-        if requested_date:
-            context['target_name'] = requested_date
+        target_name = self.request.GET.get('target_name')  # Get date from query parameter
+        if target_name:
+            context['target_name'] = target_name
+
+        category_name = self.request.GET.get('category_name')  # Get date from query parameter
+        if category_name:
+            context['category_name'] = category_name
 
         return context
 

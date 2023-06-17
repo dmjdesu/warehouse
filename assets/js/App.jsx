@@ -15,14 +15,25 @@ const App = () => {
   const containerOffset = useRef(null)
   const [results, setResults,] = useState([]);
   const [handleSubmit, setHandleSubmit,] = useState(false);
+  const [category, setCategory,] = useState({ value: 'all', label: '全て' });
+  const [position, setPosition,] = useState({ value: 'all', label: '全て' });
   const [targetName, setTargetName,] = useState({ value: 'all', label: '全て' });
   const [inputYesterdayValues, setInputYesterdayDayValues] = useState({});
   const [inputTodayValues, setInputTodayValues] = useState({});
   const [cookies, setCookie, removeCookie] = useCookies(['csrftoken']);
+  const PositionHash ={
+    'kitchen':1,
+    'Sushi':2,
+    'dishup':3,
+  }
   
-  const [width, height] = useWindowSize();
-  const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  
+
+  const potion_options = [
+    { value: 'all', label: '全て' },
+    { value: 'kitchen', label: 'Kitchen' },
+    { value: 'Sushi', label: 'Sushi' },
+    { value: 'dishup', label: 'Dish Up' },
+  ];
 
   const options = [
     { value: 'all', label: '全て' },
@@ -32,6 +43,17 @@ const App = () => {
     { value: 'warehouse', label: '倉庫' },
     { value: 'others', label: 'OTHERS' },
     { value: 'central', label: 'セントラルキッチン' },
+  ];
+
+  const category_options = [
+    { value: 'all', label: '全て' },
+    { value: 'Other', label: 'Other' },
+    { value: 'Container', label: 'Container' },
+    { value: 'Drinks', label: 'Drinks' },
+    { value: 'Dry', label: 'Dry' },
+    { value: 'Frozen', label: 'Frozen' },
+    { value: 'Kitchen', label: 'Kitchen' },
+    { value: 'Sushi', label: 'Sushi' },
   ];
 
   // 入力フィールドの値が変わった時に呼び出す関数
@@ -100,6 +122,14 @@ const handleTodayBlur = (e, materialId,num) => {
   const  handleChange = (targetName) => {
     setTargetName(targetName)
   }
+
+  const  handleCategoryChange = (category) => {
+    setCategory(category)
+  }
+
+  const  handlePositionChange = (position) => {
+    setPosition(position)
+  }
   
 
   const submitYesterdayDate = async (e,materialId,originNum) => {
@@ -138,21 +168,20 @@ const handleTodayBlur = (e, materialId,num) => {
         } catch (err) {
         }
     };
-
-
+    
 
   useEffect(()=>{
     console.log(currentDate)
-    axios.get(`${baseURL}parent_category?date=${currentDate}&target_name=${targetName?.value}`)
+    axios.get(`${baseURL}parent_category?date=${currentDate}&target_name=${targetName?.value}&category_name=${category?.value}`)
       .then(res => {
+        console.log(res.data.results)
         setResults(res.data.results);
-        console.log(res.data.results[0].item_set[0].material_set[0])
         setCurrentDate(res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
         setYesterDay(res.data.results[0].item_set[0].material_set[0].shopping_history_yesterday.date )
       }).catch(function (error) {
         console.log(error.response);
       });
-  },[currentDate,targetName,handleSubmit])  
+  },[category,currentDate,targetName,handleSubmit])  
     
 
     return (
@@ -163,6 +192,21 @@ const handleTodayBlur = (e, materialId,num) => {
     <time dateTime="2022-01">{currentDate}</time>
   </h1>
   <div className="flex items-center">
+    <Select
+        defaultValue="all"
+        value={category}
+        onChange={handleCategoryChange}
+        options={category_options}
+        placeholder="カテゴリーを選択してください。"
+      />
+      <Select
+        defaultValue="all"
+        value={position}
+        onChange={handlePositionChange}
+        options={potion_options}
+        placeholder="ポジションを選択してください。"
+      />
+      
     <Select
         defaultValue="all"
         value={targetName}
@@ -241,9 +285,12 @@ const handleTodayBlur = (e, materialId,num) => {
                             <div key={itemIndex}>
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
-                                return <div key={materialIndex} className="h-24 text-black">
-                                        <p className="text-black whitespace-nowrap">{material.name}</p>
-                                      </div>
+                                if(position.value == "all" || material.role.includes(PositionHash[position.value])){
+                                  return <div key={materialIndex} className="h-24 text-black">
+                                      <p className="text-black whitespace-nowrap">{material.name}</p>
+                                    </div>
+                                }
+                                
                               })}
                             </div>
                           )
@@ -265,6 +312,7 @@ const handleTodayBlur = (e, materialId,num) => {
                             <div key={itemIndex}>
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
+                                if(position.value == "all" || material.role.includes(PositionHash[position.value])){
                                 if (material.shopping_history_yesterday.total_num) {
                                   return <div key={materialIndex} className="h-24 text-black">
                                         <label>個数:</label>
@@ -300,7 +348,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                         <label>価格:0$</label>                                        
                                       </div>
                                 }
-                                
+                              }
                               })}
                             </div>
                           )
@@ -321,6 +369,7 @@ const handleTodayBlur = (e, materialId,num) => {
                             <div key={itemIndex}>
                               <p className="text-green-500">{item.name}</p>
                               {item.material_set.map((material, materialIndex) => {
+                                if(position.value == "all" || material.role.includes(PositionHash[position.value])){
                                 if (material.shopping_history_today.total_num) {
                                   return <div  key={materialIndex} className="h-24 text-black">
                                         <label>個数:</label>
@@ -353,7 +402,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                         <label>価格:0$</label>                                        
                                       </div>
                                 }
-                                
+                              }
                               })}
                             </div>
                           )
