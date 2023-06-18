@@ -1,6 +1,6 @@
 import React, { Fragment,useRef,useState, useEffect } from 'react';
 import axios from 'axios';
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, EllipsisHorizontalIcon } from '@heroicons/react/20/solid'
+import { ChevronLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/20/solid'
 import { Menu, Transition } from '@headlessui/react'
 import { baseURL } from "./export.js";
 import { useWindowSize } from "./useWindowSize.js";
@@ -69,7 +69,7 @@ const handleYesterdayBlur = (e, materialId,total_num) => {
   submitYesterdayDate(e, materialId, total_num);
   setInputYesterdayDayValues({
     ...inputYesterdayValues,
-    [materialId]: '' // リセット
+    [materialId]: undefined // リセット
   });
 }  
 
@@ -83,10 +83,12 @@ const handleInputTodayChange = (e, materialId) => {
 
 // 入力フィールドからフォーカスが外れた時に呼び出す関数
 const handleTodayBlur = (e, materialId,num) => {
+  console.log("handleTodayBlur")
+  console.log(e.target.value)
   submitToday(e, materialId, num);
   setInputTodayValues({
     ...inputTodayValues,
-    [materialId]: '' // リセット
+    [materialId]: undefined // リセット
   });
 }  
   const today = new Date();
@@ -192,6 +194,13 @@ const handleTodayBlur = (e, materialId,num) => {
     <time dateTime="2022-01">{currentDate}</time>
   </h1>
   <div className="flex items-center">
+    <button
+        type="button"
+        onClick={()=>setHandleSubmit(!handleSubmit)}
+        className="flex items-center justify-center rounded-l-md py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
+      >
+        <ArrowPathIcon className="h-5 w-5" aria-hidden="true" />
+      </button>
     <Select
         defaultValue="all"
         value={category}
@@ -214,6 +223,12 @@ const handleTodayBlur = (e, materialId,num) => {
         options={options}
         placeholder="店舗を選択してください。"
       />
+    <div className="relative flex items-center rounded-md bg-white shadow-sm md:items-stretch">
+      <div
+        className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-inset ring-gray-300"
+        aria-hidden="true"
+      />
+    </div>
     <div className="relative flex items-center rounded-md bg-white shadow-sm md:items-stretch">
       <div
         className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-inset ring-gray-300"
@@ -322,7 +337,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                           onBlur={(e) => handleYesterdayBlur(e, material.id,material?.shopping_history_yesterday.total_num)}
                                           onChange={(e) => handleInputYesterdayChange(e, material.id)}
                                           type="text"
-                                          value={inputTodayValues[material.id] !== undefined ? inputTodayValues[material.id] : (material ? material?.shopping_history_today.total_num : "")}
+                                          value={inputYesterdayValues[material.id] !== undefined ? inputYesterdayValues[material.id] : (material ? material?.shopping_history_yesterday.total_num : "")}
                                         />  
                                         : 
                                         <label>個数:{material?.shopping_history_yesterday?.total_num} </label>}
@@ -335,13 +350,10 @@ const handleTodayBlur = (e, materialId,num) => {
                                          <label>個数:</label>
                                         { (targetName.value != 'all') ?
                                         <input 
-                                          onBlur={(e) => { 
-                                            submitYesterdayDate(e, material.id, 0); 
-                                            setInputYesterdayDayValues(prev => ({...prev, [material.id]: ''})); 
-                                          }}
+                                          onBlur={(e) => handleYesterdayBlur(e, material.id,0)}
                                           onChange={(e) => handleInputYesterdayChange(e, material.id)}
                                           type="text" 
-                                          value={inputYesterdayValues[material.id] !== undefined ? inputYesterdayValues[material.id] : (material ? material?.shopping_history_today.total_num : "")}
+                                          value={inputYesterdayValues[material.id] !== undefined ? inputYesterdayValues[material.id] : (material ? material?.shopping_history_yesterday.total_num : "")}
                                         />
                                          :  <label>個数:0</label>}
                                         <br/>
@@ -389,10 +401,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                   return <div  key={materialIndex} className="h-24 text-black">
                                          <label>個数:</label>
                                         { (targetName.value != 'all') ?  <input 
-                                            onBlur={(e) => { 
-                                              submitToday(e, material.id, 0); 
-                                              setInputTodayValues(prev => ({...prev, [material.id]: ''})); 
-                                            }}
+                                            onBlur={(e) => handleTodayBlur(e, material.id,0)}
                                             onChange={(e) => handleInputTodayChange(e, material.id)}
                                             type="text" 
                                             value={inputTodayValues[material.id] !== undefined ? inputTodayValues[material.id] : (material ? material?.shopping_history_today.total_num : "")}
