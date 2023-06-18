@@ -98,6 +98,7 @@ const handleTodayBlur = (e, materialId,num) => {
 
   const [currentDate, setCurrentDate] = useState(formattedDate);
   let displayDate = new Date(currentDate).getDate()
+  let displayFormattedYesterday = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
 
   // Create a new Date object for yesterday's date
   const yesterday = new Date(today);
@@ -192,7 +193,7 @@ const handleTodayBlur = (e, materialId,num) => {
 <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-200 px-6 py-4 sticky top-0 z-40 bg-white shadow">
   <h1 className="text-base font-semibold leading-6 text-gray-900">
-    <time dateTime="2022-01">{displayDate}</time>
+    <time dateTime="2022-01">{displayFormattedYesterday}</time>
   </h1>
   <div className="flex items-center">
     <button
