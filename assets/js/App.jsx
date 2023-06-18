@@ -98,7 +98,7 @@ const handleTodayBlur = (e, materialId,num) => {
 
   const [currentDate, setCurrentDate] = useState(formattedDate);
   let displayDate = new Date(currentDate).getDate()
-  let displayFormattedYesterday = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+  let displayFormattedYesterday = `${new Date(currentDate).getFullYear()}-${String(new Date(currentDate).getMonth() + 1).padStart(2, '0')}-${String(new Date(currentDate).getDate()).padStart(2, '0')}`;
 
   // Create a new Date object for yesterday's date
   const yesterday = new Date(today);
