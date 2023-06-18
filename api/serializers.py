@@ -39,10 +39,13 @@ class MaterialSerializer(serializers.ModelSerializer):
         requested_date = self.context.get('requested_date') 
         target_name = self.context.get('target_name') 
         totals = None
+
+        today = datetime.today().date()
+
         while True:
-            queryset = ShoppingHistory.objects.filter(date=requested_date)            
-            
-            if not queryset.exists():
+            queryset = ShoppingHistory.objects.filter(date=requested_date) 
+
+            if not queryset.exists() and requested_date < today:
                 requested_date = requested_date - timedelta(days=1) 
             else:
                 queryset = queryset.filter(material_name=obj.name)

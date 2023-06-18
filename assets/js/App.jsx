@@ -176,7 +176,7 @@ const handleTodayBlur = (e, materialId,num) => {
     axios.get(`${baseURL}parent_category?date=${currentDate}&target_name=${targetName?.value}&category_name=${category?.value}`)
       .then(res => {
         setResults(res.data.results);
-        setCurrentDate(currentDate > res.data.results[0].item_set[0].material_set[0].shopping_history_today.date ? currentDate : res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
+        setCurrentDate(res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
         setYesterDay(res.data.results[0].item_set[0].material_set[0].shopping_history_yesterday.date )
       }).catch(function (error) {
         console.log(error.response);
