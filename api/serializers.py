@@ -2,7 +2,7 @@ from stock.models import *
 from rest_framework import serializers
 from datetime import datetime, timedelta
 from pprint import pprint
-from django.db.models import Sum
+from django.db.models import Sum, Max
 
 class ShoppingHistoryReactSerializer(serializers.ModelSerializer):
     total_num = serializers.SerializerMethodField()
@@ -40,12 +40,12 @@ class MaterialSerializer(serializers.ModelSerializer):
         target_name = self.context.get('target_name') 
         totals = None
 
-        today = datetime.today().date()
+        max_date = ShoppingHistory.objects.aggregate(Max('date'))['date__max']
 
         while True:
             queryset = ShoppingHistory.objects.filter(date=requested_date) 
 
-            if not queryset.exists() and requested_date < today:
+            if not queryset.exists() and requested_date < max_date:
                 requested_date = requested_date - timedelta(days=1) 
             else:
                 queryset = queryset.filter(material_name=obj.name)
