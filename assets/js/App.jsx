@@ -322,7 +322,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                           onBlur={(e) => handleYesterdayBlur(e, material.id,material?.shopping_history_yesterday.total_num)}
                                           onChange={(e) => handleInputYesterdayChange(e, material.id)}
                                           type="text"
-                                          value={inputYesterdayValues[material.id] || (material ? material?.shopping_history_yesterday.total_num || "" : "")}
+                                          value={inputTodayValues[material.id] !== undefined ? inputTodayValues[material.id] : (material ? material?.shopping_history_today.total_num : "")}
                                         />  
                                         : 
                                         <label>個数:{material?.shopping_history_yesterday?.total_num} </label>}
@@ -341,7 +341,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                           }}
                                           onChange={(e) => handleInputYesterdayChange(e, material.id)}
                                           type="text" 
-                                          value={inputYesterdayValues[material.id] || ""}
+                                          value={inputYesterdayValues[material.id] !== undefined ? inputYesterdayValues[material.id] : (material ? material?.shopping_history_today.total_num : "")}
                                         />
                                          :  <label>個数:0</label>}
                                         <br/>
@@ -378,7 +378,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                           onBlur={(e) => handleTodayBlur(e, material.id,material.shopping_history_today.total_num)}
                                           onChange={(e) => handleInputTodayChange(e, material.id)}
                                           type="text"
-                                          value={inputTodayValues[material.id] || (material ? material?.shopping_history_today.total_num || "": "")}
+                                          value={inputTodayValues[material.id] !== undefined ? inputTodayValues[material.id] : (material ? material?.shopping_history_today.total_num : "")}
                                         /> 
                                           : <label>個数:{material.shopping_history_today.total_num} </label>}
                                         <br/>
@@ -395,7 +395,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                             }}
                                             onChange={(e) => handleInputTodayChange(e, material.id)}
                                             type="text" 
-                                            value={inputTodayValues[material.id] || ""}
+                                            value={inputTodayValues[material.id] !== undefined ? inputTodayValues[material.id] : (material ? material?.shopping_history_today.total_num : "")}
                                           />
                                         : <label>個数:0</label>}
                                         <br/>
