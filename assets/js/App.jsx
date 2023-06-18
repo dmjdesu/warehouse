@@ -97,6 +97,7 @@ const handleTodayBlur = (e, materialId,num) => {
   console.log(formattedDate)
 
   const [currentDate, setCurrentDate] = useState(formattedDate);
+  let displayDate = new Date(currentDate).getDate()
 
   // Create a new Date object for yesterday's date
   const yesterday = new Date(today);
@@ -176,7 +177,9 @@ const handleTodayBlur = (e, materialId,num) => {
     axios.get(`${baseURL}parent_category?date=${currentDate}&target_name=${targetName?.value}&category_name=${category?.value}`)
       .then(res => {
         setResults(res.data.results);
-        setCurrentDate(res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
+        if(currentDate < res.data.results[0].item_set[0].material_set[0].shopping_history_today.date){
+          displayDate = new Date(currentDate).getDate()
+        }
         setYesterDay(res.data.results[0].item_set[0].material_set[0].shopping_history_yesterday.date )
       }).catch(function (error) {
         console.log(error.response);
@@ -189,7 +192,7 @@ const handleTodayBlur = (e, materialId,num) => {
 <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-200 px-6 py-4 sticky top-0 z-40 bg-white shadow">
   <h1 className="text-base font-semibold leading-6 text-gray-900">
-    <time dateTime="2022-01">{currentDate}</time>
+    <time dateTime="2022-01">{displayDate}</time>
   </h1>
   <div className="flex items-center">
     <button
@@ -281,7 +284,7 @@ const handleTodayBlur = (e, materialId,num) => {
         className="flex flex-col items-center pb-3 pt-2"
       >
         <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">
-          {new Date(currentDate).getDate()}
+          {displayDate}
         </span>
       </button>
     </div>
