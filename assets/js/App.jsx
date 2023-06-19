@@ -195,7 +195,7 @@ const handleTodayBlur = (e, materialId,num) => {
   <h1 className="text-base font-semibold leading-6 text-gray-900">
     <time dateTime="2022-01">{displayFormattedYesterday}</time>
   </h1>
-  <div className="flex items-center">
+  <div className="flex flex-col items-center">
     <button
         type="button"
         onClick={()=>setHandleSubmit(!handleSubmit)}
