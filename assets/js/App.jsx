@@ -97,7 +97,8 @@ const handleTodayBlur = (e, materialId,num) => {
   console.log(formattedDate)
 
   const [currentDate, setCurrentDate] = useState(formattedDate);
-  let displayDate = new Date(currentDate).getDate()
+  const [displayDate, setDisplayDate] = useState(formattedDate);
+  
   let displayFormattedYesterday = `${new Date(currentDate).getFullYear()}-${String(new Date(currentDate).getMonth() + 1).padStart(2, '0')}-${String(new Date(currentDate).getDate()).padStart(2, '0')}`;
 
   // Create a new Date object for yesterday's date
@@ -108,13 +109,17 @@ const handleTodayBlur = (e, materialId,num) => {
   const [yesterDay, setYesterDay] = useState(formattedYesterday);
 
   const decreaseDateByOneDay = () => {
-        let tempDate = new Date(currentDate);
+        let tempDate = new Date(displayDate);
+        console.log("tempDate")
+        console.log(tempDate)
         tempDate.setDate(tempDate.getDate() - 1);
         setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
     }
 
   const riseDateByOneDay = () => {
-        let tempDate = new Date(currentDate);
+        let tempDate = new Date(displayDate);
+        console.log("tempDate")
+        console.log(tempDate)
         tempDate.setDate(tempDate.getDate() + 1);
         setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
     }
@@ -142,7 +147,9 @@ const handleTodayBlur = (e, materialId,num) => {
   }
 
   const submitToday  = async (e,materialId,originNum) => {
-    submit(e,materialId,currentDate,originNum)
+    let format_displayDate = `${displayDate.getFullYear()}-${String(displayDate.getMonth() + 1).padStart(2, '0')}-${String(displayDate.getDate()).padStart(2, '0')}`;
+    
+    submit(e,materialId,format_displayDate,originNum)
   }
 
     const submit = async (e,materialId,date,originNum) => {
@@ -178,9 +185,8 @@ const handleTodayBlur = (e, materialId,num) => {
     axios.get(`${baseURL}parent_category?date=${currentDate}&target_name=${targetName?.value}&category_name=${category?.value}`)
       .then(res => {
         setResults(res.data.results);
-        if(currentDate < res.data.results[0].item_set[0].material_set[0].shopping_history_today.date){
-          displayDate = new Date(currentDate).getDate()
-        }
+        console.log(res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
+        setDisplayDate(res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
         setYesterDay(res.data.results[0].item_set[0].material_set[0].shopping_history_yesterday.date )
       }).catch(function (error) {
         console.log(error.response);
@@ -285,7 +291,7 @@ const handleTodayBlur = (e, materialId,num) => {
         className="flex flex-col items-center pb-3 pt-2"
       >
         <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">
-          {displayDate}
+          {new Date(displayDate).getDate()}
         </span>
       </button>
     </div>
@@ -333,31 +339,14 @@ const handleTodayBlur = (e, materialId,num) => {
                                 if (material.shopping_history_yesterday.total_num) {
                                   return <div key={materialIndex} className="h-24 text-black">
                                         <label>個数:</label>
-                                        {
-                                        (targetName.value != 'all') ?
-                                        <input
-                                          onBlur={(e) => handleYesterdayBlur(e, material.id,material?.shopping_history_yesterday.total_num)}
-                                          onChange={(e) => handleInputYesterdayChange(e, material.id)}
-                                          type="text"
-                                          value={inputYesterdayValues[material.id] !== undefined ? inputYesterdayValues[material.id] : (material ? material?.shopping_history_yesterday.total_num : "")}
-                                        />  
-                                        : 
-                                        <label>個数:{material?.shopping_history_yesterday?.total_num} </label>}
+                                        <label>個数:{material?.shopping_history_yesterday?.total_num} </label>
                                         <br/>
                                         <label>価格:{material.shopping_history_yesterday.total_value}$
                                         </label>
                                       </div>
                                 }else{
                                   return <div  key={materialIndex} className="h-24 text-black">
-                                         <label>個数:</label>
-                                        { (targetName.value != 'all') ?
-                                        <input 
-                                          onBlur={(e) => handleYesterdayBlur(e, material.id,0)}
-                                          onChange={(e) => handleInputYesterdayChange(e, material.id)}
-                                          type="text" 
-                                          value={inputYesterdayValues[material.id] !== undefined ? inputYesterdayValues[material.id] : (material ? material?.shopping_history_yesterday.total_num : "")}
-                                        />
-                                         :  <label>個数:0</label>}
+                                         <label>個数:0</label>
                                         <br/>
                                         <label>価格:0$</label>                                        
                                       </div>

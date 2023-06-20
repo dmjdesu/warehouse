@@ -38,28 +38,18 @@ class MaterialSerializer(serializers.ModelSerializer):
     def get_shopping_history_today(self, obj):
         requested_date = self.context.get('requested_date') 
         target_name = self.context.get('target_name') 
-        totals = None
 
-        max_date = ShoppingHistory.objects.aggregate(Max('date'))['date__max']
-
-        while True:
-            queryset = ShoppingHistory.objects.filter(date=requested_date) 
-
-            if not queryset.exists() and requested_date < max_date:
-                requested_date = requested_date - timedelta(days=1) 
-            else:
-                queryset = queryset.filter(material_name=obj.name)
-                
-                print(target_name)
-                if target_name != "all" and target_name != "undefined":
-                    queryset = queryset.filter(target_name=target_name)
-                totals = queryset.aggregate(
-                        total_num=Sum('num'),
-                        total_value=Sum('value'),
-                    )
-                totals['date'] = requested_date
-                    
-                break
+        queryset = ShoppingHistory.objects.filter(date=requested_date) 
+        queryset = queryset.filter(material_name=obj.name)
+        
+        print(target_name)
+        if target_name != "all" and target_name != "undefined":
+            queryset = queryset.filter(target_name=target_name)
+        totals = queryset.aggregate(
+                total_num=Sum('num'),
+                total_value=Sum('value'),
+            )
+        totals['date'] = requested_date
 
         return totals
 
