@@ -97,7 +97,7 @@ const handleTodayBlur = (e, materialId,num) => {
   console.log(formattedDate)
 
   const [currentDate, setCurrentDate] = useState(formattedDate);
-  const [displayDate, setDisplayDate] = useState(formattedDate);
+  // const [displayDate, setDisplayDate] = useState(formattedDate);
   
   let displayFormattedYesterday = `${new Date(currentDate).getFullYear()}-${String(new Date(currentDate).getMonth() + 1).padStart(2, '0')}-${String(new Date(currentDate).getDate()).padStart(2, '0')}`;
 
@@ -109,7 +109,7 @@ const handleTodayBlur = (e, materialId,num) => {
   const [yesterDay, setYesterDay] = useState(formattedYesterday);
 
   const decreaseDateByOneDay = () => {
-        let tempDate = new Date(displayDate);
+        let tempDate = new Date(currentDate);
         console.log("tempDate")
         console.log(tempDate)
         tempDate.setDate(tempDate.getDate() - 1);
@@ -117,7 +117,7 @@ const handleTodayBlur = (e, materialId,num) => {
     }
 
   const riseDateByOneDay = () => {
-        let tempDate = new Date(displayDate);
+        let tempDate = new Date(currentDate);
         console.log("tempDate")
         console.log(tempDate)
         tempDate.setDate(tempDate.getDate() + 1);
@@ -147,7 +147,7 @@ const handleTodayBlur = (e, materialId,num) => {
   }
 
   const submitToday  = async (e,materialId,originNum) => {
-    let format_displayDate = `${displayDate.getFullYear()}-${String(displayDate.getMonth() + 1).padStart(2, '0')}-${String(displayDate.getDate()).padStart(2, '0')}`;
+    let format_displayDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
     
     submit(e,materialId,format_displayDate,originNum)
   }
@@ -186,7 +186,6 @@ const handleTodayBlur = (e, materialId,num) => {
       .then(res => {
         setResults(res.data.results);
         console.log(res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
-        setDisplayDate(res.data.results[0].item_set[0].material_set[0].shopping_history_today.date)
         setYesterDay(res.data.results[0].item_set[0].material_set[0].shopping_history_yesterday.date )
       }).catch(function (error) {
         console.log(error.response);
@@ -291,7 +290,7 @@ const handleTodayBlur = (e, materialId,num) => {
         className="flex flex-col items-center pb-3 pt-2"
       >
         <span className="mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900">
-          {new Date(displayDate).getDate()}
+          {new Date(currentDate).getDate()}
         </span>
       </button>
     </div>
