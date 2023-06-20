@@ -210,25 +210,24 @@ const handleTodayBlur = (e, materialId,num) => {
       </button>
     <Select
         defaultValue="all"
-        value={category}
-        onChange={handleCategoryChange}
-        options={category_options}
-        placeholder="カテゴリーを選択してください。"
+        value={targetName}
+        onChange={handleChange}
+        options={options}
+        placeholder="店舗を選択してください。"
       />
-      <Select
+    <Select
         defaultValue="all"
         value={position}
         onChange={handlePositionChange}
         options={potion_options}
         placeholder="ポジションを選択してください。"
       />
-      
     <Select
         defaultValue="all"
-        value={targetName}
-        onChange={handleChange}
-        options={options}
-        placeholder="店舗を選択してください。"
+        value={category}
+        onChange={handleCategoryChange}
+        options={category_options}
+        placeholder="カテゴリーを選択してください。"
       />
     <div className="relative flex items-center rounded-md bg-white shadow-sm md:items-stretch">
       <div
