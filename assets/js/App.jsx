@@ -15,9 +15,9 @@ const App = () => {
   const containerOffset = useRef(null)
   const [results, setResults,] = useState([]);
   const [handleSubmit, setHandleSubmit,] = useState(false);
-  const [category, setCategory,] = useState();
-  const [position, setPosition,] = useState();
-  const [targetName, setTargetName,] = useState();
+  const [category, setCategory,] = useState({ value: 'all', label: '種類全て' });
+  const [position, setPosition,] = useState({ value: 'all', label: 'ポジション全て' });
+  const [targetName, setTargetName,] = useState({ value: 'all', label: '店舗全て' });
   const [inputYesterdayValues, setInputYesterdayDayValues] = useState({});
   const [inputTodayValues, setInputTodayValues] = useState({});
   const [cookies, setCookie, removeCookie] = useCookies(['csrftoken']);
@@ -29,14 +29,14 @@ const App = () => {
   
 
   const potion_options = [
-    { value: 'all', label: '全て' },
+    { value: 'all', label: 'ポジション全て' },
     { value: 'kitchen', label: 'Kitchen' },
     { value: 'Sushi', label: 'Sushi' },
     { value: 'dishup', label: 'Dish Up' },
   ];
 
   const options = [
-    { value: 'all', label: '全て' },
+    { value: 'all', label: '店舗全て' },
     { value: 'penticton', label: 'ペンティクトン店' },
     { value: 'west', label: 'ウエスト' },
     { value: 'koya', label: 'KOYA' },
@@ -46,7 +46,7 @@ const App = () => {
   ];
 
   const category_options = [
-    { value: 'all', label: '全て' },
+    { value: 'all', label: '種類全て' },
     { value: 'Other', label: 'Other' },
     { value: 'Container', label: 'Container' },
     { value: 'Drinks', label: 'Drinks' },
@@ -209,18 +209,21 @@ const handleTodayBlur = (e, materialId,num) => {
         <ArrowPathIcon className="h-5 w-5" aria-hidden="true" />
       </button>
     <Select
+        defaultValue="all"
         value={targetName}
         onChange={handleChange}
         options={options}
         placeholder="店舗を選択してください。"
       />
     <Select
+        defaultValue="all"
         value={position}
         onChange={handlePositionChange}
         options={potion_options}
         placeholder="ポジションを選択してください。"
       />
     <Select
+        defaultValue="all"
         value={category}
         onChange={handleCategoryChange}
         options={category_options}
