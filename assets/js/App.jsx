@@ -15,9 +15,9 @@ const App = () => {
   const containerOffset = useRef(null)
   const [results, setResults,] = useState([]);
   const [handleSubmit, setHandleSubmit,] = useState(false);
-  const [category, setCategory,] = useState({ value: 'all', label: '全て' });
-  const [position, setPosition,] = useState({ value: 'all', label: '全て' });
-  const [targetName, setTargetName,] = useState({ value: 'all', label: '全て' });
+  const [category, setCategory,] = useState();
+  const [position, setPosition,] = useState();
+  const [targetName, setTargetName,] = useState();
   const [inputYesterdayValues, setInputYesterdayDayValues] = useState({});
   const [inputTodayValues, setInputTodayValues] = useState({});
   const [cookies, setCookie, removeCookie] = useCookies(['csrftoken']);
@@ -209,21 +209,18 @@ const handleTodayBlur = (e, materialId,num) => {
         <ArrowPathIcon className="h-5 w-5" aria-hidden="true" />
       </button>
     <Select
-        defaultValue="all"
         value={targetName}
         onChange={handleChange}
         options={options}
         placeholder="店舗を選択してください。"
       />
     <Select
-        defaultValue="all"
         value={position}
         onChange={handlePositionChange}
         options={potion_options}
         placeholder="ポジションを選択してください。"
       />
     <Select
-        defaultValue="all"
         value={category}
         onChange={handleCategoryChange}
         options={category_options}
