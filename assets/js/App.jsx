@@ -200,7 +200,7 @@ const handleTodayBlur = (e, materialId,num) => {
   <h1 className="text-base font-semibold leading-6 text-gray-900">
     <time dateTime="2022-01">{displayFormattedYesterday}</time>
   </h1>
-  <div className="flex flex-col items-center">
+  <div className="flex flex-col sm:flex-row items-center">
     <button
         type="button"
         onClick={()=>setHandleSubmit(!handleSubmit)}
@@ -336,7 +336,6 @@ const handleTodayBlur = (e, materialId,num) => {
                                 if(position.value == "all" || material.role.includes(PositionHash[position.value])){
                                 if (material.shopping_history_yesterday.total_num) {
                                   return <div key={materialIndex} className="h-24 text-black">
-                                        <label>個数:</label>
                                         <label>個数:{material?.shopping_history_yesterday?.total_num} </label>
                                         <br/>
                                         <label>価格:{material.shopping_history_yesterday.total_value}$
@@ -388,7 +387,6 @@ const handleTodayBlur = (e, materialId,num) => {
                                       </div>
                                 }else{
                                   return <div  key={materialIndex} className="h-24 text-black">
-                                         <label>個数:</label>
                                         { (targetName.value != 'all') ?  <input 
                                             onBlur={(e) => handleTodayBlur(e, material.id,0)}
                                             onChange={(e) => handleInputTodayChange(e, material.id)}
