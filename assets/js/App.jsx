@@ -147,7 +147,7 @@ const handleTodayBlur = (e, materialId,num) => {
   }
 
   const submitToday  = async (e,materialId,originNum) => {
-    let format_displayDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+    let format_displayDate = `${new Date(currentDate).getFullYear()}-${String(new Date(new Date(currentDate)).getMonth() + 1).padStart(2, '0')}-${String(new Date(currentDate).getDate()).padStart(2, '0')}`;
     
     submit(e,materialId,format_displayDate,originNum)
   }
