@@ -387,6 +387,7 @@ const handleTodayBlur = (e, materialId,num) => {
                                       </div>
                                 }else{
                                   return <div  key={materialIndex} className="h-24 text-black">
+                                        <label>個数:</label>
                                         { (targetName.value != 'all') ?  <input 
                                             onBlur={(e) => handleTodayBlur(e, material.id,0)}
                                             onChange={(e) => handleInputTodayChange(e, material.id)}
