@@ -6,6 +6,7 @@ import { baseURL } from "./export.js";
 import { useWindowSize } from "./useWindowSize.js";
 import Select from 'react-select';
 import { useCookies } from 'react-cookie';
+import { DateTime } from 'luxon';
 
 
 const App = () => {
@@ -91,22 +92,17 @@ const handleTodayBlur = (e, materialId,num) => {
     [materialId]: undefined // リセット
   });
 }  
-  const today = new Date();
-  const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  console.log("formattedDate")
-  console.log(formattedDate)
+    // Get the current date in Ohio
+    const currentDateInOhio = DateTime.now().setZone('America/New_York');
+    const formattedDate = `${currentDateInOhio.year}-${String(currentDateInOhio.month).padStart(2, '0')}-${String(currentDateInOhio.day).padStart(2, '0')}`;
 
-  const [currentDate, setCurrentDate] = useState(formattedDate);
-  // const [displayDate, setDisplayDate] = useState(formattedDate);
-  
-  let displayFormattedYesterday = `${new Date(currentDate).getFullYear()}-${String(new Date(currentDate).getMonth() + 1).padStart(2, '0')}-${String(new Date(currentDate).getDate()).padStart(2, '0')}`;
+    const [currentDate, setCurrentDate] = useState(formattedDate);
 
-  // Create a new Date object for yesterday's date
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
+    // Get yesterday's date in Ohio
+    const yesterdayInOhio = currentDateInOhio.minus({days: 1});
+    const formattedYesterday = `${yesterdayInOhio.year}-${String(yesterdayInOhio.month).padStart(2, '0')}-${String(yesterdayInOhio.day).padStart(2, '0')}`;
 
-  const formattedYesterday = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-  const [yesterDay, setYesterDay] = useState(formattedYesterday);
+    const [yesterDay, setYesterDay] = useState(formattedYesterday);
 
   const decreaseDateByOneDay = () => {
         let tempDate = new Date(currentDate);
@@ -198,7 +194,7 @@ const handleTodayBlur = (e, materialId,num) => {
 <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-200 px-6 py-4 sticky top-0 z-40 bg-white shadow">
   <h1 className="text-base font-semibold leading-6 text-gray-900">
-    <time dateTime="2022-01">{displayFormattedYesterday}</time>
+    <time dateTime="2022-01">{currentDate}</time>
   </h1>
   <div className="flex flex-col sm:flex-row items-center">
     <button
