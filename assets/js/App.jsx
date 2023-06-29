@@ -105,24 +105,21 @@ const handleTodayBlur = (e, materialId,num) => {
     const [yesterDay, setYesterDay] = useState(formattedYesterday);
 
   const decreaseDateByOneDay = () => {
-        let tempDate = new Date(currentDate);
-        console.log("tempDate")
-        console.log(tempDate)
-        tempDate.setDate(tempDate.getDate() - 1);
-        setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
-    }
+    let tempDate = DateTime.fromISO(currentDate, {zone: 'America/New_York'});
+    tempDate = tempDate.minus({days: 1});
+    setCurrentDate(`${tempDate.year}-${String(tempDate.month).padStart(2, '0')}-${String(tempDate.day).padStart(2, '0')}`);
+  }
 
   const riseDateByOneDay = () => {
-        let tempDate = new Date(currentDate);
-        console.log("tempDate")
-        console.log(tempDate)
-        tempDate.setDate(tempDate.getDate() + 1);
-        setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
-    }
+      let tempDate = DateTime.fromISO(currentDate, {zone: 'America/New_York'});
+      tempDate = tempDate.plus({days: 1});
+      setCurrentDate(`${tempDate.year}-${String(tempDate.month).padStart(2, '0')}-${String(tempDate.day).padStart(2, '0')}`);
+  }
+  // Set the date to the current date
   const toDayByOneDay = () => {
-        let tempDate = new Date();
-        setCurrentDate(`${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`);
-    }
+      let tempDate = DateTime.now().setZone('America/New_York');
+      setCurrentDate(`${tempDate.year}-${String(tempDate.month).padStart(2, '0')}-${String(tempDate.day).padStart(2, '0')}`);
+  }
 
   const  handleChange = (targetName) => {
     setTargetName(targetName)
