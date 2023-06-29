@@ -9,6 +9,7 @@ import { useCookies } from 'react-cookie';
 import { DateTime } from 'luxon';
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import { FaCalendarAlt } from 'react-icons/fa';
 
 
 const App = () => {
@@ -106,6 +107,7 @@ const handleTodayBlur = (e, materialId,num) => {
     const formattedYesterday = `${yesterdayInOhio.year}-${String(yesterdayInOhio.month).padStart(2, '0')}-${String(yesterdayInOhio.day).padStart(2, '0')}`;
 
     const [yesterDay, setYesterDay] = useState(formattedYesterday);
+    
 
   const decreaseDateByOneDay = () => {
     let tempDate = DateTime.fromISO(currentDate, {zone: 'America/New_York'});
@@ -274,6 +276,7 @@ const handleTodayBlur = (e, materialId,num) => {
       </button> */}
       <DatePicker
         selected={new Date(currentDate)}
+        customInput={<FaCalendarAlt />}
         onChange={handleChangeDate}
       />
     </div>
