@@ -7,6 +7,8 @@ import { useWindowSize } from "./useWindowSize.js";
 import Select from 'react-select';
 import { useCookies } from 'react-cookie';
 import { DateTime } from 'luxon';
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 
 const App = () => {
@@ -27,6 +29,7 @@ const App = () => {
     'Sushi':2,
     'dishup':3,
   }
+  
   
 
   const potion_options = [
@@ -132,6 +135,19 @@ const handleTodayBlur = (e, materialId,num) => {
   const  handlePositionChange = (position) => {
     setPosition(position)
   }
+
+  const handleChangeDate = (date) => {
+    console.log(date)
+    
+    let tempDate = DateTime.fromJSDate(date, {zone: 'America/New_York'});
+    tempDate = tempDate.plus({days: 1});
+    
+    const year = tempDate.year;
+    const month = String(tempDate.month).padStart(2, '0');
+    const day = String(tempDate.day).padStart(2, '0');
+
+    setCurrentDate(`${year}-${month}-${day}`);
+}
   
 
   const submitYesterdayDate = async (e,materialId,originNum) => {
@@ -184,6 +200,7 @@ const handleTodayBlur = (e, materialId,num) => {
         console.log(error.response);
       });
   },[category,currentDate,targetName,handleSubmit])  
+  
     
 
     return (
@@ -233,7 +250,7 @@ const handleTodayBlur = (e, materialId,num) => {
         className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-inset ring-gray-300"
         aria-hidden="true"
       />
-      <button
+      {/* <button
         type="button"
         onClick={decreaseDateByOneDay}
         className="flex items-center justify-center rounded-l-md py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
@@ -254,7 +271,11 @@ const handleTodayBlur = (e, materialId,num) => {
         className="flex items-center justify-center rounded-r-md py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
       >
         <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-      </button>
+      </button> */}
+      <DatePicker
+        selected={new Date(currentDate)}
+        onChange={handleChangeDate}
+      />
     </div>
   </div>
 </header>
