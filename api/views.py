@@ -52,7 +52,7 @@ class ShoppingHistoryJson(ModelViewSet):
         queryset = None
 
         if self.kwargs.get('fk1'):
-            queryset = ShoppingHistory.objects.filter(target_name=self.kwargs.get('fk1'))
+            queryset = ShoppingHistory.objects.order_by("-updated_at").filter(target_name=self.kwargs.get('fk1'))
         else:
             queryset = ShoppingHistory.objects.order_by("-updated_at")
 
