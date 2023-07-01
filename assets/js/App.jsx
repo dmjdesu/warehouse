@@ -10,6 +10,7 @@ import { DateTime } from 'luxon';
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { FaCalendarAlt } from 'react-icons/fa';
+import ReactLoading from 'react-loading';
 
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
   const container = useRef(null)
   const containerNav = useRef(null)
   const containerOffset = useRef(null)
+  const [loading, setLoading] = useState(false);
   const [results, setResults,] = useState([]);
   const [handleSubmit, setHandleSubmit,] = useState(false);
   const [category, setCategory,] = useState({ value: 'all', label: '種類全て' });
@@ -193,6 +195,7 @@ const handleTodayBlur = (e, materialId,num) => {
     
 
   useEffect(()=>{
+    setLoading(true);
     axios.get(`${baseURL}parent_category?date=${currentDate}&target_name=${targetName?.value}&category_name=${category?.value}`)
       .then(res => {
         setResults(res.data.results);
@@ -200,6 +203,8 @@ const handleTodayBlur = (e, materialId,num) => {
         setYesterDay(res.data.results[0].item_set[0].material_set[0].shopping_history_yesterday.date )
       }).catch(function (error) {
         console.log(error.response);
+      }).finally(function () {
+        setLoading(false);
       });
   },[category,currentDate,targetName,handleSubmit])  
   
@@ -207,6 +212,7 @@ const handleTodayBlur = (e, materialId,num) => {
 
     return (
     <>
+    {loading &&<ReactLoading type={"balls"} color={"bluew"} height={'20%'} width={'20%'} />}
 <div className="flex h-full flex-col">
       <header className="flex flex-none items-center justify-between border-b border-gray-200 px-6 py-4 sticky top-0 z-40 bg-white shadow">
   <h1 className="text-base font-semibold leading-6 text-gray-900">
