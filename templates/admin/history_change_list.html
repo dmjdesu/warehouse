@@ -65,7 +65,8 @@
         {% endif %}
 
         {% block result_list %}
-        <table>
+        <div class="table-wrap">
+  <table class="table">
             <thead>
                 <tr>
                     <th>
@@ -93,6 +94,37 @@
                           <a href="#">合計金額</a>
                       </div>
                   </th>
+                  </th>
+                    <th>
+                      <div class="text">
+                          <a href="#">GST</a>
+                      </div>
+                  </th>
+                    <th>
+                      <div class="text">
+                          <a href="#">PST</a>
+                      </div>
+                  </th>
+                    <th>
+                      <div class="text">
+                          <a href="#">Bottle Deposit</a>
+                      </div>
+                  </th>
+                    <th>
+                      <div class="text">
+                          <a href="#">Recycle Fee</a>
+                      </div>
+                  </th>
+                  <th>
+                      <div class="text">
+                          <a href="#">Drink GST</a>
+                      </div>
+                  </th>
+                  <th>
+                      <div class="text">
+                          <a href="#">総額</a>
+                      </div>
+                  </th>
                 </tr>
             </thead>
             <tbody>
@@ -104,25 +136,36 @@
                     <td> {{row.total_num}}{{row.material_unit}}</td> 
                     <td> 
                       合計:{{row.total_value|floatformat:2 }}$
+                    </td>
+                    <td> 
                       {% if row.total_gst  %}
                         <br/>GST:{{row.total_gst |floatformat:4 }}$
                       {% endif %}
+                    </td>
+                    <td>
                       {% if row.total_pst %}
                         <br/>PST:{{row.total_pst |floatformat:4 }}$
                       {% endif %}
+                    </td>
+                    <td>
                       {% if row.total_bottle_deposit %}
                         <br/>Bottle Deposit:{{row.total_bottle_deposit |floatformat:4 }}$
                       {% endif %}
+                    </td>
+                    <td>
                       {% if row.total_recycle_fee %}
                         <br/>Recycle Fee:{{row.total_recycle_fee |floatformat:4 }}$
                       {% endif %}
+                    </td>
+                    <td>
                       {% if row.total_drink_gst %}
                         <br/>Drink GST:{{row.total_drink_gst |floatformat:4 }}$
                       {% endif %}
+                    </td>
+                    <td>
                       {% if row.total_gst or row.total_pst or row.total_bottle_deposit or row.total_recycle_fee or row.total_drink_gst %}
                         <br/>総額:{{row.total_tax_value |floatformat:4 }}$
                       {% endif %}
-                      
                     </td>  
                 </tr>
                 {% endfor %}
@@ -133,26 +176,39 @@
                   <td> 合計件数：{{ total_num }}件</td>
                   <td> 
                     合計仕入れ金額：{{ total_value|floatformat:2 }}$<br/>
+                  </td>
+                  <td>
                     {% if total_gst %}
                     合計GST：{{ total_gst|floatformat:4 }}$<br/>
                     {% endif %}
+                  </td>
+                  <td>
                     {% if total_pst %}
                     合計PST：{{ total_pst|floatformat:4 }}$<br/>
                     {% endif %}
+                  </td>
+                  <td>
                     {% if total_bottle_deposit %}
                     合計Bottle Deposit：{{ total_bottle_deposit|floatformat:4 }}$<br/>
                     {% endif %}
+                  </td>
+                  <td>
                     {% if total_recycle_fee %}
                     合計Recycle Fee：{{ total_recycle_fee|floatformat:4 }}$<br/>
                     {% endif %}
+                  </td>
+                  <td>
                     {% if total_drink_gst %}
                     合計Drink GST：{{ total_drink_gst|floatformat:4 }}$<br/>
                     {% endif %}
+                  </td>
+                  <td>
                     総額仕入れ金額：{{ total_tax_value|floatformat:4 }}$<br/>
                   </td>
               </tr>
             </tbody>
         </table>
+</div>
           {% if action_form and actions_on_bottom and cl.show_admin_actions %}{% admin_actions %}{% endif %}
         {% endblock %}
         </form>
@@ -176,4 +232,19 @@
       {% endblock %}
     </div>
   </div>
+  <style>
+    .table-wrap {
+      overflow-x: scroll;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+    .table th,
+    .table td {
+      border: 2px solid #eee;
+      padding: 4px 8px;
+    }
+  </style>
 {% endblock %}
