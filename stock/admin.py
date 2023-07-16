@@ -205,7 +205,8 @@ class WarehouseAdmin(admin.ModelAdmin):
     def num_unit(self,object):
         return str(object.num) + object.material.unit
 
-
+class ParentCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
 
 admin.site.register(Item,ItemAdmin)
 admin.site.register(Profile,ProfileAdmin)
@@ -215,5 +216,5 @@ admin.site.register(Role)
 admin.site.register(Material,MaterialAdmin)
 admin.site.register(MaterialProxy,MaterialProxyAdmin)
 
-admin.site.register(ParentCategory)
+admin.site.register(ParentCategory,ParentCategoryAdmin)
 admin.site.register(Warehouse,WarehouseAdmin)
