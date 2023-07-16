@@ -171,7 +171,7 @@
                         'pk': '{{ material.pk }}',
                         'name': '{{ "【" | add:material.place |  add:"】" |add:material.name }}',
                         'role': '{{ material.role_name }}',
-                        'note': '{{ material.note  | linebreaks  }}',
+                        'note': '{{ material.note  | linebreaksbr  }}',
                         'num': '{{ material.unit}}',
                         
                     },
