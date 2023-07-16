@@ -97,6 +97,7 @@ const App = () => {
     { value: "Frozen", label: "Frozen" },
     { value: "Kitchen", label: "Kitchen" },
     { value: "Sushi", label: "Sushi" },
+    { value: "amazake sause", label: "amazake sause" },
   ];
 
   // 入力フィールドの値が変わった時に呼び出す関数
