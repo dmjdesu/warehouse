@@ -179,31 +179,31 @@
                   </td>
                   <td>
                     {% if total_gst %}
-                    合計GST：{{ total_gst|floatformat:4 }}$<br/>
+                    合計GST：{{ total_gst|floatformat:2 }}$<br/>
                     {% endif %}
                   </td>
                   <td>
                     {% if total_pst %}
-                    合計PST：{{ total_pst|floatformat:4 }}$<br/>
+                    合計PST：{{ total_pst|floatformat:2 }}$<br/>
                     {% endif %}
                   </td>
                   <td>
                     {% if total_bottle_deposit %}
-                    合計Bottle Deposit：{{ total_bottle_deposit|floatformat:4 }}$<br/>
+                    合計Bottle Deposit：{{ total_bottle_deposit|floatformat:2 }}$<br/>
                     {% endif %}
                   </td>
                   <td>
                     {% if total_recycle_fee %}
-                    合計Recycle Fee：{{ total_recycle_fee|floatformat:4 }}$<br/>
+                    合計Recycle Fee：{{ total_recycle_fee|floatformat:2 }}$<br/>
                     {% endif %}
                   </td>
                   <td>
                     {% if total_drink_gst %}
-                    合計Drink GST：{{ total_drink_gst|floatformat:4 }}$<br/>
+                    合計Drink GST：{{ total_drink_gst|floatformat:2 }}$<br/>
                     {% endif %}
                   </td>
                   <td>
-                    総額仕入れ金額：{{ total_tax_value|floatformat:4 }}$<br/>
+                    総額仕入れ金額：{{ total_tax_value|floatformat:2 }}$<br/>
                   </td>
               </tr>
             </tbody>
