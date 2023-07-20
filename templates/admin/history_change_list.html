@@ -23,6 +23,11 @@
 {{ block.super }}
 {{ media.js }}
 <script src="{% static 'admin/js/filters.js' %}" defer></script>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+</head>
 {% endblock %}
 
 {% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
@@ -66,12 +71,22 @@
 
         {% block result_list %}
         <div class="table-wrap">
-  <table class="table">
+  <table class="table" id="target">
             <thead>
                 <tr>
                     <th>
                         <div class="text">
                             <a href="#">対象店</a>
+                        </div>
+                    </th>
+                    <th>
+                      <div class="text">
+                          <a href="#">アイテム名</a>
+                      </div>
+                    </th>
+                    <th>
+                        <div class="text">
+                            <a href="#">ポジション名</a>
                         </div>
                     </th>
                     <th>
@@ -131,6 +146,8 @@
                 {% for row in summary %}
                 <tr class="{% cycle 'row1' 'row2' %}">
                     <td> {{ row.target_name }} </td>
+                    <td> {{ row.material_item_name }} </td>
+                    <td> {{ row.material_position_name }} </td>
                     <td> {{ row.material_name }} </td>
                     <td> {{ row.total }}件 </td>
                     <td> {{row.total_num}}{{row.material_unit}}</td> 
@@ -166,10 +183,14 @@
                       {% if row.total_gst or row.total_pst or row.total_bottle_deposit or row.total_recycle_fee or row.total_drink_gst %}
                         <br/>総額:{{row.total_tax_value |floatformat:2 }}$
                       {% endif %}
-                    </td>  
+                    </td>
                 </tr>
                 {% endfor %}
+              </tbody>
+              <tfoot>
                 <tr class="{% cycle 'row1' 'row2' %}">
+                  <td></td>
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -206,7 +227,7 @@
                     総額仕入れ金額：{{ total_tax_value|floatformat:2 }}$<br/>
                   </td>
               </tr>
-            </tbody>
+            </tfoot>
         </table>
 </div>
           {% if action_form and actions_on_bottom and cl.show_admin_actions %}{% admin_actions %}{% endif %}
@@ -247,4 +268,13 @@
       padding: 4px 8px;
     }
   </style>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+  <script>
+
+  $(document).ready(function() {
+        $("#target").dataTable({ "aLengthMenu": [[25, 50, 100, 200, -1],[25, 50, 100, 200, "All"]], "iDisplayLength" : -1 }); 
+      });
+  </script>
 {% endblock %}

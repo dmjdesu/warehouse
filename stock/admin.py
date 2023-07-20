@@ -32,7 +32,7 @@ class ShoppingHistoryProxyResource(resources.ModelResource):
 
 class ShoppingHistoryResource(resources.ModelResource):
     class Meta:
-        fields = ['target_name','material_name', "total"]
+        fields = ['target_name','material_name', "total","material_position_name"]
         model = ShoppingHistory
     
     def get_queryset():
@@ -95,7 +95,7 @@ class ShoppingHistoryAdmin(admin.ModelAdmin):
         response.context_data['summary'] = list(
             qs
             .exclude(target_name="warehouse")
-            .values('target_name','material_name','material_unit')
+            .values('target_name','material_name','material_item_name','material_position_name','material_unit')
             .annotate(**metrics)
             .order_by('-target_name')
         )
@@ -206,7 +206,7 @@ class WarehouseAdmin(admin.ModelAdmin):
         return str(object.num) + object.material.unit
 
 class ParentCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name','id')
 
 admin.site.register(Item,ItemAdmin)
 admin.site.register(Profile,ProfileAdmin)
