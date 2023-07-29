@@ -161,12 +161,13 @@ class ItemFilter(admin.SimpleListFilter):
 
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name','place','unit','note')
-    readonly_fields = ('value',)
+    readonly_fields = ('value','name')
     list_filter = ['item__parent',ItemFilter]
     list_per_page = 16384
 
 class MaterialProxyAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')
+    readonly_fields = ('value','name')
     list_filter = ['item__parent',ItemFilter]
 
      
