@@ -8,6 +8,7 @@ from pprint import pprint
 from decimal import Decimal
 from api.models import *
 from api.serializers import *
+from fractions import Fraction
 
 class ParentCategoryJson(ModelViewSet):
     serializer_class = ParentCategorySerializer
@@ -84,14 +85,14 @@ class ShoppingHistoryJson(ModelViewSet):
             drink_gst = 0
             bottle_deposit = 0
             recycle_fee = 0
-            if material.is_gst : gst = round(Decimal(request.data["num"]) * material.value * Decimal(0.05),4)
-            if material.is_pst : pst = round(Decimal(request.data["num"]) * material.value * Decimal(0.07),4)
-            if material.is_drink_gst : drink_gst = round(Decimal(request.data["num"]) * material.value * Decimal(0.05),4)
-            if material.is_bottle_deposit : bottle_deposit = material.bottle_num * 0.1
-            if material.is_recycle_fee : recycle_fee = material.bottle_num * 0.02
+            if material.is_gst : gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
+            if material.is_pst : pst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.07)
+            if material.is_drink_gst : drink_gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
+            if material.is_bottle_deposit : bottle_deposit = Decimal(material.bottle_num) * Decimal(0.1)
+            if material.is_recycle_fee : recycle_fee = Decimal(material.bottle_num) * Decimal(0.02)
             ShoppingHistory.objects.create(
                 target_name = request.data["target_name"],
-                value=round(Decimal(request.data["num"]) * material.value,4),
+                value=Decimal(request.data["num"]) * Decimal(material.value),
                 gst= gst,
                 pst= pst,
                 bottle_deposit=bottle_deposit,
@@ -151,14 +152,14 @@ class ShoppingHistoryReactJson(ModelViewSet):
             drink_gst = 0
             bottle_deposit = 0
             recycle_fee = 0
-            if material.is_gst : gst = round(Decimal(request.data["num"]) * material.value * Decimal(0.05),4)
-            if material.is_pst : pst = round(Decimal(request.data["num"]) * material.value * Decimal(0.07),4)
-            if material.is_drink_gst : drink_gst = round(Decimal(request.data["num"]) * material.value * Decimal(0.05),4)
-            if material.is_bottle_deposit : bottle_deposit = material.bottle_num * 0.1
-            if material.is_recycle_fee : recycle_fee = material.bottle_num * 0.02
+            if material.is_gst : gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
+            if material.is_pst : pst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.07)
+            if material.is_drink_gst : drink_gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
+            if material.is_bottle_deposit : bottle_deposit = Decimal(material.bottle_num) * Decimal(0.1)
+            if material.is_recycle_fee : recycle_fee = Decimal(material.bottle_num) * Decimal(0.02)
             ShoppingHistory.objects.create(
                 target_name = request.data["target_name"],
-                value=round(Decimal(request.data["num"]) * material.value,4),
+                value=Decimal(request.data["num"]) * Decimal(material.value),
                 gst= gst,
                 pst= pst,
                 bottle_deposit=bottle_deposit,
