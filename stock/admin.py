@@ -36,7 +36,6 @@ class ShoppingHistoryResource(resources.ModelResource):
         model = ShoppingHistory
     
     def get_queryset():
-            
         return super.get_queryset().values("total",'target_name','material_name','value','material_unit').annotate(total=Count('id')).order_by('-target_name')
 
 class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
@@ -44,7 +43,7 @@ class ShoppingHistoryProxyAdmin(ImportExportModelAdmin):
     list_display = ('target_name','material_name','material_parent_category_name','num_unit','date','is_send','created_at')
     list_filter = [('target_name',MultiSelectDropdownFilter),'date',("material_position_name",MultiSelectDropdownFilter), ('material_item_name', MultiSelectDropdownFilter),'is_send',('material_name',MultiSelectDropdownFilter),('material_parent_category_name',MultiSelectDropdownFilter), ['date', DateRangeFilter],['value',NumericRangeFilter]]
     actions = ['send_material','no_send_material']
-    list_per_page = 16384
+    list_per_page = 500
 
     def num_unit(self,object):
         return str(object.num) + object.material_unit
@@ -134,12 +133,10 @@ class MaterialItemFilter(admin.SimpleListFilter):
     parameter_name = 'material__item__parent'
 
     def lookups(self, request, model_admin):
-        pprint("Warehouse")
         warehouse = Warehouse.objects.values_list("material__item__id","material__item__name",flat=False).filter(material__item__parent__id=request.GET.get("material__item__parent__id__exact")).distinct()
         return warehouse
 
     def queryset(self, request, queryset):
-        pprint(self.value())
         if self.value():
             return queryset.filter(material__item__id=self.value())
         else:
@@ -162,7 +159,7 @@ class ItemFilter(admin.SimpleListFilter):
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name','place','unit','note')
     list_filter = ['item__parent',ItemFilter]
-    list_per_page = 16384
+    list_per_page = 100
 
 class MaterialProxyAdmin(admin.ModelAdmin):
     list_display = ('name','unit','note')

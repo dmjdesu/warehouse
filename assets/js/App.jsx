@@ -67,10 +67,6 @@ const App = () => {
     dishup: 3,
   };
 
-  useEffect(() => {
-    console.log(inputTodayValues);
-  }, [inputTodayValues]);
-
   const potion_options = [
     { value: "all", label: "ポジション全て" },
     { value: "kitchen", label: "Kitchen" },
@@ -115,9 +111,6 @@ const App = () => {
 
     // 文字列から数値への変換
     newTotalNum = Number(newTotalNum);
-
-    console.log("newTotalNum");
-    console.log(newTotalNum);
 
     // 全ての results のコピーを作成
     const updatedResults = [...results];
@@ -183,8 +176,6 @@ const App = () => {
   };
 
   const handleChangeDate = (date) => {
-    console.log(date);
-
     let tempDate = DateTime.fromJSDate(date, { zone: "America/New_York" });
     tempDate = tempDate.plus({ days: 1 });
 
@@ -197,7 +188,9 @@ const App = () => {
   };
 
   const submit = async (materialId, date, oldTotalNum, newTotalNum) => {
-    if (Math.floor(newTotalNum) - Math.floor(oldTotalNum) === 0) return;
+    console.log("newTotalNum");
+    console.log(newTotalNum - oldTotalNum);
+    if (newTotalNum - oldTotalNum === 0) return;
 
     const data = {
       target_name: targetName.value,
