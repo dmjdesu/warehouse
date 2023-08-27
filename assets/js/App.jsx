@@ -17,6 +17,8 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { AiFillCheckCircle } from "react-icons/ai";
 import ReactLoading from "react-loading";
 import Modal from "react-modal";
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 
 const App = () => {
   let subtitle;
@@ -271,23 +273,25 @@ const App = () => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <div className="h-full overflow-y-auto">
-          {Object.keys(changedMaterials).map((materialId) => {
-            const material = changedMaterials[materialId];
-            return (
-              <div
-                key={materialId}
-                className="flex justify-between items-center"
-              >
-                <p className="flex-1">
-                  {material.name}:元々の個数: {material.oldTotalNum ?? 0}{" "}
-                  新しい個数:
-                  {material.newTotalNum}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+        <SimpleBar style={{ maxHeight: 300, width: 500 }}>
+          <div className="h-full overflow-y-auto">
+            {Object.keys(changedMaterials).map((materialId) => {
+              const material = changedMaterials[materialId];
+              return (
+                <div
+                  key={materialId}
+                  className="flex justify-between items-center"
+                >
+                  <p className="flex-1">
+                    {material.name}:元々の個数: {material.oldTotalNum ?? 0}{" "}
+                    新しい個数:
+                    {material.newTotalNum}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </SimpleBar>
         <div className="flex justify-end mt-4">
           <button
             className="flex-1 px-4 py-2 bg-gray-300 mr-2"
