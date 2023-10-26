@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # カレントディレクトリをプロジェクトのルートに変更
-cd /path/to/your/django/project
+cd /var/www/os3-381-23528.vs.sakura.ne.jp/html/warehouse
 
 # Gitコマンドで変更を追跡、コミット、プッシュ
 git add .
