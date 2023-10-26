@@ -20,8 +20,6 @@ class ParentCategoryJson(ModelViewSet):
         if category_name != "all" and category_name != "undefined":
             queryset = queryset.filter(name=category_name)
 
-        pprint("queryset")
-        pprint(queryset.distinct().count())
         return queryset.distinct()
     
     def get_serializer_context(self):
@@ -85,6 +83,7 @@ class ShoppingHistoryJson(ModelViewSet):
             drink_gst = 0
             bottle_deposit = 0
             recycle_fee = 0
+            print("debug")
             if material.is_gst : gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
             if material.is_pst : pst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.07)
             if material.is_drink_gst : drink_gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)

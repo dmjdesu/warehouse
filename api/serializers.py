@@ -42,7 +42,6 @@ class MaterialSerializer(serializers.ModelSerializer):
         queryset = ShoppingHistory.objects.filter(date=requested_date) 
         queryset = queryset.filter(material_name=obj.name)
         
-        print(target_name)
         if target_name != "all" and target_name != "undefined":
             queryset = queryset.filter(target_name=target_name)
         totals = queryset.aggregate(
