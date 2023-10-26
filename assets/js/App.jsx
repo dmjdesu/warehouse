@@ -5,7 +5,9 @@ import {
   ChevronRightIcon,
   ArrowPathIcon,
 } from "@heroicons/react/20/solid";
+import { Menu, Transition } from "@headlessui/react";
 import { baseURL } from "./export.js";
+import { useWindowSize } from "./useWindowSize.js";
 import Select from "react-select";
 import { useCookies } from "react-cookie";
 import { DateTime } from "luxon";
@@ -104,7 +106,6 @@ const App = () => {
     });
   };
 
-  // 入力フィールドからフォーカスが外れた時に呼び出す関数
   const handleTodayBlur = (e, materialId, newTotalNum) => {
     // 現在の changedMaterials のコピーを作成
     const updatedChangedMaterials = { ...changedMaterials };
@@ -123,8 +124,15 @@ const App = () => {
         for (let material of item.material_set) {
           // 材料の ID が一致するかどうかをチェック
           if (material.id === materialId) {
-            if (e.target.value - material.shopping_history_today.total_num == 0)
+            if (
+              Number(e.target.value) -
+                material.shopping_history_today.total_num ==
+              0
+            ) {
+              delete updatedChangedMaterials[materialId];
+              setChangedMaterials(updatedChangedMaterials);
               return;
+            }
             // 一致する場合、新しい値を使って更新情報を作成
             updatedChangedMaterials[materialId] = {
               oldTotalNum: material.shopping_history_today.total_num,
@@ -187,9 +195,21 @@ const App = () => {
     setChangedMaterials({});
   };
 
+  const handleUpdateMaterial = (materialId, value) => {
+    const updatedMaterials = { ...changedMaterials };
+    if (updatedMaterials[materialId]) {
+      updatedMaterials[materialId].newTotalNum = Number(value);
+      setChangedMaterials(updatedMaterials);
+    }
+  };
+
+  const handleDeleteMaterial = (materialId) => {
+    const updatedMaterials = { ...changedMaterials };
+    delete updatedMaterials[materialId];
+    setChangedMaterials(updatedMaterials);
+  };
+
   const submit = async (materialId, date, oldTotalNum, newTotalNum) => {
-    console.log("newTotalNum");
-    console.log(newTotalNum - oldTotalNum);
     if (newTotalNum - oldTotalNum === 0) return;
 
     const data = {
@@ -278,13 +298,25 @@ const App = () => {
               return (
                 <div
                   key={materialId}
-                  className="flex justify-between items-center"
+                  className="flex justify-between items-center mb-2"
                 >
-                  <p className="flex-1">
-                    {material.name}:元々の個数: {material.oldTotalNum ?? 0}{" "}
-                    新しい個数:
-                    {material.newTotalNum}
+                  <p className="flex-1 mr-2">
+                    {material.name}: 元々の個数: {material.oldTotalNum ?? 0}
                   </p>
+                  <input
+                    type="number"
+                    className="border flex-1 mr-2"
+                    value={material.newTotalNum}
+                    onChange={(e) =>
+                      handleUpdateMaterial(materialId, e.target.value)
+                    }
+                  />
+                  <button
+                    className="text-red-600 hover:text-red-800"
+                    onClick={() => handleDeleteMaterial(materialId)}
+                  >
+                    削除
+                  </button>
                 </div>
               );
             })}
