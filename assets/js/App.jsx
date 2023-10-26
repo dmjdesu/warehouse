@@ -5,9 +5,7 @@ import {
   ChevronRightIcon,
   ArrowPathIcon,
 } from "@heroicons/react/20/solid";
-import { Menu, Transition } from "@headlessui/react";
 import { baseURL } from "./export.js";
-import { useWindowSize } from "./useWindowSize.js";
 import Select from "react-select";
 import { useCookies } from "react-cookie";
 import { DateTime } from "luxon";
