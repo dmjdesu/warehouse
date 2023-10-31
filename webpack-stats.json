@@ -1,14 +1,14 @@
 {
   "status": "done",
   "assets": {
-    "main-dc09bc50579ae1eb5d9f.js": {
-      "name": "main-dc09bc50579ae1eb5d9f.js",
-      "path": "/Users/koudaseiryuu/shoping/static/bundles/main-dc09bc50579ae1eb5d9f.js"
+    "main-258cdc31ef81071ca88f.js": {
+      "name": "main-258cdc31ef81071ca88f.js",
+      "path": "/var/www/os3-381-23528.vs.sakura.ne.jp/html/warehouse/static/bundles/main-258cdc31ef81071ca88f.js"
     }
   },
   "chunks": {
     "main": [
-      "main-dc09bc50579ae1eb5d9f.js"
+      "main-258cdc31ef81071ca88f.js"
     ]
   }
 }
