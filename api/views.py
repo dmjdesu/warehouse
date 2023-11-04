@@ -1,11 +1,13 @@
+from django.db import transaction
 from django.shortcuts import redirect
 from django.views import View
+from django.core.exceptions import ValidationError
 from stock.models import *
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from pprint import pprint
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation, ROUND_UP
 from api.models import *
 from api.serializers import *
 from fractions import Fraction
@@ -65,6 +67,8 @@ class ShoppingHistoryJson(ModelViewSet):
 
         datetime_object = datetime.strptime(request.data["date"], "%Y-%m-%d")
         formatted_date = datetime_object.strftime("%Y-%m-%d")
+
+        print("create")
 
         if request.data["target_name"] == "warehouse" :
             WarehouseHistory.objects.create(
@@ -133,6 +137,9 @@ class ShoppingHistoryReactJson(ModelViewSet):
         datetime_object = datetime.strptime(request.data["date"], "%Y-%m-%d")
         formatted_date = datetime_object.strftime("%Y-%m-%d")
 
+        print("value")
+        print(Decimal(request.data["num"]) * Decimal(material.value))
+
         if request.data["target_name"] == "warehouse" :
             WarehouseHistory.objects.create(
                 target_name = request.data["target_name"],
@@ -152,28 +159,70 @@ class ShoppingHistoryReactJson(ModelViewSet):
             drink_gst = 0
             bottle_deposit = 0
             recycle_fee = 0
-            if material.is_gst : gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
-            if material.is_pst : pst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.07)
-            if material.is_drink_gst : drink_gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
-            if material.is_bottle_deposit : bottle_deposit = Decimal(material.bottle_num) * Decimal(0.1)
-            if material.is_recycle_fee : recycle_fee = Decimal(material.bottle_num) * Decimal(0.02)
-            ShoppingHistory.objects.create(
-                target_name = request.data["target_name"],
-                value=Decimal(request.data["num"]) * Decimal(material.value),
-                gst= gst,
-                pst= pst,
-                bottle_deposit=bottle_deposit,
-                recycle_fee=recycle_fee,
-                drink_gst=drink_gst,
-                num=(Decimal(request.data["num"])),
-                material_name=material.name,
-                material_item_name=material.item.name,
-                material_parent_category_name=material.item.parent.name,
-                material_unit=material.unit,
-                material_position_name=",".join(material.role.values_list("name", flat=True)),
-                date=formatted_date,
-                is_send=False
-            ) 
+            # 小数点以下4桁で切り上げるためのコンテキストを作成
+            four_places = Decimal('0.0001')
+            # もしGSTが適用されるなら
+            if material.is_gst:
+                gst = (Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)).quantize(four_places, rounding=ROUND_UP)
+
+            # もしPSTが適用されるなら
+            if material.is_pst:
+                pst = (Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.07)).quantize(four_places, rounding=ROUND_UP)
+
+            # もし飲料にGSTが適用されるなら
+            if material.is_drink_gst:
+                drink_gst = (Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)).quantize(four_places, rounding=ROUND_UP)
+
+            # もしボトルデポジットが適用されるなら
+            if material.is_bottle_deposit:
+                bottle_deposit = (Decimal(material.bottle_num) * Decimal(0.1)).quantize(four_places, rounding=ROUND_UP)
+
+            # もしリサイクル料金が適用されるなら
+            if material.is_recycle_fee:
+                recycle_fee = (Decimal(material.bottle_num) * Decimal(0.02)).quantize(four_places, rounding=ROUND_UP)
+            print(gst)
+            print(pst)
+            try:
+                # データベーストランザクションの開始
+                with transaction.atomic():
+                    # 各フィールドを個別に処理
+                    num = Decimal(request.data["num"])
+                    value = num * Decimal(material.value)
+
+                    # オブジェクトの作成
+                    shopping_history = ShoppingHistory(
+                        target_name=request.data["target_name"],
+                        value=value,
+                        gst=gst,
+                        pst=pst,
+                        bottle_deposit=bottle_deposit,
+                        recycle_fee=recycle_fee,
+                        drink_gst=drink_gst,
+                        num=num,
+                        material_name=material.name,
+                        material_item_name=material.item.name,
+                        material_parent_category_name=material.item.parent.name,
+                        material_unit=material.unit,
+                        material_position_name=",".join(material.role.values_list("name", flat=True)),
+                        date=formatted_date,
+                        is_send=False
+                    )
+
+                    # 保存前の検証を行う
+                    shopping_history.full_clean()
+
+                    # データベースに保存
+                    shopping_history.save()
+            except InvalidOperation as e:
+                # ここでどの項目でエラーが起きたかを判断する
+                error_field = "value" if 'value' in str(e) else "num"  # この例では 'value' と 'num' のみチェックしています
+                error_message = f"Invalid input for {error_field}: {e}"
+                print(error_message)
+                # 適切なエラーレスポンスを返す
+            except Exception as e:
+                # その他のエラー
+                print(f"An unexpected error occurred: {e}")
+                # 適切なエラーレスポンスを返す
             werehouse[0].num -= Decimal(request.data["num"])
             werehouse[0].save()
 
