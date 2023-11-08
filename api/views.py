@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from pprint import pprint
-from decimal import Decimal, InvalidOperation, ROUND_UP
+from decimal import Decimal, InvalidOperation, ROUND_UP, ROUND_DOWN
 from api.models import *
 from api.serializers import *
 from fractions import Fraction
@@ -89,14 +89,27 @@ class ShoppingHistoryJson(ModelViewSet):
             drink_gst = 0
             bottle_deposit = 0
             recycle_fee = 0
-            if material.is_gst : gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
-            if material.is_pst : pst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.07)
-            if material.is_drink_gst : drink_gst = Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)
-            if material.is_bottle_deposit : bottle_deposit = Decimal(material.bottle_num) * Decimal(0.1)
-            if material.is_recycle_fee : recycle_fee = Decimal(material.bottle_num) * Decimal(0.02)
+            # 小数点以下4桁に丸めるための値を定義
+            four_places = Decimal('0.0001')
+
+            # 以下のように、各税金や料金を計算する際にquantizeメソッドを使用して小数点以下4桁に丸めます。
+            if material.is_gst:
+                gst = (Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)).quantize(four_places, ROUND_DOWN)
+            if material.is_pst:
+                pst = (Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.07)).quantize(four_places, ROUND_DOWN)
+            if material.is_drink_gst:
+                drink_gst = (Decimal(request.data["num"]) * Decimal(material.value) * Decimal(0.05)).quantize(four_places, ROUND_DOWN)
+            if material.is_bottle_deposit:
+                bottle_deposit = (Decimal(material.bottle_num) * Decimal(0.1)).quantize(four_places, ROUND_DOWN)
+            if material.is_recycle_fee:
+                recycle_fee = (Decimal(material.bottle_num) * Decimal(0.02)).quantize(four_places, ROUND_DOWN)
+
+            # 計算された値を四捨五入してShoppingHistoryオブジェクトを作成します。
+            value = (Decimal(request.data["num"]) * Decimal(material.value)).quantize(four_places, ROUND_DOWN)
+
             ShoppingHistory.objects.create(
                 target_name = request.data["target_name"],
-                value=Decimal(request.data["num"]) * Decimal(material.value),
+                value=value,
                 gst= gst,
                 pst= pst,
                 bottle_deposit=bottle_deposit,
@@ -136,9 +149,6 @@ class ShoppingHistoryReactJson(ModelViewSet):
 
         datetime_object = datetime.strptime(request.data["date"], "%Y-%m-%d")
         formatted_date = datetime_object.strftime("%Y-%m-%d")
-
-        print("value")
-        print(Decimal(request.data["num"]) * Decimal(material.value))
 
         if request.data["target_name"] == "warehouse" :
             WarehouseHistory.objects.create(
@@ -186,9 +196,14 @@ class ShoppingHistoryReactJson(ModelViewSet):
                 # データベーストランザクションの開始
                 with transaction.atomic():
                     # 各フィールドを個別に処理
+                 
+                    # 小数点以下4桁に丸めるための値を定義
+                    four_places = Decimal('0.0001')
+                    value = (Decimal(request.data["num"]) * Decimal(material.value)).quantize(four_places, ROUND_DOWN)
                     num = Decimal(request.data["num"])
-                    value = num * Decimal(material.value)
-
+                    print("value2")
+                    print(value)
+                    
                     # オブジェクトの作成
                     shopping_history = ShoppingHistory(
                         target_name=request.data["target_name"],
